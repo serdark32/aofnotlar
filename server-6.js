@@ -339,7 +339,7 @@ app.get('/api/admin/stats', adminAuth, async (req, res) => {
       pool.query('SELECT COUNT(*) FROM categories'),
       pool.query('SELECT COUNT(*) FROM user_answers'),
     ]);
-    const catStats = await pool.query(`SELECT c.name, COUNT(q.id)::int as count FROM categories c LEFT JOIN questions q ON q.category_id = c.id GROUP BY c.id, c.name ORDER BY count DESC`);
+    const catStats = await pool.query(`SELECT c.name, COUNT(ua.id)::int as count FROM categories c LEFT JOIN questions q ON q.category_id = c.id LEFT JOIN user_answers ua ON ua.question_id = q.id GROUP BY c.id, c.name ORDER BY count DESC`);
     const recentActivity = await pool.query(`SELECT DATE(answered_at) as date, COUNT(*)::int as count FROM user_answers WHERE answered_at >= NOW() - INTERVAL '7 days' GROUP BY DATE(answered_at) ORDER BY date DESC`);
     res.json({
       users: parseInt(users.rows[0].count),
