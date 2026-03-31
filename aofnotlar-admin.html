@@ -859,7 +859,7 @@
       </div>
 
       <div class="card">
-        <div class="card-title">🏆 Kategori Başına Soru Sayısı</div>
+        <div class="card-title">📈 Kategoriye Göre Çözülen Soru Sayısı</div>
         <div id="cat-stats"><div class="empty-state"><div class="empty-icon">⏳</div>Yükleniyor...</div></div>
       </div>
     </div>
@@ -1488,7 +1488,7 @@ async function loadDashboard() {
     const catEl = document.getElementById('cat-stats');
     if (data.catStats && data.catStats.length) {
       catEl.innerHTML = `<div class="table-wrap"><table>
-        <thead><tr><th>Kategori</th><th>Soru Sayısı</th></tr></thead>
+        <thead><tr><th>Kategori</th><th>Çözülen Soru</th></tr></thead>
         <tbody>${data.catStats.map(c => `<tr><td>${c.name}</td><td><span class="badge badge-green">${c.count}</span></td></tr>`).join('')}</tbody>
       </table></div>`;
     } else {
@@ -1848,6 +1848,8 @@ function closeQModal() { document.getElementById('q-modal').classList.remove('op
 
 async function saveQuestion() {
   const id = document.getElementById('qm-id').value;
+  const yearVal = document.getElementById('qm-year').value;
+  const freqVal = document.getElementById('qm-frequency').value;
   const body = {
     question_text: document.getElementById('qm-question').value.trim(),
     option_a: document.getElementById('qm-a').value.trim(),
@@ -1857,6 +1859,8 @@ async function saveQuestion() {
     option_e: document.getElementById('qm-e').value.trim() || null,
     correct_option: document.getElementById('qm-correct').value,
     hint: document.getElementById('qm-hint').value.trim() || null,
+    year: yearVal ? parseInt(yearVal) : null,
+    frequency: freqVal ? parseInt(freqVal) : 1,
   };
   try {
     await apiFetch(`/api/admin/questions/${id}`, { method:'PUT', body: JSON.stringify(body) });
