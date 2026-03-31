@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>AOF Lokal Test Ekranı</title>
+    <!-- React ve Babel (Kodu tarayıcıda derlemek için) -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+      body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #eef2f6; margin: 0; padding: 0; display: flex; flex-direction: column; min-height: 100vh; }
+      #setup-ui { padding: 40px; text-align: center; background: white; margin: 60px auto; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 80%; max-width: 500px; }
+      #root { flex: 1; display: none; margin: 0; align-items: stretch; justify-content: stretch; height: 100vh;}
+      h2 { color: #1a6b3c; margin-top: 0; }
+      .file-btn { background: #1a6b3c; color: white; padding: 14px 28px; border-radius: 8px; cursor: pointer; border: none; font-size: 16px; font-weight: bold; margin-top: 20px; box-shadow: 0 4px 6px rgba(26,107,60,0.3); }
+      .file-btn:hover { background: #0f3d22; }
+      .info { font-size: 14px; color: #4b5563; line-height: 1.6; }
+    </style>
+</head>
+<body>
+
+    <div id="setup-ui">
+        <h2>🚀 AOF Lokal Test Ortamı</h2>
+        <p class="info">Bilgisayarınıza hiçbir kurulum yapmadan React dosyalarını (App-yeni.js) anında test edebilirsiniz.</p>
+        <p class="info" style="font-weight:600; color:#b91c1c;">Masaüstündeki <strong>App-yeni.js</strong> dosyanızı seçin.</p>
+        
+        <input type="file" id="fileInput" accept=".js" style="display:none;" />
+        <button class="file-btn" onclick="document.getElementById('fileInput').click()">App-yeni.js Dosyasını Seç</button>
+        
+        <p class="info" style="font-size:12px; margin-top:30px;">Kodu her değiştirdiğinizde, F5 yapıp tekrar dosyayı seçmeniz yeterlidir.</p>
+    </div>
+
+    <!-- Uygulamanın yükleneceği yer -->
+    <div id="root"></div>
+
+    <script type="text/babel">
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                let code = evt.target.result;
+                
+                // 1. import satırlarını temizle (Tarayıcıda hazır ekli oldukları için import hatası verdirmemek için)
+                code = code.replace(/import\s+.*?;/g, '');
+                code = code.replace(/import\s+.*?\n/g, '');
+                
+                // 2. export default function App yazısını function App olarak düzelt
+                code = code.replace(/export\s+default\s+function\s+App/g, 'function App');
+                
+                // 3. Dosyanın sonuna React DOM render kodunu ekle
+                code += `\n\nconst rootElement = document.getElementById('root');\nif (rootElement) {\n   const root = ReactDOM.createRoot(rootElement);\n   root.render(<App />);\n}`;
+
+                try {
+                    // Window objesine React hook'larını ekle (App-yeni.js içinden de direkt ulaşabilsinler diye)
+                    window.useState = React.useState;
+                    window.useEffect = React.useEffect;
+                    window.useRef = React.useRef;
+
+                    // Kodu Babel ile derle (JSX'i normal JS'e çevir)
+                    const compiled = Babel.transform(code, { presets: ['react'] }).code;
+                    
+                    // Arayüzü gizle
+                    document.getElementById('setup-ui').style.display = 'none';
+                    document.getElementById('root').style.display = 'block';
+
+                    // Derlenmiş kodu çalıştır
+                    eval(compiled);
+
+                } catch (err) {
+                    alert("Kod çalıştırılırken bir hata oluştu (Sözdizimi hatası olabilir):\n" + err.message);
+                }
+            };
+            reader.readAsText(file);
+        });
+    </script>
+</body>
+</html>
