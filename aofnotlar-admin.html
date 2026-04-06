@@ -1014,7 +1014,7 @@
           </div>
           <div class="field-group">
             <label class="field-label">Çıkış Yılı <span style="color:var(--muted);font-size:11px;">(opsiyonel)</span></label>
-            <input type="number" id="aq-year" placeholder="2023" min="2000" max="2030">
+            <input type="text" id="aq-year" placeholder="2023 veya 2023-2024">
           </div>
           <div class="field-group">
             <label class="field-label">Kaç Kez Çıktı <span style="color:var(--muted);font-size:11px;">(varsayılan: 1)</span></label>
@@ -1307,7 +1307,7 @@ cd /var/www/aofnotlar && ./deploy.sh<button class="copy-btn" onclick="copyCode(t
       </div>
       <div class="field-group">
         <label class="field-label">Çıkış Yılı</label>
-        <input type="number" id="qm-year" placeholder="2023" min="2000" max="2030">
+        <input type="text" id="qm-year" placeholder="2023 veya 2023-2024">
       </div>
       <div class="field-group">
         <label class="field-label">Kaç Kez Çıktı</label>
@@ -1315,6 +1315,7 @@ cd /var/www/aofnotlar && ./deploy.sh<button class="copy-btn" onclick="copyCode(t
       </div>
     </div>
     <input type="hidden" id="qm-id">
+    <input type="hidden" id="qm-category-id">
     <div class="btn-row">
       <button class="btn btn-green" onclick="saveQuestion()">Kaydet</button>
       <button class="btn btn-ghost" onclick="closeQModal()">İptal</button>
@@ -1759,7 +1760,7 @@ async function addQuestion() {
         option_e: e || null,
         correct_option: correct,
         hint: hint || null,
-        year: year ? parseInt(year) : null,
+        year: year.trim() || null,
         frequency: parseInt(frequency)
       })
     });
@@ -1839,6 +1840,7 @@ function openEditQ(id) {
   document.getElementById('qm-correct').value = q.correct_option || 'a';
   document.getElementById('qm-hint').value = q.hint || '';
   document.getElementById('qm-year').value = q.year || '';
+  document.getElementById('qm-category-id').value = q.category_id || '';
   document.getElementById('qm-frequency').value = q.frequency || 1;
   document.getElementById('q-modal-msg').innerHTML = '';
   document.getElementById('q-modal').classList.add('open');
@@ -1848,6 +1850,7 @@ function closeQModal() { document.getElementById('q-modal').classList.remove('op
 
 async function saveQuestion() {
   const id = document.getElementById('qm-id').value;
+  const catId = document.getElementById('qm-category-id').value;
   const yearVal = document.getElementById('qm-year').value;
   const freqVal = document.getElementById('qm-frequency').value;
   const body = {
@@ -1859,7 +1862,8 @@ async function saveQuestion() {
     option_e: document.getElementById('qm-e').value.trim() || null,
     correct_option: document.getElementById('qm-correct').value,
     hint: document.getElementById('qm-hint').value.trim() || null,
-    year: yearVal ? parseInt(yearVal) : null,
+    category_id: catId ? parseInt(catId) : null,
+    year: yearVal.trim() || null,
     frequency: freqVal ? parseInt(freqVal) : 1,
   };
   try {
