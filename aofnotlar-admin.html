@@ -901,6 +901,9 @@
 
       <div class="template-hint">
         <strong>📋 Excel sütun sırası:</strong><br>
+        <span class="col-pill" style="background:#e5e7eb;color:#6b7280;">satir_no</span>
+        <span class="col-pill">yil</span>
+        <span class="col-pill" style="background:#e5e7eb;color:#6b7280;">soruNo</span>
         <span class="col-pill">soru</span>
         <span class="col-pill">a</span>
         <span class="col-pill">b</span>
@@ -909,8 +912,8 @@
         <span class="col-pill">e (opsiyonel)</span>
         <span class="col-pill">dogru (a/b/c/d/e)</span>
         <span class="col-pill">frekans (1,2,3...)</span>
-        <span class="col-pill">yil (2024-2025)</span>
         <br><br>
+        <span style="color:#6b7280;font-size:11px;">⚪ Gri sütunlar (satir_no, soruNo) okunur ama kaydedilmez.</span><br>
         İlk satır başlık olabilir, otomatik atlanır. E şıkkı boş kalabilir.
         <br><button class="btn btn-accent btn-sm" style="margin-top:10px;" onclick="downloadTemplate()">⬇ Örnek Şablonu İndir</button>
       </div>
@@ -1640,22 +1643,24 @@ function parseExcel(file) {
       const ws = wb.Sheets[wb.SheetNames[0]];
       const rows = XLSX.utils.sheet_to_json(ws, { header: 1 });
 
-      // Detect if first row is header
+      // Detect if first row is header (satir_no kolonu string ya da 'satir' içeriyorsa)
       const firstRow = rows[0] || [];
-      const isHeader = isNaN(firstRow[0]) && typeof firstRow[0] === 'string' &&
-        firstRow[0].toLowerCase().includes('soru') || firstRow[0]?.toLowerCase() === 'soru';
+      const firstCell = String(firstRow[0] || '').toLowerCase().trim();
+      const isHeader = isNaN(firstRow[0]) && (firstCell.includes('satir') || firstCell.includes('soru') || firstCell.includes('no'));
 
       const dataRows = isHeader ? rows.slice(1) : rows;
-      parsedRows = dataRows.filter(r => r && r[0]).map((r, i) => ({
-        question_text: String(r[0] || '').trim(),
-        option_a: String(r[1] || '').trim(),
-        option_b: String(r[2] || '').trim(),
-        option_c: String(r[3] || '').trim(),
-        option_d: String(r[4] || '').trim(),
-        option_e: String(r[5] || '').trim() || null,
-        correct_option: String(r[6] || 'a').trim().toLowerCase(),
-        frequency: parseInt(r[7]) || 1,
-        year: String(r[8] || '').trim() || null,
+      // Yeni format: satir_no(0) | yil(1) | soruNo(2) | soru(3) | a(4) | b(5) | c(6) | d(7) | e(8) | dogru(9) | frekans(10)
+      // satir_no ve soruNo yoksayılır
+      parsedRows = dataRows.filter(r => r && r[3]).map((r, i) => ({
+        question_text: String(r[3] || '').trim(),
+        option_a: String(r[4] || '').trim(),
+        option_b: String(r[5] || '').trim(),
+        option_c: String(r[6] || '').trim(),
+        option_d: String(r[7] || '').trim(),
+        option_e: String(r[8] || '').trim() || null,
+        correct_option: String(r[9] || 'a').trim().toLowerCase(),
+        frequency: parseInt(r[10]) || 1,
+        year: String(r[1] || '').trim() || null,
       }));
 
       showPreview(parsedRows);
@@ -1717,14 +1722,15 @@ function clearPreview() {
 }
 
 function downloadTemplate() {
+  // Yeni format: satir_no | yil | soruNo | soru | a | b | c | d | e | dogru | frekans
   const ws_data = [
-    ['soru', 'a', 'b', 'c', 'd', 'e', 'dogru', 'ipucu'],
-    ['Örnek soru metni?', 'Şık A', 'Şık B', 'Şık C', 'Şık D', '', 'a', 'Kısa ipucu'],
-    ['Başka bir soru?', 'Cevap 1', 'Cevap 2', 'Cevap 3', 'Cevap 4', 'Cevap 5', 'c', ''],
+    ['satir_no', 'yil', 'soruNo', 'soru', 'a', 'b', 'c', 'd', 'e', 'dogru', 'frekans'],
+    [1, '2023-2024', 1, 'Örnek soru metni?', 'Şık A', 'Şık B', 'Şık C', 'Şık D', '', 'a', 1],
+    [2, '2024-2025', 2, 'Başka bir soru?', 'Cevap 1', 'Cevap 2', 'Cevap 3', 'Cevap 4', 'Cevap 5', 'c', 2],
   ];
   const wb = XLSX.utils.book_new();
   const ws = XLSX.utils.aoa_to_sheet(ws_data);
-  ws['!cols'] = [{wch:50},{wch:20},{wch:20},{wch:20},{wch:20},{wch:20},{wch:8},{wch:40}];
+  ws['!cols'] = [{wch:10},{wch:12},{wch:10},{wch:50},{wch:20},{wch:20},{wch:20},{wch:20},{wch:20},{wch:8},{wch:10}];
   XLSX.utils.book_append_sheet(wb, ws, 'Sorular');
   XLSX.writeFile(wb, 'aofnotlar_soru_sablonu.xlsx');
 }
