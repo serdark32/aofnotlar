@@ -78,6 +78,11 @@ export default function App() {
   const [showReportModal, setShowReportModal] = useState(false);
   const [reportSent, setReportSent] = useState(false);
 
+  // Geçtim mi? modalı
+  const [showPassCheck, setShowPassCheck] = useState(false);
+  const [vizeInput, setVizeInput] = useState('');
+  const [passResult, setPassResult] = useState(null);
+
   const loadMyFeedbacks = async () => {
     try {
       const res = await fetch(API + '/api/feedback/mine', {
@@ -708,6 +713,16 @@ export default function App() {
 
           {myRank && <div style={s.rankResult}>📍 Bugün {myRank}. sıradasın!</div>}
 
+          {/* Geçtim mi? - sadece final sınavında */}
+          {r.type === 'final' && (
+            <button
+              style={{ ...s.btn, background: 'linear-gradient(135deg, #f59e0b, #d97706)', color: '#fff', marginBottom: 6, fontWeight: 800 }}
+              onClick={() => { setShowPassCheck(true); setPassResult(null); setVizeInput(''); }}
+            >
+              🎓 Geçtim mi?
+            </button>
+          )}
+
           {/* Dinamik Buton Mantığı */}
           {prevYear ? (
             <button style={s.btn} onClick={() => openCategory(activeCategory, prevYear)}>
@@ -720,7 +735,83 @@ export default function App() {
           )}
 
           <button style={{ ...s.btn, background: '#fff', color: GREEN, marginTop: 10 }} onClick={() => setScreen('home')}>🏠 Ana Sayfa</button>
+
+          {/* YouTube Takip Bölümü */}
+          <a
+            href="https://www.youtube.com/@aofseslinotlar"
+            target="_blank"
+            rel="noreferrer"
+            style={{
+              display: 'flex', alignItems: 'center', gap: 12,
+              background: 'rgba(255,255,255,0.12)', borderRadius: 16,
+              padding: '14px 16px', marginTop: 14, textDecoration: 'none',
+              border: '1.5px solid rgba(255,255,255,0.2)',
+            }}
+          >
+            <span style={{ fontSize: 28 }}>▶️</span>
+            <div>
+              <div style={{ color: '#fff', fontWeight: 800, fontSize: 14 }}>YouTube'da takip et!</div>
+              <div style={{ color: 'rgba(255,255,255,0.65)', fontSize: 12, marginTop: 2 }}>@aofseslinotlar — sesli anlatımlar, özetler</div>
+            </div>
+            <span style={{ marginLeft: 'auto', color: 'rgba(255,255,255,0.5)', fontSize: 18 }}>›</span>
+          </a>
         </div>
+
+        {/* Geçtim mi? Modal */}
+        {showPassCheck && (
+          <div style={s.modalOverlay} onClick={() => setShowPassCheck(false)}>
+            <div style={{ ...s.modalBox, maxWidth: 360 }} onClick={e => e.stopPropagation()}>
+              <div style={{ fontWeight: 900, fontSize: 18, color: '#1f2937', marginBottom: 4 }}>🎓 Geçtim mi?</div>
+              <div style={{ fontSize: 13, color: '#6b7280', marginBottom: 16 }}>
+                Vize notunu gir, final puanınla birlikte hesaplayalım.<br/>
+                <span style={{ fontSize: 12 }}>Vize %30 + Final %70 ≥ 35 → Geçtin!</span>
+              </div>
+
+              <label style={{ fontSize: 13, fontWeight: 700, color: '#374151', display: 'block', marginBottom: 6 }}>Vize Notun (0–100)</label>
+              <input
+                type="number" min="0" max="100"
+                placeholder="örn: 60"
+                value={vizeInput}
+                onChange={e => { setVizeInput(e.target.value); setPassResult(null); }}
+                style={{ width: '100%', padding: '12px 14px', borderRadius: 12, border: '1.5px solid #d1d5db', fontSize: 16, outline: 'none', boxSizing: 'border-box', marginBottom: 12 }}
+              />
+
+              {/* Final puanı bilgi satırı */}
+              <div style={{ fontSize: 13, color: '#6b7280', marginBottom: 14, background: '#f9fafb', borderRadius: 10, padding: '9px 12px' }}>
+                📊 Bu sınavdaki final puanın: <strong style={{ color: GREEN }}>{r.puan} / 100</strong>
+              </div>
+
+              <button
+                style={{ ...s.btn, background: GREEN, color: '#fff', marginBottom: 8 }}
+                onClick={() => {
+                  const vize = parseFloat(vizeInput);
+                  if (isNaN(vize) || vize < 0 || vize > 100) return;
+                  const ortalama = vize * 0.30 + r.puan * 0.70;
+                  setPassResult({ ortalama: ortalama.toFixed(1), gecti: ortalama >= 35 });
+                }}
+              >
+                Hesapla
+              </button>
+
+              {passResult && (
+                <div style={{
+                  borderRadius: 14, padding: '14px 16px', textAlign: 'center',
+                  background: passResult.gecti ? '#d1fae5' : '#fee2e2',
+                  color: passResult.gecti ? '#065f46' : '#991b1b',
+                  fontWeight: 800, fontSize: 16, marginBottom: 8,
+                }}>
+                  {passResult.gecti ? '🎉 Tebrikler, geçtin!' : '📚 Maalesef geçemedin.'}
+                  <div style={{ fontWeight: 600, fontSize: 13, marginTop: 6 }}>
+                    Ortalamanız: <strong>{passResult.ortalama}</strong> / 100
+                    {!passResult.gecti && <span style={{ display: 'block', marginTop: 4, fontWeight: 500, fontSize: 12 }}>Geçmek için en az 35 gerekiyor.</span>}
+                  </div>
+                </div>
+              )}
+
+              <button style={{ ...s.btn, background: '#f3f4f6', color: '#374151', marginTop: 0 }} onClick={() => setShowPassCheck(false)}>Kapat</button>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
