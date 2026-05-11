@@ -620,6 +620,26 @@ export default function App() {
               🚩 Hatalı soru bildir
             </button>
           )}
+          {!selected && (
+            <button
+              style={{
+                background: 'transparent',
+                border: '1px solid rgba(255,255,255,0.2)',
+                borderRadius: 12,
+                padding: '9px 20px',
+                color: 'rgba(255,255,255,0.45)',
+                fontSize: 13,
+                fontWeight: 500,
+                cursor: 'pointer',
+                marginTop: 6,
+                marginBottom: 4,
+                letterSpacing: 0.2,
+              }}
+              onClick={e => { e.stopPropagation(); handleNext(); }}
+            >
+              Bu soruyu geç →
+            </button>
+          )}
           {showReportModal && (
             <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.55)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: 20 }}
               onClick={() => setShowReportModal(false)}>
