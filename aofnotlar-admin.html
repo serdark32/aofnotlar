@@ -1,1397 +1,1694 @@
 <!DOCTYPE html>
 <html lang="tr">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AOF Notlar — Admin</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<style>
-  :root {
-    --green-dark: #0f3d22;
-    --green-mid: #1a6b3c;
-    --green-light: #2d9a5a;
-    --green-pale: #e8f5ee;
-    --accent: #f5c842;
-    --danger: #e53e3e;
-    --danger-pale: #fff5f5;
-    --text: #1a1a1a;
-    --muted: #6b7280;
-    --border: #d1fae5;
-    --surface: #ffffff;
-    --bg: #f0faf4;
-  }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-  }
-
-  /* LOGIN */
-  #login-screen {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--green-dark);
-    background-image: radial-gradient(circle at 20% 80%, #1a6b3c44 0%, transparent 50%),
-                      radial-gradient(circle at 80% 20%, #2d9a5a22 0%, transparent 50%);
-  }
-
-  .login-box {
-    background: white;
-    border-radius: 16px;
-    padding: 48px 40px;
-    width: 380px;
-    box-shadow: 0 32px 80px rgba(0,0,0,0.3);
-  }
-
-  .login-logo {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-weight: 800;
-    font-size: 26px;
-    color: var(--green-dark);
-    margin-bottom: 6px;
-  }
-
-  .login-logo span { color: var(--green-light); }
-
-  .login-subtitle {
-    font-size: 11px;
-    color: var(--muted);
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    margin-bottom: 32px;
-  }
-
-  .field-label {
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 8px;
-    display: block;
-  }
-
-  .field-group { margin-bottom: 16px; }
-
-  input[type="text"], input[type="password"], input[type="url"],
-  select, textarea {
-    width: 100%;
-    padding: 11px 14px;
-    border: 1.5px solid #e5e7eb;
-    border-radius: 8px;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-size: 13px;
-    background: white;
-    color: var(--text);
-    outline: none;
-    transition: border-color 0.2s;
-  }
-
-  input:focus, select:focus, textarea:focus {
-    border-color: var(--green-mid);
-    box-shadow: 0 0 0 3px rgba(26,107,60,0.1);
-  }
-
-  textarea { resize: vertical; min-height: 70px; }
-
-  .btn {
-    padding: 11px 20px;
-    border: none;
-    border-radius: 8px;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-weight: 600;
-    font-size: 13px;
-    cursor: pointer;
-    transition: all 0.15s;
-    letter-spacing: 0.3px;
-  }
-
-  .btn-primary {
-    background: var(--green-mid);
-    color: white;
-    width: 100%;
-    padding: 14px;
-    font-size: 14px;
-  }
-  .btn-primary:hover { background: var(--green-dark); transform: translateY(-1px); }
-
-  .btn-green { background: var(--green-mid); color: white; }
-  .btn-green:hover { background: var(--green-dark); }
-
-  .btn-accent { background: var(--accent); color: var(--green-dark); }
-  .btn-accent:hover { background: #e0b530; }
-
-  .btn-danger { background: var(--danger); color: white; }
-  .btn-danger:hover { background: #c53030; }
-
-  .btn-ghost {
-    background: transparent;
-    color: var(--green-mid);
-    border: 1.5px solid var(--green-mid);
-  }
-  .btn-ghost:hover { background: var(--green-pale); }
-
-  .btn-sm { padding: 7px 14px; font-size: 12px; }
-
-  /* LAYOUT */
-  #app { display: none; min-height: 100vh; }
-
-  .sidebar {
-    position: fixed;
-    left: 0; top: 0; bottom: 0;
-    width: 220px;
-    background: var(--green-dark);
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    z-index: 100;
-  }
-
-  .sidebar-header {
-    padding: 24px 20px 20px;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
-  }
-
-  .sidebar-logo {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-weight: 800;
-    font-size: 18px;
-    color: white;
-  }
-
-  .sidebar-logo span { color: var(--accent); }
-
-  .sidebar-tag {
-    font-size: 10px;
-    color: rgba(255,255,255,0.4);
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    margin-top: 3px;
-  }
-
-  .nav-section {
-    padding: 16px 12px 8px;
-    font-size: 10px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.3);
-  }
-
-  .nav-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 12px;
-    margin: 2px 8px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-weight: 600;
-    font-size: 13px;
-    color: rgba(255,255,255,0.6);
-    transition: all 0.15s;
-    border: none;
-    background: transparent;
-    width: calc(100% - 16px);
-    text-align: left;
-  }
-
-  .nav-item:hover { background: rgba(255,255,255,0.08); color: white; }
-  .nav-item.active { background: var(--green-mid); color: white; }
-  .nav-icon { font-size: 16px; width: 20px; }
-
-  .sidebar-footer {
-    margin-top: auto;
-    padding: 16px;
-    border-top: 1px solid rgba(255,255,255,0.08);
-  }
-
-  .server-badge {
-    background: rgba(255,255,255,0.06);
-    border-radius: 8px;
-    padding: 10px 12px;
-    font-size: 11px;
-    color: rgba(255,255,255,0.5);
-  }
-
-  .server-badge .dot {
-    width: 7px; height: 7px;
-    border-radius: 50%;
-    background: #4ade80;
-    display: inline-block;
-    margin-right: 6px;
-    animation: pulse 2s infinite;
-  }
-
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.4; }
-  }
-
-  .main {
-    margin-left: 220px;
-    padding: 32px 36px;
-    min-height: 100vh;
-  }
-
-  .page { display: none; }
-  .page.active { display: block; }
-
-  .page-header {
-    margin-bottom: 28px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 12px;
-  }
-
-  .page-title {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-weight: 800;
-    font-size: 28px;
-    color: var(--green-dark);
-  }
-
-  .page-subtitle {
-    font-size: 12px;
-    color: var(--muted);
-    margin-top: 3px;
-  }
-
-  /* CARDS */
-  .card {
-    background: white;
-    border-radius: 12px;
-    padding: 24px;
-    border: 1px solid var(--border);
-    margin-bottom: 20px;
-  }
-
-  .card-title {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-weight: 700;
-    font-size: 15px;
-    color: var(--green-dark);
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  /* STAT CARDS */
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 16px;
-    margin-bottom: 24px;
-  }
-
-  .stat-card {
-    background: white;
-    border-radius: 12px;
-    padding: 20px;
-    border: 1px solid var(--border);
-    text-align: center;
-  }
-
-  .stat-num {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-weight: 800;
-    font-size: 36px;
-    color: var(--green-mid);
-    line-height: 1;
-  }
-
-  .stat-label {
-    font-size: 11px;
-    color: var(--muted);
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    margin-top: 6px;
-  }
-
-  /* TABLE */
-  .table-wrap { overflow-x: auto; border-radius: 10px; border: 1px solid var(--border); }
-
-  table { width: 100%; border-collapse: collapse; font-size: 13px; }
-
-  th {
-    background: var(--green-pale);
-    padding: 10px 14px;
-    text-align: left;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-weight: 700;
-    font-size: 11px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    color: var(--green-dark);
-    white-space: nowrap;
-  }
-
-  td {
-    padding: 10px 14px;
-    border-top: 1px solid #f0fdf4;
-    vertical-align: middle;
-  }
-
-  tr:hover td { background: #f9fffe; }
-
-  /* FORM GRID */
-  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-  .form-grid.cols-1 { grid-template-columns: 1fr; }
-  .form-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
-  .span-2 { grid-column: span 2; }
-
-  /* EXCEL UPLOAD */
-  .drop-zone {
-    border: 2.5px dashed var(--green-light);
-    border-radius: 12px;
-    padding: 40px 24px;
-    text-align: center;
-    cursor: pointer;
-    background: var(--green-pale);
-    transition: all 0.2s;
-  }
-
-  .drop-zone:hover { border-color: var(--green-dark); background: #d4f0e2; }
-  .drop-zone.dragover { border-color: var(--green-dark); background: #c0e8d2; }
-
-  .drop-icon { font-size: 40px; margin-bottom: 10px; }
-  .drop-text { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-weight: 700; color: var(--green-dark); font-size: 16px; }
-  .drop-sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
-
-  /* BADGES */
-  .badge {
-    display: inline-block;
-    padding: 3px 10px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: 600;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  }
-
-  .badge-green { background: #d1fae5; color: #065f46; }
-  .badge-yellow { background: #fef9c3; color: #854d0e; }
-  .badge-red { background: #fee2e2; color: #991b1b; }
-  .badge-gray { background: #f3f4f6; color: #374151; }
-
-  /* ALERT */
-  .alert {
-    padding: 12px 16px;
-    border-radius: 8px;
-    font-size: 13px;
-    margin-bottom: 16px;
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-  }
-
-  .alert-success { background: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; }
-  .alert-error { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
-  .alert-info { background: #dbeafe; color: #1e40af; border: 1px solid #93c5fd; }
-
-  /* PREVIEW TABLE */
-  #preview-area { display: none; }
-
-  .preview-table-wrap {
-    max-height: 320px;
-    overflow-y: auto;
-    border-radius: 10px;
-    border: 1px solid var(--border);
-    margin: 16px 0;
-  }
-
-  .btn-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
-
-  /* MODAL */
-  .modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.5);
-    z-index: 1000;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .modal-overlay.open { display: flex; }
-
-  .modal {
-    background: white;
-    border-radius: 16px;
-    padding: 32px;
-    width: 560px;
-    max-width: 95vw;
-    max-height: 90vh;
-    overflow-y: auto;
-    box-shadow: 0 32px 80px rgba(0,0,0,0.2);
-  }
-
-  .modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-
-  .modal-title {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-weight: 700;
-    font-size: 18px;
-    color: var(--green-dark);
-  }
-
-  .modal-close {
-    background: none;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-    color: var(--muted);
-  }
-
-  /* TEMPLATE HINT */
-  .template-hint {
-    background: #fffbeb;
-    border: 1px solid #fde68a;
-    border-radius: 8px;
-    padding: 12px 16px;
-    font-size: 12px;
-    color: #78350f;
-    margin-bottom: 16px;
-  }
-
-  .template-hint strong { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; }
-
-  .col-pill {
-    display: inline-block;
-    background: var(--green-dark);
-    color: white;
-    border-radius: 4px;
-    padding: 1px 6px;
-    font-size: 11px;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    margin: 1px;
-  }
-
-  /* GIT PAGE */
-  .code-block {
-    background: var(--green-dark);
-    color: #a7f3d0;
-    border-radius: 10px;
-    padding: 20px 24px;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-size: 13px;
-    line-height: 1.7;
-    margin: 12px 0;
-    position: relative;
-    white-space: pre;
-    overflow-x: auto;
-  }
-
-  .copy-btn {
-    position: absolute;
-    top: 10px; right: 10px;
-    background: rgba(255,255,255,0.1);
-    border: none;
-    border-radius: 6px;
-    color: white;
-    font-size: 11px;
-    padding: 4px 10px;
-    cursor: pointer;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  }
-
-  .copy-btn:hover { background: rgba(255,255,255,0.2); }
-
-  .step-num {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 28px; height: 28px;
-    border-radius: 50%;
-    background: var(--green-mid);
-    color: white;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-weight: 700;
-    font-size: 13px;
-    margin-right: 10px;
-    flex-shrink: 0;
-  }
-
-  .step-row {
-    display: flex;
-    align-items: flex-start;
-    margin-bottom: 20px;
-  }
-
-  .step-content { flex: 1; }
-  .step-title { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-weight: 700; font-size: 15px; color: var(--green-dark); }
-  .step-desc { font-size: 12px; color: var(--muted); margin-top: 3px; }
-
-  #msg-area { min-height: 20px; }
-
-  .loading { opacity: 0.6; pointer-events: none; }
-
-  .empty-state {
-    text-align: center;
-    padding: 48px 24px;
-    color: var(--muted);
-  }
-
-  .empty-icon { font-size: 40px; margin-bottom: 12px; }
-
-  .search-bar {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 16px;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-
-  .search-bar input { flex: 1; min-width: 200px; }
-
-  #logout-btn {
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.15);
-    color: rgba(255,255,255,0.6);
-    padding: 7px 14px;
-    border-radius: 8px;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-size: 12px;
-    cursor: pointer;
-    width: 100%;
-    margin-top: 8px;
-  }
-
-  #logout-btn:hover { background: rgba(255,255,255,0.14); color: white; }
-
-  /* ============================================================
-     MOBİL UYUM
-  ============================================================ */
-
-  /* Hamburger butonu — sadece mobilde görünür */
-  #hamburger {
-    display: none;
-    position: fixed;
-    top: 12px; left: 12px;
-    z-index: 300;
-    background: var(--green-dark);
-    border: none;
-    border-radius: 10px;
-    padding: 10px 13px;
-    cursor: pointer;
-    flex-direction: column;
-    gap: 5px;
-  }
-
-  #hamburger span {
-    display: block;
-    width: 22px; height: 2px;
-    background: white;
-    border-radius: 2px;
-    transition: all 0.25s;
-  }
-
-  /* Sidebar overlay kapama */
-  #sidebar-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.45);
-    z-index: 150;
-  }
-
-  #sidebar-overlay.open { display: block; }
-
-  /* Mobil tablo: card görünümü */
-  @media (max-width: 480px) {
-    .mobile-card-table thead { display: none; }
-
-    .mobile-card-table tr {
-      display: block;
-      background: white;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      margin-bottom: 10px;
-      padding: 12px 14px;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AOF Notlar — Admin</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <style>
+    :root {
+      --green-dark: #0f3d22;
+      --green-mid: #1a6b3c;
+      --green-light: #2d9a5a;
+      --green-pale: #e8f5ee;
+      --accent: #f5c842;
+      --danger: #e53e3e;
+      --danger-pale: #fff5f5;
+      --text: #1a1a1a;
+      --muted: #6b7280;
+      --border: #d1fae5;
+      --surface: #ffffff;
+      --bg: #f0faf4;
     }
 
-    .mobile-card-table tr:hover td { background: transparent; }
-
-    .mobile-card-table td {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 8px;
-      border: none;
-      padding: 5px 0;
-      font-size: 13px;
-      border-bottom: 1px solid #f3f4f6;
-    }
-
-    .mobile-card-table td:last-child { border-bottom: none; }
-
-    .mobile-card-table td::before {
-      content: attr(data-label);
-      font-size: 10px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      color: var(--muted);
-      flex-shrink: 0;
-      min-width: 80px;
-      padding-top: 2px;
-    }
-
-    .btn-row { flex-wrap: wrap; }
-    .btn-row .btn { flex: 1; text-align: center; min-width: 80px; }
-  }
-
-  @media (max-width: 768px) {
-    #hamburger { display: flex; }
-
-    .sidebar {
-      transform: translateX(-100%);
-      transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
-      z-index: 200;
-      width: 260px;
-    }
-
-    .sidebar.open { transform: translateX(0); }
-
-    .main {
-      margin-left: 0;
-      padding: 72px 16px 24px;
-    }
-
-    .page-title { font-size: 20px; }
-
-    .stats-grid {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-    }
-
-    .stat-num { font-size: 28px; }
-
-    .form-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .form-grid.cols-3 { grid-template-columns: 1fr; }
-
-    .span-2 { grid-column: span 1; }
-
-    .login-box {
-      width: 100%;
-      margin: 16px;
-      padding: 32px 24px;
-    }
-
-    .modal {
-      width: 100%;
-      max-width: 100%;
-      margin: 0 12px;
-      padding: 20px;
-      border-radius: 16px;
-    }
-
-    .modal-overlay {
-      align-items: flex-end;
+    * {
+      box-sizing: border-box;
+      margin: 0;
       padding: 0;
     }
 
-    .modal-overlay.open .modal {
-      border-bottom-left-radius: 0;
-      border-bottom-right-radius: 0;
-      margin: 0;
-      max-height: 92vh;
+    body {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* LOGIN */
+    #login-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--green-dark);
+      background-image: radial-gradient(circle at 20% 80%, #1a6b3c44 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, #2d9a5a22 0%, transparent 50%);
+    }
+
+    .login-box {
+      background: white;
+      border-radius: 16px;
+      padding: 48px 40px;
+      width: 380px;
+      box-shadow: 0 32px 80px rgba(0, 0, 0, 0.3);
+    }
+
+    .login-logo {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-weight: 800;
+      font-size: 26px;
+      color: var(--green-dark);
+      margin-bottom: 6px;
+    }
+
+    .login-logo span {
+      color: var(--green-light);
+    }
+
+    .login-subtitle {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 32px;
+    }
+
+    .field-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .field-group {
+      margin-bottom: 16px;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    input[type="url"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 8px;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 13px;
+      background: white;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--green-mid);
+      box-shadow: 0 0 0 3px rgba(26, 107, 60, 0.1);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 70px;
+    }
+
+    .btn {
+      padding: 11px 20px;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.15s;
+      letter-spacing: 0.3px;
+    }
+
+    .btn-primary {
+      background: var(--green-mid);
+      color: white;
+      width: 100%;
+      padding: 14px;
+      font-size: 14px;
+    }
+
+    .btn-primary:hover {
+      background: var(--green-dark);
+      transform: translateY(-1px);
+    }
+
+    .btn-green {
+      background: var(--green-mid);
+      color: white;
+    }
+
+    .btn-green:hover {
+      background: var(--green-dark);
+    }
+
+    .btn-accent {
+      background: var(--accent);
+      color: var(--green-dark);
+    }
+
+    .btn-accent:hover {
+      background: #e0b530;
+    }
+
+    .btn-danger {
+      background: var(--danger);
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #c53030;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--green-mid);
+      border: 1.5px solid var(--green-mid);
+    }
+
+    .btn-ghost:hover {
+      background: var(--green-pale);
+    }
+
+    .btn-sm {
+      padding: 7px 14px;
+      font-size: 12px;
+    }
+
+    /* LAYOUT */
+    #app {
+      display: none;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 220px;
+      background: var(--green-dark);
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      z-index: 100;
+    }
+
+    .sidebar-header {
+      padding: 24px 20px 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .sidebar-logo {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-weight: 800;
+      font-size: 18px;
+      color: white;
+    }
+
+    .sidebar-logo span {
+      color: var(--accent);
+    }
+
+    .sidebar-tag {
+      font-size: 10px;
+      color: rgba(255, 255, 255, 0.4);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-top: 3px;
+    }
+
+    .nav-section {
+      padding: 16px 12px 8px;
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      margin: 2px 8px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-weight: 600;
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.6);
+      transition: all 0.15s;
+      border: none;
+      background: transparent;
+      width: calc(100% - 16px);
+      text-align: left;
+    }
+
+    .nav-item:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: white;
+    }
+
+    .nav-item.active {
+      background: var(--green-mid);
+      color: white;
+    }
+
+    .nav-icon {
+      font-size: 16px;
+      width: 20px;
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      padding: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .server-badge {
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .server-badge .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #4ade80;
+      display: inline-block;
+      margin-right: 6px;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.4;
+      }
+    }
+
+    .main {
+      margin-left: 220px;
+      padding: 32px 36px;
+      min-height: 100vh;
+    }
+
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
     }
 
     .page-header {
-      flex-direction: column;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .page-title {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-weight: 800;
+      font-size: 28px;
+      color: var(--green-dark);
+    }
+
+    .page-subtitle {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    /* CARDS */
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      border: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+
+    .card-title {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--green-dark);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* STAT CARDS */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      border: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .stat-num {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-weight: 800;
+      font-size: 36px;
+      color: var(--green-mid);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-top: 6px;
+    }
+
+    /* TABLE */
+    .table-wrap {
+      overflow-x: auto;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th {
+      background: var(--green-pale);
+      padding: 10px 14px;
+      text-align: left;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--green-dark);
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 10px 14px;
+      border-top: 1px solid #f0fdf4;
+      vertical-align: middle;
+    }
+
+    tr:hover td {
+      background: #f9fffe;
+    }
+
+    /* FORM GRID */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .form-grid.cols-1 {
+      grid-template-columns: 1fr;
+    }
+
+    .form-grid.cols-3 {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    .span-2 {
+      grid-column: span 2;
+    }
+
+    /* EXCEL UPLOAD */
+    .drop-zone {
+      border: 2.5px dashed var(--green-light);
+      border-radius: 12px;
+      padding: 40px 24px;
+      text-align: center;
+      cursor: pointer;
+      background: var(--green-pale);
+      transition: all 0.2s;
+    }
+
+    .drop-zone:hover {
+      border-color: var(--green-dark);
+      background: #d4f0e2;
+    }
+
+    .drop-zone.dragover {
+      border-color: var(--green-dark);
+      background: #c0e8d2;
+    }
+
+    .drop-icon {
+      font-size: 40px;
+      margin-bottom: 10px;
+    }
+
+    .drop-text {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-weight: 700;
+      color: var(--green-dark);
+      font-size: 16px;
+    }
+
+    .drop-sub {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    /* BADGES */
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+
+    .badge-green {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .badge-yellow {
+      background: #fef9c3;
+      color: #854d0e;
+    }
+
+    .badge-red {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .badge-gray {
+      background: #f3f4f6;
+      color: #374151;
+    }
+
+    /* ALERT */
+    .alert {
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      margin-bottom: 16px;
+      display: flex;
       align-items: flex-start;
       gap: 10px;
     }
 
-    .page-header > .btn { align-self: flex-start; }
-
-    .search-bar { flex-direction: column; gap: 8px; }
-    .search-bar input { min-width: unset; width: 100%; }
-    .search-bar select { width: 100%; }
-
-    .card { padding: 16px; }
-
-    .template-hint { font-size: 12px; }
-
-    .code-block { font-size: 12px; padding: 14px 14px; }
-
-    /* Feedback kartlarındaki buton satırı mobilde yığılsın */
-    #feedback-list .card > div:first-child {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 6px;
+    .alert-success {
+      background: #d1fae5;
+      color: #065f46;
+      border: 1px solid #6ee7b7;
     }
 
-    #feedback-list .card > div:first-child > div:last-child {
-      flex-direction: row;
+    .alert-error {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fca5a5;
+    }
+
+    .alert-info {
+      background: #dbeafe;
+      color: #1e40af;
+      border: 1px solid #93c5fd;
+    }
+
+    /* PREVIEW TABLE */
+    #preview-area {
+      display: none;
+    }
+
+    .preview-table-wrap {
+      max-height: 320px;
+      overflow-y: auto;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      margin: 16px 0;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    /* MODAL */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal {
+      background: white;
+      border-radius: 16px;
+      padding: 32px;
+      width: 560px;
+      max-width: 95vw;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 32px 80px rgba(0, 0, 0, 0.2);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .modal-title {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--green-dark);
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: var(--muted);
+    }
+
+    /* TEMPLATE HINT */
+    .template-hint {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 12px;
+      color: #78350f;
+      margin-bottom: 16px;
+    }
+
+    .template-hint strong {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+
+    .col-pill {
+      display: inline-block;
+      background: var(--green-dark);
+      color: white;
+      border-radius: 4px;
+      padding: 1px 6px;
+      font-size: 11px;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      margin: 1px;
+    }
+
+    /* GIT PAGE */
+    .code-block {
+      background: var(--green-dark);
+      color: #a7f3d0;
+      border-radius: 10px;
+      padding: 20px 24px;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 13px;
+      line-height: 1.7;
+      margin: 12px 0;
+      position: relative;
+      white-space: pre;
+      overflow-x: auto;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-size: 11px;
+      padding: 4px 10px;
+      cursor: pointer;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+
+    .copy-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .step-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--green-mid);
+      color: white;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-weight: 700;
+      font-size: 13px;
+      margin-right: 10px;
+      flex-shrink: 0;
+    }
+
+    .step-row {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 20px;
+    }
+
+    .step-content {
+      flex: 1;
+    }
+
+    .step-title {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--green-dark);
+    }
+
+    .step-desc {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    #msg-area {
+      min-height: 20px;
+    }
+
+    .loading {
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 48px 24px;
+      color: var(--muted);
+    }
+
+    .empty-icon {
+      font-size: 40px;
+      margin-bottom: 12px;
+    }
+
+    .search-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+      align-items: center;
       flex-wrap: wrap;
     }
-  }
-</style>
+
+    .search-bar input {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    #logout-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: rgba(255, 255, 255, 0.6);
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 12px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 8px;
+    }
+
+    #logout-btn:hover {
+      background: rgba(255, 255, 255, 0.14);
+      color: white;
+    }
+
+    /* ============================================================
+     MOBİL UYUM
+  ============================================================ */
+
+    /* Hamburger butonu — sadece mobilde görünür */
+    #hamburger {
+      display: none;
+      position: fixed;
+      top: 12px;
+      left: 12px;
+      z-index: 300;
+      background: var(--green-dark);
+      border: none;
+      border-radius: 10px;
+      padding: 10px 13px;
+      cursor: pointer;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    #hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: white;
+      border-radius: 2px;
+      transition: all 0.25s;
+    }
+
+    /* Sidebar overlay kapama */
+    #sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      z-index: 150;
+    }
+
+    #sidebar-overlay.open {
+      display: block;
+    }
+
+    /* Mobil tablo: card görünümü */
+    @media (max-width: 480px) {
+      .mobile-card-table thead {
+        display: none;
+      }
+
+      .mobile-card-table tr {
+        display: block;
+        background: white;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        margin-bottom: 10px;
+        padding: 12px 14px;
+      }
+
+      .mobile-card-table tr:hover td {
+        background: transparent;
+      }
+
+      .mobile-card-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 8px;
+        border: none;
+        padding: 5px 0;
+        font-size: 13px;
+        border-bottom: 1px solid #f3f4f6;
+      }
+
+      .mobile-card-table td:last-child {
+        border-bottom: none;
+      }
+
+      .mobile-card-table td::before {
+        content: attr(data-label);
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        color: var(--muted);
+        flex-shrink: 0;
+        min-width: 80px;
+        padding-top: 2px;
+      }
+
+      .btn-row {
+        flex-wrap: wrap;
+      }
+
+      .btn-row .btn {
+        flex: 1;
+        text-align: center;
+        min-width: 80px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      #hamburger {
+        display: flex;
+      }
+
+      .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 200;
+        width: 260px;
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .main {
+        margin-left: 0;
+        padding: 72px 16px 24px;
+      }
+
+      .page-title {
+        font-size: 20px;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+
+      .stat-num {
+        font-size: 28px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-grid.cols-3 {
+        grid-template-columns: 1fr;
+      }
+
+      .span-2 {
+        grid-column: span 1;
+      }
+
+      .login-box {
+        width: 100%;
+        margin: 16px;
+        padding: 32px 24px;
+      }
+
+      .modal {
+        width: 100%;
+        max-width: 100%;
+        margin: 0 12px;
+        padding: 20px;
+        border-radius: 16px;
+      }
+
+      .modal-overlay {
+        align-items: flex-end;
+        padding: 0;
+      }
+
+      .modal-overlay.open .modal {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+        margin: 0;
+        max-height: 92vh;
+      }
+
+      .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      .page-header>.btn {
+        align-self: flex-start;
+      }
+
+      .search-bar {
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .search-bar input {
+        min-width: unset;
+        width: 100%;
+      }
+
+      .search-bar select {
+        width: 100%;
+      }
+
+      .card {
+        padding: 16px;
+      }
+
+      .template-hint {
+        font-size: 12px;
+      }
+
+      .code-block {
+        font-size: 12px;
+        padding: 14px 14px;
+      }
+
+      /* Feedback kartlarındaki buton satırı mobilde yığılsın */
+      #feedback-list .card>div:first-child {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+      }
+
+      #feedback-list .card>div:first-child>div:last-child {
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-<!-- LOGIN -->
-<div id="login-screen">
-  <div class="login-box">
-    <div class="login-logo">AOF<span>Notlar</span></div>
-    <div class="login-subtitle">Admin Paneli</div>
+  <!-- LOGIN -->
+  <div id="login-screen">
+    <div class="login-box">
+      <div class="login-logo">AOF<span>Notlar</span></div>
+      <div class="login-subtitle">Admin Paneli</div>
 
-    <div class="field-group">
-      <label class="field-label">Sunucu URL</label>
-      <input type="url" id="server-url" value="https://aofnotlar.com" placeholder="https://aofnotlar.com">
-    </div>
-    <div class="field-group">
-      <label class="field-label">Admin Şifresi</label>
-      <input type="password" id="admin-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
-    </div>
-    <div id="login-error" style="display:none" class="alert alert-error">❌ Hatalı şifre veya sunucuya ulaşılamıyor.</div>
-    <button class="btn btn-primary" onclick="doLogin()">Giriş Yap →</button>
-  </div>
-</div>
-
-<!-- Hamburger (mobil) -->
-<button id="hamburger" onclick="toggleSidebar()" aria-label="Menü">
-  <span></span><span></span><span></span>
-</button>
-<div id="sidebar-overlay" onclick="closeSidebar()"></div>
-
-<!-- APP -->
-<div id="app">
-  <!-- Sidebar -->
-  <div class="sidebar">
-    <div class="sidebar-header">
-      <div class="sidebar-logo">AOF<span>Notlar</span></div>
-      <div class="sidebar-tag">Admin Panel</div>
-    </div>
-
-    <div class="nav-section">Genel</div>
-    <button class="nav-item active" data-page="dashboard" onclick="navigate('dashboard', this); closeSidebar()">
-      <span class="nav-icon">📊</span> Dashboard
-    </button>
-    <button class="nav-item" data-page="categories" onclick="navigate('categories', this); closeSidebar()">
-      <span class="nav-icon">📚</span> Kategoriler
-    </button>
-
-    <div class="nav-section">Sorular</div>
-    <button class="nav-item" data-page="excel-upload" onclick="navigate('excel-upload', this); closeSidebar()">
-      <span class="nav-icon">📥</span> Excel Yükle
-    </button>
-    <button class="nav-item" data-page="add-question" onclick="navigate('add-question', this); closeSidebar()">
-      <span class="nav-icon">➕</span> Soru Ekle
-    </button>
-    <button class="nav-item" data-page="questions" onclick="navigate('questions', this); closeSidebar()">
-      <span class="nav-icon">❓</span> Soruları Gör
-    </button>
-
-    <div class="nav-section">Sistem</div>
-    <button class="nav-item" data-page="users" onclick="navigate('users', this); closeSidebar()">
-      <span class="nav-icon">👥</span> Kullanıcılar
-    </button>
-    <button class="nav-item" data-page="feedback" onclick="navigate('feedback', this); closeSidebar()">
-      <span class="nav-icon">💬</span> Geri Bildirimler
-    </button>
-    <button class="nav-item" data-page="git-setup" onclick="navigate('git-setup', this); closeSidebar()">
-      <span class="nav-icon">🔧</span> Git Kurulum
-    </button>
-
-    <div class="sidebar-footer">
-      <div class="server-badge">
-        <span class="dot"></span>
-        <span id="server-display">—</span>
+      <div class="field-group">
+        <label class="field-label">Sunucu URL</label>
+        <input type="url" id="server-url" value="https://aofnotlar.com" placeholder="https://aofnotlar.com">
       </div>
-      <button id="logout-btn" onclick="doLogout()">Çıkış Yap</button>
+      <div class="field-group">
+        <label class="field-label">Admin Şifresi</label>
+        <input type="password" id="admin-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <div id="login-error" style="display:none" class="alert alert-error">❌ Hatalı şifre veya sunucuya ulaşılamıyor.
+      </div>
+      <button class="btn btn-primary" onclick="doLogin()">Giriş Yap →</button>
     </div>
   </div>
 
-  <!-- Main -->
-  <div class="main">
+  <!-- Hamburger (mobil) -->
+  <button id="hamburger" onclick="toggleSidebar()" aria-label="Menü">
+    <span></span><span></span><span></span>
+  </button>
+  <div id="sidebar-overlay" onclick="closeSidebar()"></div>
 
-    <!-- DASHBOARD -->
-    <div class="page active" id="page-dashboard">
-      <div class="page-header">
-        <div>
-          <div class="page-title">📊 Dashboard</div>
-          <div class="page-subtitle">Genel bakış</div>
-        </div>
-        <button class="btn btn-ghost btn-sm" onclick="loadDashboard()">↻ Yenile</button>
+  <!-- APP -->
+  <div id="app">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">AOF<span>Notlar</span></div>
+        <div class="sidebar-tag">Admin Panel</div>
       </div>
 
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-num" id="stat-users">—</div>
-          <div class="stat-label">Kullanıcı</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-num" id="stat-questions">—</div>
-          <div class="stat-label">Soru</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-num" id="stat-categories">—</div>
-          <div class="stat-label">Kategori</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-num" id="stat-answers">—</div>
-          <div class="stat-label">Cevap</div>
-        </div>
-      </div>
+      <div class="nav-section">Genel</div>
+      <button class="nav-item active" data-page="dashboard" onclick="navigate('dashboard', this); closeSidebar()">
+        <span class="nav-icon">📊</span> Dashboard
+      </button>
+      <button class="nav-item" data-page="categories" onclick="navigate('categories', this); closeSidebar()">
+        <span class="nav-icon">📚</span> Kategoriler
+      </button>
 
-      <div class="card">
-        <div class="card-title">📅 Son 7 Günlük Cevaplar</div>
-        <div id="activity-list"><div class="empty-state"><div class="empty-icon">⏳</div>Yükleniyor...</div></div>
-      </div>
+      <div class="nav-section">Sorular</div>
+      <button class="nav-item" data-page="excel-upload" onclick="navigate('excel-upload', this); closeSidebar()">
+        <span class="nav-icon">📥</span> Excel Yükle
+      </button>
+      <button class="nav-item" data-page="add-question" onclick="navigate('add-question', this); closeSidebar()">
+        <span class="nav-icon">➕</span> Soru Ekle
+      </button>
+      <button class="nav-item" data-page="questions" onclick="navigate('questions', this); closeSidebar()">
+        <span class="nav-icon">❓</span> Soruları Gör
+      </button>
 
-      <div class="card">
-        <div class="card-title">📈 Kategoriye Göre Çözülen Soru Sayısı</div>
-        <div id="cat-stats"><div class="empty-state"><div class="empty-icon">⏳</div>Yükleniyor...</div></div>
-      </div>
-    </div>
+      <div class="nav-section">Sistem</div>
+      <button class="nav-item" data-page="users" onclick="navigate('users', this); closeSidebar()">
+        <span class="nav-icon">👥</span> Kullanıcılar
+      </button>
+      <button class="nav-item" data-page="feedback" onclick="navigate('feedback', this); closeSidebar()">
+        <span class="nav-icon">💬</span> Geri Bildirimler
+      </button>
+      <button class="nav-item" data-page="git-setup" onclick="navigate('git-setup', this); closeSidebar()">
+        <span class="nav-icon">🔧</span> Git Kurulum
+      </button>
 
-    <!-- KATEGORILER -->
-    <div class="page" id="page-categories">
-      <div class="page-header">
-        <div>
-          <div class="page-title">📚 Kategoriler</div>
-          <div class="page-subtitle">Ders kategorilerini yönet</div>
+      <div class="sidebar-footer">
+        <div class="server-badge">
+          <span class="dot"></span>
+          <span id="server-display">—</span>
         </div>
-        <button class="btn btn-green" onclick="openAddCatModal()">+ Yeni Kategori</button>
-      </div>
-
-      <div id="cat-msg-area"></div>
-
-      <div class="card" style="padding:0; overflow:hidden;">
-        <div class="table-wrap">
-          <table class="mobile-card-table">
-            <thead><tr>
-              <th>ID</th><th>Ad</th><th>Açıklama</th><th>Soru Sayısı</th><th>İşlem</th>
-            </tr></thead>
-            <tbody id="cat-table-body">
-              <tr><td colspan="5"><div class="empty-state"><div class="empty-icon">⏳</div>Yükleniyor...</div></td></tr>
-            </tbody>
-          </table>
-        </div>
+        <button id="logout-btn" onclick="doLogout()">Çıkış Yap</button>
       </div>
     </div>
 
-    <!-- EXCEL YÜKLE -->
-    <div class="page" id="page-excel-upload">
-      <div class="page-header">
-        <div>
-          <div class="page-title">📥 Excel'den Soru Yükle</div>
-          <div class="page-subtitle">Toplu soru aktarımı</div>
-        </div>
-      </div>
+    <!-- Main -->
+    <div class="main">
 
-      <div class="template-hint">
-        <strong>📋 Excel sütun sırası:</strong><br>
-        <span class="col-pill" style="background:#e5e7eb;color:#6b7280;">satir_no</span>
-        <span class="col-pill">yil</span>
-        <span class="col-pill" style="background:#e5e7eb;color:#6b7280;">soruNo</span>
-        <span class="col-pill">soru</span>
-        <span class="col-pill">a</span>
-        <span class="col-pill">b</span>
-        <span class="col-pill">c</span>
-        <span class="col-pill">d</span>
-        <span class="col-pill">e (opsiyonel)</span>
-        <span class="col-pill">dogru (a/b/c/d/e)</span>
-        <span class="col-pill">frekans (1,2,3...)</span>
-        <br><br>
-        <span style="color:#6b7280;font-size:11px;">⚪ Gri sütunlar (satir_no, soruNo) okunur ama kaydedilmez.</span><br>
-        İlk satır başlık olabilir, otomatik atlanır. E şıkkı boş kalabilir.
-        <br><button class="btn btn-accent btn-sm" style="margin-top:10px;" onclick="downloadTemplate()">⬇ Örnek Şablonu İndir</button>
-      </div>
-
-      <div class="card">
-        <div class="field-group">
-          <label class="field-label">Kategori Seç</label>
-          <select id="excel-cat-select">
-            <option value="">— Önce kategori seç —</option>
-          </select>
-        </div>
-
-        <div class="drop-zone" id="drop-zone" onclick="document.getElementById('file-input').click()"
-          ondragover="event.preventDefault(); this.classList.add('dragover')"
-          ondragleave="this.classList.remove('dragover')"
-          ondrop="handleDrop(event)">
-          <div class="drop-icon">📊</div>
-          <div class="drop-text">Excel dosyasını buraya sürükle veya tıkla</div>
-          <div class="drop-sub">.xlsx, .xls desteklenir</div>
-        </div>
-        <input type="file" id="file-input" accept=".xlsx,.xls" style="display:none" onchange="handleFileSelect(event)">
-      </div>
-
-      <div id="preview-area">
-        <div id="preview-msg"></div>
-        <div class="card" style="padding: 16px 0 0;">
-          <div style="padding: 0 16px 12px; display:flex; justify-content:space-between; align-items:center;">
-            <div class="card-title" style="margin:0">👁 Önizleme</div>
-            <span id="preview-count" class="badge badge-green"></span>
+      <!-- DASHBOARD -->
+      <div class="page active" id="page-dashboard">
+        <div class="page-header">
+          <div>
+            <div class="page-title">📊 Dashboard</div>
+            <div class="page-subtitle">Genel bakış</div>
           </div>
-          <div class="preview-table-wrap">
-            <table>
-              <thead><tr>
-                <th>#</th><th>Soru</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>Doğru</th><th>Frekans</th><th>Yıl</th>
-              </tr></thead>
-              <tbody id="preview-tbody"></tbody>
+          <button class="btn btn-ghost btn-sm" onclick="loadDashboard()">↻ Yenile</button>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-num" id="stat-users">—</div>
+            <div class="stat-label">Kullanıcı</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num" id="stat-questions">—</div>
+            <div class="stat-label">Soru</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num" id="stat-categories">—</div>
+            <div class="stat-label">Kategori</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num" id="stat-answers">—</div>
+            <div class="stat-label">Cevap</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">📅 Son 7 Günlük Cevaplar</div>
+          <div id="activity-list">
+            <div class="empty-state">
+              <div class="empty-icon">⏳</div>Yükleniyor...
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">📈 Kategoriye Göre Çözülen Soru Sayısı</div>
+          <div id="cat-stats">
+            <div class="empty-state">
+              <div class="empty-icon">⏳</div>Yükleniyor...
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- KATEGORILER -->
+      <div class="page" id="page-categories">
+        <div class="page-header">
+          <div>
+            <div class="page-title">📚 Kategoriler</div>
+            <div class="page-subtitle">Ders kategorilerini yönet</div>
+          </div>
+          <button class="btn btn-green" onclick="openAddCatModal()">+ Yeni Kategori</button>
+        </div>
+
+        <div id="cat-msg-area"></div>
+
+        <div class="card" style="padding:0; overflow:hidden;">
+          <div class="table-wrap">
+            <table class="mobile-card-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Ad</th>
+                  <th>Açıklama</th>
+                  <th>Soru Sayısı</th>
+                  <th>İşlem</th>
+                </tr>
+              </thead>
+              <tbody id="cat-table-body">
+                <tr>
+                  <td colspan="5">
+                    <div class="empty-state">
+                      <div class="empty-icon">⏳</div>Yükleniyor...
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
             </table>
           </div>
-          <div style="padding: 16px;" class="btn-row">
-            <button class="btn btn-green" onclick="uploadQuestions()">✅ Veritabanına Yükle</button>
-            <button class="btn btn-ghost" onclick="clearPreview()">✕ İptal</button>
-            <span id="upload-msg" style="font-size:13px;"></span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- SORU EKLE -->
-    <div class="page" id="page-add-question">
-      <div class="page-header">
-        <div>
-          <div class="page-title">➕ Soru Ekle</div>
-          <div class="page-subtitle">Tek tek soru girişi</div>
         </div>
       </div>
 
-      <div class="card">
-        <div id="aq-msg"></div>
-        <div class="field-group">
-          <label class="field-label">Kategori</label>
-          <select id="aq-category"></select>
+      <!-- EXCEL YÜKLE -->
+      <div class="page" id="page-excel-upload">
+        <div class="page-header">
+          <div>
+            <div class="page-title">📥 Excel'den Soru Yükle</div>
+            <div class="page-subtitle">Toplu soru aktarımı</div>
+          </div>
         </div>
-        <div class="field-group">
-          <label class="field-label">Soru Metni</label>
-          <textarea id="aq-question" rows="3" placeholder="Soruyu buraya yaz..."></textarea>
+
+        <div class="template-hint">
+          <strong>📋 Excel sütun sırası:</strong><br>
+          <span class="col-pill" style="background:#e5e7eb;color:#6b7280;">satir_no</span>
+          <span class="col-pill">yil</span>
+          <span class="col-pill" style="background:#e5e7eb;color:#6b7280;">soruNo</span>
+          <span class="col-pill">soru</span>
+          <span class="col-pill">a</span>
+          <span class="col-pill">b</span>
+          <span class="col-pill">c</span>
+          <span class="col-pill">d</span>
+          <span class="col-pill">e (opsiyonel)</span>
+          <span class="col-pill">dogru (a/b/c/d/e)</span>
+          <span class="col-pill">frekans (1,2,3...)</span>
+          <br><br>
+          <span style="color:#6b7280;font-size:11px;">⚪ Gri sütunlar (satir_no, soruNo) okunur ama
+            kaydedilmez.</span><br>
+          İlk satır başlık olabilir, otomatik atlanır. E şıkkı boş kalabilir.
+          <br><button class="btn btn-accent btn-sm" style="margin-top:10px;" onclick="downloadTemplate()">⬇ Örnek
+            Şablonu İndir</button>
         </div>
-        <div class="form-grid">
+
+        <div class="card">
           <div class="field-group">
-            <label class="field-label">A Şıkkı</label>
-            <input type="text" id="aq-a" placeholder="A şıkkı">
-          </div>
-          <div class="field-group">
-            <label class="field-label">B Şıkkı</label>
-            <input type="text" id="aq-b" placeholder="B şıkkı">
-          </div>
-          <div class="field-group">
-            <label class="field-label">C Şıkkı</label>
-            <input type="text" id="aq-c" placeholder="C şıkkı">
-          </div>
-          <div class="field-group">
-            <label class="field-label">D Şıkkı</label>
-            <input type="text" id="aq-d" placeholder="D şıkkı">
-          </div>
-          <div class="field-group">
-            <label class="field-label">E Şıkkı <span style="color:var(--muted);font-size:11px;">(opsiyonel)</span></label>
-            <input type="text" id="aq-e" placeholder="E şıkkı (boş bırakılabilir)">
-          </div>
-          <div class="field-group">
-            <label class="field-label">Doğru Cevap</label>
-            <select id="aq-correct">
-              <option value="a">A</option>
-              <option value="b">B</option>
-              <option value="c">C</option>
-              <option value="d">D</option>
-              <option value="e">E</option>
+            <label class="field-label">Kategori Seç</label>
+            <select id="excel-cat-select">
+              <option value="">— Önce kategori seç —</option>
             </select>
           </div>
-          <div class="field-group span-2">
-            <label class="field-label">İpucu <span style="color:var(--muted);font-size:11px;">(opsiyonel)</span></label>
-            <input type="text" id="aq-hint" placeholder="Kısa ipucu...">
+
+          <div class="drop-zone" id="drop-zone" onclick="document.getElementById('file-input').click()"
+            ondragover="event.preventDefault(); this.classList.add('dragover')"
+            ondragleave="this.classList.remove('dragover')" ondrop="handleDrop(event)">
+            <div class="drop-icon">📊</div>
+            <div class="drop-text">Excel dosyasını buraya sürükle veya tıkla</div>
+            <div class="drop-sub">.xlsx, .xls desteklenir</div>
           </div>
-          <div class="field-group">
-            <label class="field-label">Çıkış Yılı <span style="color:var(--muted);font-size:11px;">(opsiyonel)</span></label>
-            <input type="text" id="aq-year" placeholder="2023 veya 2023-2024">
-          </div>
-          <div class="field-group">
-            <label class="field-label">Kaç Kez Çıktı <span style="color:var(--muted);font-size:11px;">(varsayılan: 1)</span></label>
-            <input type="number" id="aq-frequency" placeholder="1" min="1" max="20" value="1">
+          <input type="file" id="file-input" accept=".xlsx,.xls" style="display:none"
+            onchange="handleFileSelect(event)">
+        </div>
+
+        <div id="preview-area">
+          <div id="preview-msg"></div>
+          <div class="card" style="padding: 16px 0 0;">
+            <div style="padding: 0 16px 12px; display:flex; justify-content:space-between; align-items:center;">
+              <div class="card-title" style="margin:0">👁 Önizleme</div>
+              <span id="preview-count" class="badge badge-green"></span>
+            </div>
+            <div class="preview-table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Soru</th>
+                    <th>A</th>
+                    <th>B</th>
+                    <th>C</th>
+                    <th>D</th>
+                    <th>E</th>
+                    <th>Doğru</th>
+                    <th>Frekans</th>
+                    <th>Yıl</th>
+                  </tr>
+                </thead>
+                <tbody id="preview-tbody"></tbody>
+              </table>
+            </div>
+            <div style="padding: 16px;" class="btn-row">
+              <button class="btn btn-green" onclick="uploadQuestions()">✅ Veritabanına Yükle</button>
+              <button class="btn btn-ghost" onclick="clearPreview()">✕ İptal</button>
+              <span id="upload-msg" style="font-size:13px;"></span>
+            </div>
           </div>
         </div>
-        <div class="btn-row">
-          <button class="btn btn-green" onclick="addQuestion()">✅ Soruyu Kaydet</button>
-          <button class="btn btn-ghost" onclick="clearAddForm()">↺ Temizle</button>
+      </div>
+
+      <!-- SORU EKLE -->
+      <div class="page" id="page-add-question">
+        <div class="page-header">
+          <div>
+            <div class="page-title">➕ Soru Ekle</div>
+            <div class="page-subtitle">Tek tek soru girişi</div>
+          </div>
         </div>
+
+        <div class="card">
+          <div id="aq-msg"></div>
+          <div class="field-group">
+            <label class="field-label">Kategori</label>
+            <select id="aq-category"></select>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Soru Metni</label>
+            <textarea id="aq-question" rows="3" placeholder="Soruyu buraya yaz..."></textarea>
+          </div>
+          <div class="form-grid">
+            <div class="field-group">
+              <label class="field-label">A Şıkkı</label>
+              <input type="text" id="aq-a" placeholder="A şıkkı">
+            </div>
+            <div class="field-group">
+              <label class="field-label">B Şıkkı</label>
+              <input type="text" id="aq-b" placeholder="B şıkkı">
+            </div>
+            <div class="field-group">
+              <label class="field-label">C Şıkkı</label>
+              <input type="text" id="aq-c" placeholder="C şıkkı">
+            </div>
+            <div class="field-group">
+              <label class="field-label">D Şıkkı</label>
+              <input type="text" id="aq-d" placeholder="D şıkkı">
+            </div>
+            <div class="field-group">
+              <label class="field-label">E Şıkkı <span
+                  style="color:var(--muted);font-size:11px;">(opsiyonel)</span></label>
+              <input type="text" id="aq-e" placeholder="E şıkkı (boş bırakılabilir)">
+            </div>
+            <div class="field-group">
+              <label class="field-label">Doğru Cevap</label>
+              <select id="aq-correct">
+                <option value="a">A</option>
+                <option value="b">B</option>
+                <option value="c">C</option>
+                <option value="d">D</option>
+                <option value="e">E</option>
+              </select>
+            </div>
+            <div class="field-group span-2">
+              <label class="field-label">İpucu <span
+                  style="color:var(--muted);font-size:11px;">(opsiyonel)</span></label>
+              <input type="text" id="aq-hint" placeholder="Kısa ipucu...">
+            </div>
+            <div class="field-group">
+              <label class="field-label">Çıkış Yılı <span
+                  style="color:var(--muted);font-size:11px;">(opsiyonel)</span></label>
+              <input type="text" id="aq-year" placeholder="2023 veya 2023-2024">
+            </div>
+            <div class="field-group">
+              <label class="field-label">Kaç Kez Çıktı <span style="color:var(--muted);font-size:11px;">(varsayılan:
+                  1)</span></label>
+              <input type="number" id="aq-frequency" placeholder="1" min="1" max="20" value="1">
+            </div>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-green" onclick="addQuestion()">✅ Soruyu Kaydet</button>
+            <button class="btn btn-ghost" onclick="clearAddForm()">↺ Temizle</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SORULAR -->
+      <div class="page" id="page-questions">
+        <div class="page-header">
+          <div>
+            <div class="page-title">❓ Sorular</div>
+            <div class="page-subtitle">Mevcut soruları görüntüle ve yönet</div>
+          </div>
+        </div>
+
+        <div class="card" style="padding: 16px 20px;">
+          <div class="search-bar">
+            <select id="q-filter-cat" onchange="loadQuestions()">
+              <option value="">— Tüm kategoriler —</option>
+            </select>
+            <input type="text" id="q-search" placeholder="Soru metni ara..." oninput="filterQuestions()"
+              style="flex:1; min-width:180px;">
+            <button class="btn btn-ghost btn-sm" onclick="loadQuestions()">↻ Yenile</button>
+          </div>
+        </div>
+
+        <div class="card" style="padding:0; overflow:hidden;">
+          <div class="table-wrap">
+            <table class="mobile-card-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Kategori</th>
+                  <th>Soru</th>
+                  <th>Doğru</th>
+                  <th>Şık Sayısı</th>
+                  <th>İşlem</th>
+                </tr>
+              </thead>
+              <tbody id="q-table-body">
+                <tr>
+                  <td colspan="6">
+                    <div class="empty-state">
+                      <div class="empty-icon">⏳</div>Yükleniyor...
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div id="q-footer" style="font-size:12px; color:var(--muted); padding: 8px 4px;"></div>
+      </div>
+
+      <!-- KULLANICILAR -->
+      <div class="page" id="page-users">
+        <div class="page-header">
+          <div>
+            <div class="page-title">👥 Kullanıcılar</div>
+            <div class="page-subtitle">Kayıtlı kullanıcılar ve istatistikler</div>
+          </div>
+          <button class="btn btn-ghost btn-sm" onclick="loadUsers()">↻ Yenile</button>
+        </div>
+
+        <div class="stats-grid" style="grid-template-columns: repeat(3,1fr)">
+          <div class="stat-card">
+            <div class="stat-num" id="u-total">—</div>
+            <div class="stat-label">Toplam Kullanıcı</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num" id="u-premium">—</div>
+            <div class="stat-label">Premium</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num" id="u-today">—</div>
+            <div class="stat-label">Bugün Aktif</div>
+          </div>
+        </div>
+
+        <div class="card" style="padding:0; overflow:hidden;">
+          <div class="table-wrap">
+            <table class="mobile-card-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Kullanıcı Adı</th>
+                  <th>Premium</th>
+                  <th>Bugün Kullanım</th>
+                  <th>Kayıt</th>
+                  <th>İşlem</th>
+                </tr>
+              </thead>
+              <tbody id="u-table-body">
+                <tr>
+                  <td colspan="5">
+                    <div class="empty-state">
+                      <div class="empty-icon">⏳</div>Yükleniyor...
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- GERİ BİLDİRİMLER -->
+      <div class="page" id="page-feedback">
+        <div class="page-header">
+          <div>
+            <div class="page-title">💬 Geri Bildirimler</div>
+            <div class="page-subtitle">Kullanıcıların gönderdiği mesajlar ve ders istekleri</div>
+          </div>
+          <button class="btn btn-ghost btn-sm" onclick="loadFeedback()">↻ Yenile</button>
+        </div>
+        <div id="feedback-list">
+          <div class="empty-state">
+            <div class="empty-icon">⏳</div>Yükleniyor...
+          </div>
+        </div>
+      </div>
+
+      <!-- GIT KURULUM -->
+      <div class="page" id="page-git-setup">
+        <div class="page-header">
+          <div>
+            <div class="page-title">🔧 Git Kurulum</div>
+            <div class="page-subtitle">Kod güncellemeyi kolaylaştır — scp'den kurtar</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">🎯 Hedef</div>
+          <p style="font-size:13px; color:var(--muted); line-height:1.7;">
+            Şu an her değişiklik için <code>scp</code> kullanıyorsun. Git kurulunca:<br>
+            Mac'te değişiklik yap → <code>git push</code> → sunucu otomatik güncellenir.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="card-title">1️⃣ Sunucuda Git Repo Kur</div>
+          <p style="font-size:12px; color:var(--muted); margin-bottom:8px;">SSH ile sunucuya bağlan ve şu komutları
+            çalıştır:</p>
+
+          <div class="step-row">
+            <span class="step-num">1</span>
+            <div class="step-content">
+              <div class="step-title">Git'i başlat</div>
+              <div class="step-desc">Proje dizinine git, repo oluştur</div>
+              <div class="code-block">cd /var/www/aofnotlar
+                git init
+                git add .
+                git commit -m "ilk commit"<button class="copy-btn" onclick="copyCode(this)">kopyala</button></div>
+            </div>
+          </div>
+
+          <div class="step-row">
+            <span class="step-num">2</span>
+            <div class="step-content">
+              <div class="step-title">GitHub'a bağla</div>
+              <div class="step-desc">GitHub'da yeni private repo aç (aofnotlar), sonra:</div>
+              <div class="code-block">git remote add origin https://github.com/KULLANICIADI/aofnotlar.git
+                git branch -M main
+                git push -u origin main<button class="copy-btn" onclick="copyCode(this)">kopyala</button></div>
+            </div>
+          </div>
+
+          <div class="step-row">
+            <span class="step-num">3</span>
+            <div class="step-content">
+              <div class="step-title">.gitignore oluştur</div>
+              <div class="step-desc">.env ve node_modules'ü dışarıda tut</div>
+              <div class="code-block">cat > /var/www/aofnotlar/.gitignore << 'EOF' node_modules/ frontend/node_modules/
+                  frontend/build/ .env *.log EOF<button class="copy-btn" onclick="copyCode(this)">kopyala</button></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">2️⃣ Mac'te Kur</div>
+
+          <div class="step-row">
+            <span class="step-num">4</span>
+            <div class="step-content">
+              <div class="step-title">Mac'e clone et</div>
+              <div class="step-desc">Mac terminalinde:</div>
+              <div class="code-block">cd ~/Projects # veya istediğin dizin
+                git clone https://github.com/KULLANICIADI/aofnotlar.git
+                cd aofnotlar<button class="copy-btn" onclick="copyCode(this)">kopyala</button></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">3️⃣ Otomatik Deploy Scripti (Sunucuda)</div>
+
+          <div class="step-row">
+            <span class="step-num">5</span>
+            <div class="step-content">
+              <div class="step-title">deploy.sh scripti oluştur</div>
+              <div class="step-desc">Sunucuda bu scripti çalıştırınca her şey güncellenir:</div>
+              <div class="code-block">cat > /var/www/aofnotlar/deploy.sh << 'EOF' #!/bin/bash
+                  echo "🔄 Deploy başlıyor..." cd /var/www/aofnotlar git pull origin main npm install --production cd
+                  frontend npm install npm run build cd .. pm2 restart aofnotlar echo "✅ Deploy tamamlandı!" EOF chmod
+                  +x /var/www/aofnotlar/deploy.sh<button class="copy-btn" onclick="copyCode(this)">kopyala</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">⚡ Günlük Kullanım</div>
+          <p style="font-size:12px; color:var(--muted); margin-bottom:8px;">Mac'te değişiklik yaptıktan sonra:</p>
+          <div class="code-block">## Mac'te:
+            git add .
+            git commit -m "değişiklik açıklaması"
+            git push
+
+            ## Sonra sunucuda (SSH ile):
+            cd /var/www/aofnotlar && ./deploy.sh<button class="copy-btn" onclick="copyCode(this)">kopyala</button></div>
+
+          <div class="alert alert-info" style="margin-top:12px;">
+            💡 <strong>İlerisi için:</strong> GitHub Actions ile push yapınca sunucu otomatik deploy olabilir. İstersen
+            o adımı da ekleriz.
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /main -->
+  </div><!-- /app -->
+
+  <!-- MODAL: Kategori Ekle/Düzenle -->
+  <div class="modal-overlay" id="cat-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title" id="cat-modal-title">Yeni Kategori</div>
+        <button class="modal-close" onclick="closeCatModal()">✕</button>
+      </div>
+      <div id="cat-modal-msg"></div>
+      <div class="field-group">
+        <label class="field-label">Kategori Adı</label>
+        <input type="text" id="cat-name" placeholder="örn: Finansal Yönetim 1">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Açıklama / Kod</label>
+        <input type="text" id="cat-desc" placeholder="örn: FIN101">
+      </div>
+      <input type="hidden" id="cat-edit-id">
+      <div class="btn-row" style="margin-top:4px;">
+        <button class="btn btn-green" onclick="saveCat()">Kaydet</button>
+        <button class="btn btn-ghost" onclick="closeCatModal()">İptal</button>
       </div>
     </div>
+  </div>
 
-    <!-- SORULAR -->
-    <div class="page" id="page-questions">
-      <div class="page-header">
-        <div>
-          <div class="page-title">❓ Sorular</div>
-          <div class="page-subtitle">Mevcut soruları görüntüle ve yönet</div>
-        </div>
+  <!-- MODAL: Soru Düzenle -->
+  <div class="modal-overlay" id="q-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">Soruyu Düzenle</div>
+        <button class="modal-close" onclick="closeQModal()">✕</button>
       </div>
-
-      <div class="card" style="padding: 16px 20px;">
-        <div class="search-bar">
-          <select id="q-filter-cat" onchange="loadQuestions()">
-            <option value="">— Tüm kategoriler —</option>
+      <div id="q-modal-msg"></div>
+      <div class="field-group">
+        <label class="field-label">Soru</label>
+        <textarea id="qm-question" rows="3"></textarea>
+      </div>
+      <div class="form-grid">
+        <div class="field-group">
+          <label class="field-label">A</label>
+          <input type="text" id="qm-a">
+        </div>
+        <div class="field-group">
+          <label class="field-label">B</label>
+          <input type="text" id="qm-b">
+        </div>
+        <div class="field-group">
+          <label class="field-label">C</label>
+          <input type="text" id="qm-c">
+        </div>
+        <div class="field-group">
+          <label class="field-label">D</label>
+          <input type="text" id="qm-d">
+        </div>
+        <div class="field-group">
+          <label class="field-label">E</label>
+          <input type="text" id="qm-e">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Doğru Cevap</label>
+          <select id="qm-correct">
+            <option value="a">A</option>
+            <option value="b">B</option>
+            <option value="c">C</option>
+            <option value="d">D</option>
+            <option value="e">E</option>
           </select>
-          <input type="text" id="q-search" placeholder="Soru metni ara..." oninput="filterQuestions()" style="flex:1; min-width:180px;">
-          <button class="btn btn-ghost btn-sm" onclick="loadQuestions()">↻ Yenile</button>
+        </div>
+        <div class="field-group span-2">
+          <label class="field-label">İpucu</label>
+          <input type="text" id="qm-hint">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Çıkış Yılı</label>
+          <input type="text" id="qm-year" placeholder="2023 veya 2023-2024">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Kaç Kez Çıktı</label>
+          <input type="number" id="qm-frequency" placeholder="1" min="1" max="20">
         </div>
       </div>
-
-      <div class="card" style="padding:0; overflow:hidden;">
-        <div class="table-wrap">
-          <table class="mobile-card-table">
-            <thead><tr>
-              <th>ID</th><th>Kategori</th><th>Soru</th><th>Doğru</th><th>Şık Sayısı</th><th>İşlem</th>
-            </tr></thead>
-            <tbody id="q-table-body">
-              <tr><td colspan="6"><div class="empty-state"><div class="empty-icon">⏳</div>Yükleniyor...</div></td></tr>
-            </tbody>
-          </table>
-        </div>
+      <input type="hidden" id="qm-id">
+      <input type="hidden" id="qm-category-id">
+      <div class="btn-row">
+        <button class="btn btn-green" onclick="saveQuestion()">Kaydet</button>
+        <button class="btn btn-ghost" onclick="closeQModal()">İptal</button>
       </div>
-      <div id="q-footer" style="font-size:12px; color:var(--muted); padding: 8px 4px;"></div>
-    </div>
-
-    <!-- KULLANICILAR -->
-    <div class="page" id="page-users">
-      <div class="page-header">
-        <div>
-          <div class="page-title">👥 Kullanıcılar</div>
-          <div class="page-subtitle">Kayıtlı kullanıcılar ve istatistikler</div>
-        </div>
-        <button class="btn btn-ghost btn-sm" onclick="loadUsers()">↻ Yenile</button>
-      </div>
-
-      <div class="stats-grid" style="grid-template-columns: repeat(3,1fr)">
-        <div class="stat-card">
-          <div class="stat-num" id="u-total">—</div>
-          <div class="stat-label">Toplam Kullanıcı</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-num" id="u-premium">—</div>
-          <div class="stat-label">Premium</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-num" id="u-today">—</div>
-          <div class="stat-label">Bugün Aktif</div>
-        </div>
-      </div>
-
-      <div class="card" style="padding:0; overflow:hidden;">
-        <div class="table-wrap">
-          <table class="mobile-card-table">
-            <thead><tr>
-              <th>ID</th><th>Kullanıcı Adı</th><th>Premium</th><th>Bugün Kullanım</th><th>Kayıt</th><th>İşlem</th>
-            </tr></thead>
-            <tbody id="u-table-body">
-              <tr><td colspan="5"><div class="empty-state"><div class="empty-icon">⏳</div>Yükleniyor...</div></td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- GERİ BİLDİRİMLER -->
-    <div class="page" id="page-feedback">
-      <div class="page-header">
-        <div>
-          <div class="page-title">💬 Geri Bildirimler</div>
-          <div class="page-subtitle">Kullanıcıların gönderdiği mesajlar ve ders istekleri</div>
-        </div>
-        <button class="btn btn-ghost btn-sm" onclick="loadFeedback()">↻ Yenile</button>
-      </div>
-      <div id="feedback-list">
-        <div class="empty-state"><div class="empty-icon">⏳</div>Yükleniyor...</div>
-      </div>
-    </div>
-
-    <!-- GIT KURULUM -->
-    <div class="page" id="page-git-setup">
-      <div class="page-header">
-        <div>
-          <div class="page-title">🔧 Git Kurulum</div>
-          <div class="page-subtitle">Kod güncellemeyi kolaylaştır — scp'den kurtar</div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-title">🎯 Hedef</div>
-        <p style="font-size:13px; color:var(--muted); line-height:1.7;">
-          Şu an her değişiklik için <code>scp</code> kullanıyorsun. Git kurulunca:<br>
-          Mac'te değişiklik yap → <code>git push</code> → sunucu otomatik güncellenir.
-        </p>
-      </div>
-
-      <div class="card">
-        <div class="card-title">1️⃣ Sunucuda Git Repo Kur</div>
-        <p style="font-size:12px; color:var(--muted); margin-bottom:8px;">SSH ile sunucuya bağlan ve şu komutları çalıştır:</p>
-
-        <div class="step-row">
-          <span class="step-num">1</span>
-          <div class="step-content">
-            <div class="step-title">Git'i başlat</div>
-            <div class="step-desc">Proje dizinine git, repo oluştur</div>
-            <div class="code-block">cd /var/www/aofnotlar
-git init
-git add .
-git commit -m "ilk commit"<button class="copy-btn" onclick="copyCode(this)">kopyala</button></div>
-          </div>
-        </div>
-
-        <div class="step-row">
-          <span class="step-num">2</span>
-          <div class="step-content">
-            <div class="step-title">GitHub'a bağla</div>
-            <div class="step-desc">GitHub'da yeni private repo aç (aofnotlar), sonra:</div>
-            <div class="code-block">git remote add origin https://github.com/KULLANICIADI/aofnotlar.git
-git branch -M main
-git push -u origin main<button class="copy-btn" onclick="copyCode(this)">kopyala</button></div>
-          </div>
-        </div>
-
-        <div class="step-row">
-          <span class="step-num">3</span>
-          <div class="step-content">
-            <div class="step-title">.gitignore oluştur</div>
-            <div class="step-desc">.env ve node_modules'ü dışarıda tut</div>
-            <div class="code-block">cat > /var/www/aofnotlar/.gitignore << 'EOF'
-node_modules/
-frontend/node_modules/
-frontend/build/
-.env
-*.log
-EOF<button class="copy-btn" onclick="copyCode(this)">kopyala</button></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-title">2️⃣ Mac'te Kur</div>
-
-        <div class="step-row">
-          <span class="step-num">4</span>
-          <div class="step-content">
-            <div class="step-title">Mac'e clone et</div>
-            <div class="step-desc">Mac terminalinde:</div>
-            <div class="code-block">cd ~/Projects  # veya istediğin dizin
-git clone https://github.com/KULLANICIADI/aofnotlar.git
-cd aofnotlar<button class="copy-btn" onclick="copyCode(this)">kopyala</button></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-title">3️⃣ Otomatik Deploy Scripti (Sunucuda)</div>
-
-        <div class="step-row">
-          <span class="step-num">5</span>
-          <div class="step-content">
-            <div class="step-title">deploy.sh scripti oluştur</div>
-            <div class="step-desc">Sunucuda bu scripti çalıştırınca her şey güncellenir:</div>
-            <div class="code-block">cat > /var/www/aofnotlar/deploy.sh << 'EOF'
-#!/bin/bash
-echo "🔄 Deploy başlıyor..."
-cd /var/www/aofnotlar
-git pull origin main
-npm install --production
-cd frontend
-npm install
-npm run build
-cd ..
-pm2 restart aofnotlar
-echo "✅ Deploy tamamlandı!"
-EOF
-chmod +x /var/www/aofnotlar/deploy.sh<button class="copy-btn" onclick="copyCode(this)">kopyala</button></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-title">⚡ Günlük Kullanım</div>
-        <p style="font-size:12px; color:var(--muted); margin-bottom:8px;">Mac'te değişiklik yaptıktan sonra:</p>
-        <div class="code-block">## Mac'te:
-git add .
-git commit -m "değişiklik açıklaması"
-git push
-
-## Sonra sunucuda (SSH ile):
-cd /var/www/aofnotlar && ./deploy.sh<button class="copy-btn" onclick="copyCode(this)">kopyala</button></div>
-
-        <div class="alert alert-info" style="margin-top:12px;">
-          💡 <strong>İlerisi için:</strong> GitHub Actions ile push yapınca sunucu otomatik deploy olabilir. İstersen o adımı da ekleriz.
-        </div>
-      </div>
-    </div>
-
-  </div><!-- /main -->
-</div><!-- /app -->
-
-<!-- MODAL: Kategori Ekle/Düzenle -->
-<div class="modal-overlay" id="cat-modal">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title" id="cat-modal-title">Yeni Kategori</div>
-      <button class="modal-close" onclick="closeCatModal()">✕</button>
-    </div>
-    <div id="cat-modal-msg"></div>
-    <div class="field-group">
-      <label class="field-label">Kategori Adı</label>
-      <input type="text" id="cat-name" placeholder="örn: Finansal Yönetim 1">
-    </div>
-    <div class="field-group">
-      <label class="field-label">Açıklama / Kod</label>
-      <input type="text" id="cat-desc" placeholder="örn: FIN101">
-    </div>
-    <input type="hidden" id="cat-edit-id">
-    <div class="btn-row" style="margin-top:4px;">
-      <button class="btn btn-green" onclick="saveCat()">Kaydet</button>
-      <button class="btn btn-ghost" onclick="closeCatModal()">İptal</button>
     </div>
   </div>
-</div>
 
-<!-- MODAL: Soru Düzenle -->
-<div class="modal-overlay" id="q-modal">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">Soruyu Düzenle</div>
-      <button class="modal-close" onclick="closeQModal()">✕</button>
-    </div>
-    <div id="q-modal-msg"></div>
-    <div class="field-group">
-      <label class="field-label">Soru</label>
-      <textarea id="qm-question" rows="3"></textarea>
-    </div>
-    <div class="form-grid">
-      <div class="field-group">
-        <label class="field-label">A</label>
-        <input type="text" id="qm-a">
-      </div>
-      <div class="field-group">
-        <label class="field-label">B</label>
-        <input type="text" id="qm-b">
-      </div>
-      <div class="field-group">
-        <label class="field-label">C</label>
-        <input type="text" id="qm-c">
-      </div>
-      <div class="field-group">
-        <label class="field-label">D</label>
-        <input type="text" id="qm-d">
-      </div>
-      <div class="field-group">
-        <label class="field-label">E</label>
-        <input type="text" id="qm-e">
-      </div>
-      <div class="field-group">
-        <label class="field-label">Doğru Cevap</label>
-        <select id="qm-correct">
-          <option value="a">A</option><option value="b">B</option>
-          <option value="c">C</option><option value="d">D</option>
-          <option value="e">E</option>
-        </select>
-      </div>
-      <div class="field-group span-2">
-        <label class="field-label">İpucu</label>
-        <input type="text" id="qm-hint">
-      </div>
-      <div class="field-group">
-        <label class="field-label">Çıkış Yılı</label>
-        <input type="text" id="qm-year" placeholder="2023 veya 2023-2024">
-      </div>
-      <div class="field-group">
-        <label class="field-label">Kaç Kez Çıktı</label>
-        <input type="number" id="qm-frequency" placeholder="1" min="1" max="20">
-      </div>
-    </div>
-    <input type="hidden" id="qm-id">
-    <input type="hidden" id="qm-category-id">
-    <div class="btn-row">
-      <button class="btn btn-green" onclick="saveQuestion()">Kaydet</button>
-      <button class="btn btn-ghost" onclick="closeQModal()">İptal</button>
-    </div>
-  </div>
-</div>
+  <script>
+    // ============================================================
+    // STATE
+    // ============================================================
+    let API = '';
+    let ADMIN_TOKEN = '';
+    let allCategories = [];
+    let allQuestions = [];
 
-<script>
-// ============================================================
-// STATE
-// ============================================================
-let API = '';
-let ADMIN_TOKEN = '';
-let allCategories = [];
-let allQuestions = [];
+    // ============================================================
+    // LOGIN
+    // ============================================================
+    async function doLogin() {
+      const url = document.getElementById('server-url').value.trim().replace(/\/$/, '');
+      const pass = document.getElementById('admin-pass').value;
+      const errEl = document.getElementById('login-error');
+      errEl.style.display = 'none';
 
-// ============================================================
-// LOGIN
-// ============================================================
-async function doLogin() {
-  const url = document.getElementById('server-url').value.trim().replace(/\/$/, '');
-  const pass = document.getElementById('admin-pass').value;
-  const errEl = document.getElementById('login-error');
-  errEl.style.display = 'none';
-
-  try {
-    const res = await fetch(`${url}/api/admin/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ password: pass })
-    });
-    if (!res.ok) throw new Error('auth failed');
-    const data = await res.json();
-    API = url;
-    ADMIN_TOKEN = data.token;
-    document.getElementById('server-display').textContent = url.replace('https://','');
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('app').style.display = 'block';
-    loadDashboard();
-    loadCategories();
-  } catch(e) {
-    errEl.style.display = 'flex';
-  }
-}
-
-async function setPremium(id, isPremium) {
-  const until = isPremium ? prompt('Premium bitiş tarihi (YYYY-MM-DD), boş bırakırsan 1 ay:') : null;
-  const premiumUntil = until || (isPremium ? new Date(Date.now() + 30*24*60*60*1000).toISOString().split('T')[0] : null);
-  try {
-    await apiFetch(`/api/admin/users/${id}/premium`, {
-      method: 'PUT',
-      body: JSON.stringify({ is_premium: isPremium, premium_until: premiumUntil })
-    });
-    showMsg('u-msg', isPremium ? '⭐ Premium aktifleştirildi!' : '🗑 Premium kaldırıldı', isPremium ? 'success' : 'success');
-    loadUsers();
-  } catch(e) {
-    alert('❌ ' + e.message);
-  }
-}
-
-async function loadFeedback() {
-  const container = document.getElementById('feedback-list');
-  container.innerHTML = '<div class="empty-state"><div class="empty-icon">⏳</div>Yükleniyor...</div>';
-  try {
-    const data = await apiFetch('/api/admin/feedback');
-    if (!data.length) {
-      container.innerHTML = '<div class="empty-state"><div class="empty-icon">💬</div>Henüz geri bildirim yok</div>';
-      return;
+      try {
+        const res = await fetch(`${url}/api/admin/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password: pass })
+        });
+        if (!res.ok) throw new Error('auth failed');
+        const data = await res.json();
+        API = url;
+        ADMIN_TOKEN = data.token;
+        document.getElementById('server-display').textContent = url.replace('https://', '');
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('app').style.display = 'block';
+        loadDashboard();
+        loadCategories();
+      } catch (e) {
+        errEl.style.display = 'flex';
+      }
     }
-    const unreadCount = data.filter(f => !f.is_read).length;
-    document.querySelector('#page-feedback .page-subtitle').textContent =
-      `Kullanıcıların gönderdiği mesajlar ve ders istekleri${unreadCount > 0 ? ` · ${unreadCount} okunmamış` : ''}`;
-    container.innerHTML = data.map(f => `
+
+    async function setPremium(id, isPremium) {
+      const until = isPremium ? prompt('Premium bitiş tarihi (YYYY-MM-DD), boş bırakırsan 1 ay:') : null;
+      const premiumUntil = until || (isPremium ? new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] : null);
+      try {
+        await apiFetch(`/api/admin/users/${id}/premium`, {
+          method: 'PUT',
+          body: JSON.stringify({ is_premium: isPremium, premium_until: premiumUntil })
+        });
+        showMsg('u-msg', isPremium ? '⭐ Premium aktifleştirildi!' : '🗑 Premium kaldırıldı', isPremium ? 'success' : 'success');
+        loadUsers();
+      } catch (e) {
+        alert('❌ ' + e.message);
+      }
+    }
+
+    async function loadFeedback() {
+      const container = document.getElementById('feedback-list');
+      container.innerHTML = '<div class="empty-state"><div class="empty-icon">⏳</div>Yükleniyor...</div>';
+      try {
+        const data = await apiFetch('/api/admin/feedback');
+        if (!data.length) {
+          container.innerHTML = '<div class="empty-state"><div class="empty-icon">💬</div>Henüz geri bildirim yok</div>';
+          return;
+        }
+        const unreadCount = data.filter(f => !f.is_read).length;
+        document.querySelector('#page-feedback .page-subtitle').textContent =
+          `Kullanıcıların gönderdiği mesajlar ve ders istekleri${unreadCount > 0 ? ` · ${unreadCount} okunmamış` : ''}`;
+        container.innerHTML = data.map(f => `
       <div class="card" style="margin-bottom:12px; padding:16px; border-left: 4px solid ${f.is_read ? 'var(--border)' : '#f59e0b'};">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
           <div style="display:flex; align-items:center; gap:8px;">
@@ -1403,7 +1700,7 @@ async function loadFeedback() {
           </div>
           <div style="display:flex; align-items:center; gap:8px;">
             <span style="font-size:12px; color:var(--muted);">${new Date(f.created_at).toLocaleString('tr')}</span>
-            <button class="btn btn-ghost btn-sm" onclick="replyFeedback(${f.id}, \`${(f.admin_reply||'').replace(/`/g,"'")}\`)">✉️ ${f.is_read ? 'Düzenle' : 'Yanıtla'}</button>
+            <button class="btn btn-ghost btn-sm" onclick="replyFeedback(${f.id}, \`${(f.admin_reply || '').replace(/`/g, "'")}\`)">✉️ ${f.is_read ? 'Düzenle' : 'Yanıtla'}</button>
           </div>
         </div>
         <div style="font-size:15px; color:var(--text); line-height:1.5; margin-bottom:${f.admin_reply ? '10px' : '0'}">${f.message}</div>
@@ -1415,125 +1712,125 @@ async function loadFeedback() {
         ` : ''}
       </div>
     `).join('');
-  } catch(e) {
-    container.innerHTML = `<div class="empty-state"><div class="empty-icon">❌</div>${e.message}</div>`;
-  }
-}
-
-async function replyFeedback(id, currentReply) {
-  const reply = prompt('Kullanıcıya gösterilecek yanıt (boş bırakabilirsin, sadece okundu işareti koyulur):', currentReply || '');
-  if (reply === null) return; // iptal
-  try {
-    await apiFetch(`/api/admin/feedback/${id}`, {
-      method: 'PUT',
-      body: JSON.stringify({ is_read: true, admin_reply: reply.trim() || null })
-    });
-    loadFeedback();
-  } catch(e) {
-    alert('❌ ' + e.message);
-  }
-}
-
-function doLogout() {
-  API = ''; ADMIN_TOKEN = '';
-  document.getElementById('login-screen').style.display = 'flex';
-  document.getElementById('app').style.display = 'none';
-  document.getElementById('admin-pass').value = '';
-}
-
-// ============================================================
-// NAVIGATION
-// ============================================================
-function navigate(page, el) {
-  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById('page-' + page).classList.add('active');
-
-  if (page === 'dashboard') loadDashboard();
-  if (page === 'categories') loadCategoryPage();
-  if (page === 'questions') loadQuestions();
-  if (page === 'users') loadUsers();
-  if (page === 'feedback') loadFeedback();
-  if (page === 'excel-upload' || page === 'add-question') populateCatSelects();
-}
-
-// ============================================================
-// API HELPER
-// ============================================================
-async function apiFetch(path, options = {}) {
-  const res = await fetch(API + path, {
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + ADMIN_TOKEN,
-      ...(options.headers || {})
+      } catch (e) {
+        container.innerHTML = `<div class="empty-state"><div class="empty-icon">❌</div>${e.message}</div>`;
+      }
     }
-  });
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err.error || `HTTP ${res.status}`);
-  }
-  return res.json();
-}
 
-// ============================================================
-// DASHBOARD
-// ============================================================
-async function loadDashboard() {
-  try {
-    const data = await apiFetch('/api/admin/stats');
-    document.getElementById('stat-users').textContent = data.users ?? '—';
-    document.getElementById('stat-questions').textContent = data.questions ?? '—';
-    document.getElementById('stat-categories').textContent = data.categories ?? '—';
-    document.getElementById('stat-answers').textContent = data.answers ?? '—';
+    async function replyFeedback(id, currentReply) {
+      const reply = prompt('Kullanıcıya gösterilecek yanıt (boş bırakabilirsin, sadece okundu işareti koyulur):', currentReply || '');
+      if (reply === null) return; // iptal
+      try {
+        await apiFetch(`/api/admin/feedback/${id}`, {
+          method: 'PUT',
+          body: JSON.stringify({ is_read: true, admin_reply: reply.trim() || null })
+        });
+        loadFeedback();
+      } catch (e) {
+        alert('❌ ' + e.message);
+      }
+    }
 
-    // Cat stats
-    const catEl = document.getElementById('cat-stats');
-    if (data.catStats && data.catStats.length) {
-      catEl.innerHTML = `<div class="table-wrap"><table>
+    function doLogout() {
+      API = ''; ADMIN_TOKEN = '';
+      document.getElementById('login-screen').style.display = 'flex';
+      document.getElementById('app').style.display = 'none';
+      document.getElementById('admin-pass').value = '';
+    }
+
+    // ============================================================
+    // NAVIGATION
+    // ============================================================
+    function navigate(page, el) {
+      document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      el.classList.add('active');
+      document.getElementById('page-' + page).classList.add('active');
+
+      if (page === 'dashboard') loadDashboard();
+      if (page === 'categories') loadCategoryPage();
+      if (page === 'questions') loadQuestions();
+      if (page === 'users') loadUsers();
+      if (page === 'feedback') loadFeedback();
+      if (page === 'excel-upload' || page === 'add-question') populateCatSelects();
+    }
+
+    // ============================================================
+    // API HELPER
+    // ============================================================
+    async function apiFetch(path, options = {}) {
+      const res = await fetch(API + path, {
+        ...options,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + ADMIN_TOKEN,
+          ...(options.headers || {})
+        }
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || `HTTP ${res.status}`);
+      }
+      return res.json();
+    }
+
+    // ============================================================
+    // DASHBOARD
+    // ============================================================
+    async function loadDashboard() {
+      try {
+        const data = await apiFetch('/api/admin/stats');
+        document.getElementById('stat-users').textContent = data.users ?? '—';
+        document.getElementById('stat-questions').textContent = data.questions ?? '—';
+        document.getElementById('stat-categories').textContent = data.categories ?? '—';
+        document.getElementById('stat-answers').textContent = data.answers ?? '—';
+
+        // Cat stats
+        const catEl = document.getElementById('cat-stats');
+        if (data.catStats && data.catStats.length) {
+          catEl.innerHTML = `<div class="table-wrap"><table>
         <thead><tr><th>Kategori</th><th>Çözülen Soru</th></tr></thead>
         <tbody>${data.catStats.map(c => `<tr><td>${c.name}</td><td><span class="badge badge-green">${c.count}</span></td></tr>`).join('')}</tbody>
       </table></div>`;
-    } else {
-      catEl.innerHTML = `<div class="empty-state"><div class="empty-icon">📭</div>Henüz veri yok</div>`;
-    }
+        } else {
+          catEl.innerHTML = `<div class="empty-state"><div class="empty-icon">📭</div>Henüz veri yok</div>`;
+        }
 
-    // Activity
-    const actEl = document.getElementById('activity-list');
-    if (data.recentActivity && data.recentActivity.length) {
-      actEl.innerHTML = `<div class="table-wrap"><table>
+        // Activity
+        const actEl = document.getElementById('activity-list');
+        if (data.recentActivity && data.recentActivity.length) {
+          actEl.innerHTML = `<div class="table-wrap"><table>
         <thead><tr><th>Tarih</th><th>Cevap Sayısı</th></tr></thead>
         <tbody>${data.recentActivity.map(r => `<tr><td>${r.date}</td><td>${r.count}</td></tr>`).join('')}</tbody>
       </table></div>`;
-    } else {
-      actEl.innerHTML = `<div class="empty-state"><div class="empty-icon">📭</div>Henüz aktivite yok</div>`;
+        } else {
+          actEl.innerHTML = `<div class="empty-state"><div class="empty-icon">📭</div>Henüz aktivite yok</div>`;
+        }
+      } catch (e) {
+        showMsg('dashboard-error', `❌ Yüklenemedi: ${e.message}`, 'error');
+      }
     }
-  } catch(e) {
-    showMsg('dashboard-error', `❌ Yüklenemedi: ${e.message}`, 'error');
-  }
-}
 
-// ============================================================
-// CATEGORIES
-// ============================================================
-async function loadCategories() {
-  try {
-    const data = await apiFetch('/api/categories');
-    allCategories = data;
-    populateCatSelects();
-    return data;
-  } catch(e) { console.error(e); }
-}
+    // ============================================================
+    // CATEGORIES
+    // ============================================================
+    async function loadCategories() {
+      try {
+        const data = await apiFetch('/api/categories');
+        allCategories = data;
+        populateCatSelects();
+        return data;
+      } catch (e) { console.error(e); }
+    }
 
-async function loadCategoryPage() {
-  const cats = await loadCategories();
-  const tbody = document.getElementById('cat-table-body');
-  if (!cats || !cats.length) {
-    tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="empty-icon">📭</div>Kategori yok</div></td></tr>`;
-    return;
-  }
-  tbody.innerHTML = cats.map(c => `
+    async function loadCategoryPage() {
+      const cats = await loadCategories();
+      const tbody = document.getElementById('cat-table-body');
+      if (!cats || !cats.length) {
+        tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="empty-icon">📭</div>Kategori yok</div></td></tr>`;
+        return;
+      }
+      tbody.innerHTML = cats.map(c => `
     <tr>
       <td data-label="ID">${c.id}</td>
       <td data-label="Ad"><strong>${c.name}</strong></td>
@@ -1541,144 +1838,144 @@ async function loadCategoryPage() {
       <td data-label="Soru Sayısı"><span class="badge badge-green">${c.question_count ?? '?'}</span></td>
       <td data-label="İşlem">
         <div class="btn-row">
-          <button class="btn btn-ghost btn-sm" onclick="editCat(${c.id}, '${esc(c.name)}', '${esc(c.description||'')}')">Düzenle</button>
+          <button class="btn btn-ghost btn-sm" onclick="editCat(${c.id}, '${esc(c.name)}', '${esc(c.description || '')}')">Düzenle</button>
           <button class="btn btn-danger btn-sm" onclick="deleteCat(${c.id}, '${esc(c.name)}')">Sil</button>
         </div>
       </td>
     </tr>
   `).join('');
-}
-
-function populateCatSelects() {
-  ['excel-cat-select', 'aq-category', 'q-filter-cat'].forEach(id => {
-    const el = document.getElementById(id);
-    if (!el) return;
-    const isFilter = id === 'q-filter-cat';
-    const current = el.value;
-    el.innerHTML = isFilter
-      ? `<option value="">— Tüm kategoriler —</option>`
-      : `<option value="">— Kategori seç —</option>`;
-    allCategories.forEach(c => {
-      const o = document.createElement('option');
-      o.value = c.id; o.textContent = c.name;
-      el.appendChild(o);
-    });
-    if (current) el.value = current;
-  });
-}
-
-function openAddCatModal() {
-  document.getElementById('cat-modal-title').textContent = 'Yeni Kategori';
-  document.getElementById('cat-name').value = '';
-  document.getElementById('cat-desc').value = '';
-  document.getElementById('cat-edit-id').value = '';
-  document.getElementById('cat-modal-msg').innerHTML = '';
-  document.getElementById('cat-modal').classList.add('open');
-}
-
-function editCat(id, name, desc) {
-  document.getElementById('cat-modal-title').textContent = 'Kategoriyi Düzenle';
-  document.getElementById('cat-name').value = name;
-  document.getElementById('cat-desc').value = desc;
-  document.getElementById('cat-edit-id').value = id;
-  document.getElementById('cat-modal-msg').innerHTML = '';
-  document.getElementById('cat-modal').classList.add('open');
-}
-
-function closeCatModal() { document.getElementById('cat-modal').classList.remove('open'); }
-
-async function saveCat() {
-  const id = document.getElementById('cat-edit-id').value;
-  const name = document.getElementById('cat-name').value.trim();
-  const desc = document.getElementById('cat-desc').value.trim();
-  if (!name) { document.getElementById('cat-modal-msg').innerHTML = `<div class="alert alert-error">❌ Kategori adı gerekli</div>`; return; }
-
-  try {
-    if (id) {
-      await apiFetch(`/api/admin/categories/${id}`, { method:'PUT', body: JSON.stringify({name, description:desc}) });
-    } else {
-      await apiFetch('/api/admin/categories', { method:'POST', body: JSON.stringify({name, description:desc}) });
     }
-    closeCatModal();
-    loadCategoryPage();
-    showMsg('cat-msg-area', '✅ Kategori kaydedildi', 'success');
-  } catch(e) {
-    document.getElementById('cat-modal-msg').innerHTML = `<div class="alert alert-error">❌ ${e.message}</div>`;
-  }
-}
 
-async function deleteCat(id, name) {
-  if (!confirm(`"${name}" kategorisini silmek istediğine emin misin?\nBu kategorideki tüm sorular da silinecek!`)) return;
-  try {
-    await apiFetch(`/api/admin/categories/${id}`, { method: 'DELETE' });
-    loadCategoryPage();
-    showMsg('cat-msg-area', '🗑 Kategori silindi', 'success');
-  } catch(e) {
-    showMsg('cat-msg-area', `❌ ${e.message}`, 'error');
-  }
-}
-
-// ============================================================
-// EXCEL UPLOAD
-// ============================================================
-let parsedRows = [];
-
-function handleDrop(e) {
-  e.preventDefault();
-  document.getElementById('drop-zone').classList.remove('dragover');
-  const file = e.dataTransfer.files[0];
-  if (file) parseExcel(file);
-}
-
-function handleFileSelect(e) {
-  const file = e.target.files[0];
-  if (file) parseExcel(file);
-}
-
-function parseExcel(file) {
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    try {
-      const wb = XLSX.read(e.target.result, { type: 'array' });
-      const ws = wb.Sheets[wb.SheetNames[0]];
-      const rows = XLSX.utils.sheet_to_json(ws, { header: 1 });
-
-      // Detect if first row is header (satir_no kolonu string ya da 'satir' içeriyorsa)
-      const firstRow = rows[0] || [];
-      const firstCell = String(firstRow[0] || '').toLowerCase().trim();
-      const isHeader = isNaN(firstRow[0]) && (firstCell.includes('satir') || firstCell.includes('soru') || firstCell.includes('no'));
-
-      const dataRows = isHeader ? rows.slice(1) : rows;
-      // Yeni format: satir_no(0) | yil(1) | soruNo(2) | soru(3) | a(4) | b(5) | c(6) | d(7) | e(8) | dogru(9) | frekans(10)
-      // satir_no ve soruNo yoksayılır
-      parsedRows = dataRows.filter(r => r && r[3]).map((r, i) => ({
-        question_text: String(r[3] || '').trim(),
-        option_a: String(r[4] || '').trim(),
-        option_b: String(r[5] || '').trim(),
-        option_c: String(r[6] || '').trim(),
-        option_d: String(r[7] || '').trim(),
-        option_e: String(r[8] || '').trim() || null,
-        correct_option: String(r[9] || 'a').trim().toLowerCase(),
-        frequency: parseInt(r[10]) || 1,
-        year: String(r[1] || '').trim() || null,
-      }));
-
-      showPreview(parsedRows);
-    } catch(err) {
-      document.getElementById('preview-msg').innerHTML = `<div class="alert alert-error">❌ Dosya okunamadı: ${err.message}</div>`;
-      document.getElementById('preview-area').style.display = 'block';
+    function populateCatSelects() {
+      ['excel-cat-select', 'aq-category', 'q-filter-cat'].forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const isFilter = id === 'q-filter-cat';
+        const current = el.value;
+        el.innerHTML = isFilter
+          ? `<option value="">— Tüm kategoriler —</option>`
+          : `<option value="">— Kategori seç —</option>`;
+        allCategories.forEach(c => {
+          const o = document.createElement('option');
+          o.value = c.id; o.textContent = c.name;
+          el.appendChild(o);
+        });
+        if (current) el.value = current;
+      });
     }
-  };
-  reader.readAsArrayBuffer(file);
-}
 
-function showPreview(rows) {
-  document.getElementById('preview-count').textContent = `${rows.length} soru`;
-  const tbody = document.getElementById('preview-tbody');
-  tbody.innerHTML = rows.map((r, i) => `
+    function openAddCatModal() {
+      document.getElementById('cat-modal-title').textContent = 'Yeni Kategori';
+      document.getElementById('cat-name').value = '';
+      document.getElementById('cat-desc').value = '';
+      document.getElementById('cat-edit-id').value = '';
+      document.getElementById('cat-modal-msg').innerHTML = '';
+      document.getElementById('cat-modal').classList.add('open');
+    }
+
+    function editCat(id, name, desc) {
+      document.getElementById('cat-modal-title').textContent = 'Kategoriyi Düzenle';
+      document.getElementById('cat-name').value = name;
+      document.getElementById('cat-desc').value = desc;
+      document.getElementById('cat-edit-id').value = id;
+      document.getElementById('cat-modal-msg').innerHTML = '';
+      document.getElementById('cat-modal').classList.add('open');
+    }
+
+    function closeCatModal() { document.getElementById('cat-modal').classList.remove('open'); }
+
+    async function saveCat() {
+      const id = document.getElementById('cat-edit-id').value;
+      const name = document.getElementById('cat-name').value.trim();
+      const desc = document.getElementById('cat-desc').value.trim();
+      if (!name) { document.getElementById('cat-modal-msg').innerHTML = `<div class="alert alert-error">❌ Kategori adı gerekli</div>`; return; }
+
+      try {
+        if (id) {
+          await apiFetch(`/api/admin/categories/${id}`, { method: 'PUT', body: JSON.stringify({ name, description: desc }) });
+        } else {
+          await apiFetch('/api/admin/categories', { method: 'POST', body: JSON.stringify({ name, description: desc }) });
+        }
+        closeCatModal();
+        loadCategoryPage();
+        showMsg('cat-msg-area', '✅ Kategori kaydedildi', 'success');
+      } catch (e) {
+        document.getElementById('cat-modal-msg').innerHTML = `<div class="alert alert-error">❌ ${e.message}</div>`;
+      }
+    }
+
+    async function deleteCat(id, name) {
+      if (!confirm(`"${name}" kategorisini silmek istediğine emin misin?\nBu kategorideki tüm sorular da silinecek!`)) return;
+      try {
+        await apiFetch(`/api/admin/categories/${id}`, { method: 'DELETE' });
+        loadCategoryPage();
+        showMsg('cat-msg-area', '🗑 Kategori silindi', 'success');
+      } catch (e) {
+        showMsg('cat-msg-area', `❌ ${e.message}`, 'error');
+      }
+    }
+
+    // ============================================================
+    // EXCEL UPLOAD
+    // ============================================================
+    let parsedRows = [];
+
+    function handleDrop(e) {
+      e.preventDefault();
+      document.getElementById('drop-zone').classList.remove('dragover');
+      const file = e.dataTransfer.files[0];
+      if (file) parseExcel(file);
+    }
+
+    function handleFileSelect(e) {
+      const file = e.target.files[0];
+      if (file) parseExcel(file);
+    }
+
+    function parseExcel(file) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        try {
+          const wb = XLSX.read(e.target.result, { type: 'array' });
+          const ws = wb.Sheets[wb.SheetNames[0]];
+          const rows = XLSX.utils.sheet_to_json(ws, { header: 1 });
+
+          // Detect if first row is header (satir_no kolonu string ya da 'satir' içeriyorsa)
+          const firstRow = rows[0] || [];
+          const firstCell = String(firstRow[0] || '').toLowerCase().trim();
+          const isHeader = isNaN(firstRow[0]) && (firstCell.includes('satir') || firstCell.includes('soru') || firstCell.includes('no'));
+
+          const dataRows = isHeader ? rows.slice(1) : rows;
+          // Yeni format: satir_no(0) | yil(1) | soruNo(2) | soru(3) | a(4) | b(5) | c(6) | d(7) | e(8) | dogru(9) | frekans(10)
+          // satir_no ve soruNo yoksayılır
+          parsedRows = dataRows.filter(r => r && r[3]).map((r, i) => ({
+            question_text: String(r[3] || '').trim(),
+            option_a: String(r[4] || '').trim(),
+            option_b: String(r[5] || '').trim(),
+            option_c: String(r[6] || '').trim(),
+            option_d: String(r[7] || '').trim(),
+            option_e: String(r[8] || '').trim() || null,
+            correct_option: String(r[9] || 'a').trim().toLowerCase(),
+            frequency: parseInt(r[10]) || 1,
+            year: String(r[1] || '').trim() || null,
+          }));
+
+          showPreview(parsedRows);
+        } catch (err) {
+          document.getElementById('preview-msg').innerHTML = `<div class="alert alert-error">❌ Dosya okunamadı: ${err.message}</div>`;
+          document.getElementById('preview-area').style.display = 'block';
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    }
+
+    function showPreview(rows) {
+      document.getElementById('preview-count').textContent = `${rows.length} soru`;
+      const tbody = document.getElementById('preview-tbody');
+      tbody.innerHTML = rows.map((r, i) => `
     <tr>
-      <td>${i+1}</td>
-      <td style="max-width:200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${esc(r.question_text)}">${esc(r.question_text.substring(0,60))}${r.question_text.length>60?'…':''}</td>
+      <td>${i + 1}</td>
+      <td style="max-width:200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${esc(r.question_text)}">${esc(r.question_text.substring(0, 60))}${r.question_text.length > 60 ? '…' : ''}</td>
       <td>${esc(r.option_a)}</td>
       <td>${esc(r.option_b)}</td>
       <td>${esc(r.option_c)}</td>
@@ -1689,132 +1986,132 @@ function showPreview(rows) {
       <td style="color:var(--muted); font-size:12px;">${r.year || '—'}</td>
     </tr>
   `).join('');
-  document.getElementById('preview-area').style.display = 'block';
-}
+      document.getElementById('preview-area').style.display = 'block';
+    }
 
-async function uploadQuestions() {
-  const catId = document.getElementById('excel-cat-select').value;
-  if (!catId) { alert('Lütfen kategori seçin!'); return; }
-  if (!parsedRows.length) { alert('Yüklenecek soru yok!'); return; }
+    async function uploadQuestions() {
+      const catId = document.getElementById('excel-cat-select').value;
+      if (!catId) { alert('Lütfen kategori seçin!'); return; }
+      if (!parsedRows.length) { alert('Yüklenecek soru yok!'); return; }
 
-  const msgEl = document.getElementById('upload-msg');
-  msgEl.textContent = '⏳ Yükleniyor...';
+      const msgEl = document.getElementById('upload-msg');
+      msgEl.textContent = '⏳ Yükleniyor...';
 
-  try {
-    const payload = parsedRows.map(r => ({ ...r, category_id: parseInt(catId) }));
-    const data = await apiFetch('/api/admin/questions/bulk', {
-      method: 'POST',
-      body: JSON.stringify({ questions: payload })
-    });
-    msgEl.innerHTML = `<span style="color:var(--green-mid)">✅ ${data.inserted} soru yüklendi!</span>`;
-    parsedRows = [];
-    setTimeout(clearPreview, 2000);
-  } catch(e) {
-    msgEl.innerHTML = `<span style="color:var(--danger)">❌ ${e.message}</span>`;
-  }
-}
+      try {
+        const payload = parsedRows.map(r => ({ ...r, category_id: parseInt(catId) }));
+        const data = await apiFetch('/api/admin/questions/bulk', {
+          method: 'POST',
+          body: JSON.stringify({ questions: payload })
+        });
+        msgEl.innerHTML = `<span style="color:var(--green-mid)">✅ ${data.inserted} soru yüklendi!</span>`;
+        parsedRows = [];
+        setTimeout(clearPreview, 2000);
+      } catch (e) {
+        msgEl.innerHTML = `<span style="color:var(--danger)">❌ ${e.message}</span>`;
+      }
+    }
 
-function clearPreview() {
-  document.getElementById('preview-area').style.display = 'none';
-  document.getElementById('preview-tbody').innerHTML = '';
-  document.getElementById('file-input').value = '';
-  parsedRows = [];
-}
+    function clearPreview() {
+      document.getElementById('preview-area').style.display = 'none';
+      document.getElementById('preview-tbody').innerHTML = '';
+      document.getElementById('file-input').value = '';
+      parsedRows = [];
+    }
 
-function downloadTemplate() {
-  // Yeni format: satir_no | yil | soruNo | soru | a | b | c | d | e | dogru | frekans
-  const ws_data = [
-    ['satir_no', 'yil', 'soruNo', 'soru', 'a', 'b', 'c', 'd', 'e', 'dogru', 'frekans'],
-    [1, '2023-2024', 1, 'Örnek soru metni?', 'Şık A', 'Şık B', 'Şık C', 'Şık D', '', 'a', 1],
-    [2, '2024-2025', 2, 'Başka bir soru?', 'Cevap 1', 'Cevap 2', 'Cevap 3', 'Cevap 4', 'Cevap 5', 'c', 2],
-  ];
-  const wb = XLSX.utils.book_new();
-  const ws = XLSX.utils.aoa_to_sheet(ws_data);
-  ws['!cols'] = [{wch:10},{wch:12},{wch:10},{wch:50},{wch:20},{wch:20},{wch:20},{wch:20},{wch:20},{wch:8},{wch:10}];
-  XLSX.utils.book_append_sheet(wb, ws, 'Sorular');
-  XLSX.writeFile(wb, 'aofnotlar_soru_sablonu.xlsx');
-}
+    function downloadTemplate() {
+      // Yeni format: satir_no | yil | soruNo | soru | a | b | c | d | e | dogru | frekans
+      const ws_data = [
+        ['satir_no', 'yil', 'soruNo', 'soru', 'a', 'b', 'c', 'd', 'e', 'dogru', 'frekans'],
+        [1, '2023-2024', 1, 'Örnek soru metni?', 'Şık A', 'Şık B', 'Şık C', 'Şık D', '', 'a', 1],
+        [2, '2024-2025', 2, 'Başka bir soru?', 'Cevap 1', 'Cevap 2', 'Cevap 3', 'Cevap 4', 'Cevap 5', 'c', 2],
+      ];
+      const wb = XLSX.utils.book_new();
+      const ws = XLSX.utils.aoa_to_sheet(ws_data);
+      ws['!cols'] = [{ wch: 10 }, { wch: 12 }, { wch: 10 }, { wch: 50 }, { wch: 20 }, { wch: 20 }, { wch: 20 }, { wch: 20 }, { wch: 20 }, { wch: 8 }, { wch: 10 }];
+      XLSX.utils.book_append_sheet(wb, ws, 'Sorular');
+      XLSX.writeFile(wb, 'aofnotlar_soru_sablonu.xlsx');
+    }
 
-// ============================================================
-// ADD QUESTION
-// ============================================================
-async function addQuestion() {
-  const catId = document.getElementById('aq-category').value;
-  const q = document.getElementById('aq-question').value.trim();
-  const a = document.getElementById('aq-a').value.trim();
-  const b = document.getElementById('aq-b').value.trim();
-  const c = document.getElementById('aq-c').value.trim();
-  const d = document.getElementById('aq-d').value.trim();
-  const e = document.getElementById('aq-e').value.trim();
-  const correct = document.getElementById('aq-correct').value;
-  const hint = document.getElementById('aq-hint').value.trim();
-  const year = document.getElementById('aq-year').value;
-  const frequency = document.getElementById('aq-frequency').value || 1;
+    // ============================================================
+    // ADD QUESTION
+    // ============================================================
+    async function addQuestion() {
+      const catId = document.getElementById('aq-category').value;
+      const q = document.getElementById('aq-question').value.trim();
+      const a = document.getElementById('aq-a').value.trim();
+      const b = document.getElementById('aq-b').value.trim();
+      const c = document.getElementById('aq-c').value.trim();
+      const d = document.getElementById('aq-d').value.trim();
+      const e = document.getElementById('aq-e').value.trim();
+      const correct = document.getElementById('aq-correct').value;
+      const hint = document.getElementById('aq-hint').value.trim();
+      const year = document.getElementById('aq-year').value;
+      const frequency = document.getElementById('aq-frequency').value || 1;
 
-  if (!catId || !q || !a || !b || !c || !d) {
-    showMsg('aq-msg', '❌ Kategori, soru ve A-D şıkları zorunludur', 'error');
-    return;
-  }
+      if (!catId || !q || !a || !b || !c || !d) {
+        showMsg('aq-msg', '❌ Kategori, soru ve A-D şıkları zorunludur', 'error');
+        return;
+      }
 
-  try {
-    await apiFetch('/api/admin/questions', {
-      method: 'POST',
-      body: JSON.stringify({
-        category_id: parseInt(catId),
-        question_text: q,
-        option_a: a, option_b: b, option_c: c, option_d: d,
-        option_e: e || null,
-        correct_option: correct,
-        hint: hint || null,
-        year: year.trim() || null,
-        frequency: parseInt(frequency)
-      })
-    });
-    showMsg('aq-msg', '✅ Soru eklendi!', 'success');
-    clearAddForm();
-  } catch(err) {
-    showMsg('aq-msg', `❌ ${err.message}`, 'error');
-  }
-}
+      try {
+        await apiFetch('/api/admin/questions', {
+          method: 'POST',
+          body: JSON.stringify({
+            category_id: parseInt(catId),
+            question_text: q,
+            option_a: a, option_b: b, option_c: c, option_d: d,
+            option_e: e || null,
+            correct_option: correct,
+            hint: hint || null,
+            year: year.trim() || null,
+            frequency: parseInt(frequency)
+          })
+        });
+        showMsg('aq-msg', '✅ Soru eklendi!', 'success');
+        clearAddForm();
+      } catch (err) {
+        showMsg('aq-msg', `❌ ${err.message}`, 'error');
+      }
+    }
 
-function clearAddForm() {
-  ['aq-question','aq-a','aq-b','aq-c','aq-d','aq-e','aq-hint','aq-year'].forEach(id => document.getElementById(id).value = '');
-  document.getElementById('aq-correct').value = 'a';
-  document.getElementById('aq-frequency').value = '1';
-}
+    function clearAddForm() {
+      ['aq-question', 'aq-a', 'aq-b', 'aq-c', 'aq-d', 'aq-e', 'aq-hint', 'aq-year'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('aq-correct').value = 'a';
+      document.getElementById('aq-frequency').value = '1';
+    }
 
-// ============================================================
-// QUESTIONS LIST
-// ============================================================
-async function loadQuestions() {
-  const catId = document.getElementById('q-filter-cat').value;
-  const url = catId ? `/api/admin/questions?category_id=${catId}` : '/api/admin/questions';
-  const tbody = document.getElementById('q-table-body');
-  tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><div class="empty-icon">⏳</div>Yükleniyor...</div></td></tr>`;
+    // ============================================================
+    // QUESTIONS LIST
+    // ============================================================
+    async function loadQuestions() {
+      const catId = document.getElementById('q-filter-cat').value;
+      const url = catId ? `/api/admin/questions?category_id=${catId}` : '/api/admin/questions';
+      const tbody = document.getElementById('q-table-body');
+      tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><div class="empty-icon">⏳</div>Yükleniyor...</div></td></tr>`;
 
-  try {
-    const data = await apiFetch(url);
-    allQuestions = data;
-    renderQuestions(data);
-  } catch(e) {
-    tbody.innerHTML = `<tr><td colspan="6"><div class="alert alert-error">❌ ${e.message}</div></td></tr>`;
-  }
-}
+      try {
+        const data = await apiFetch(url);
+        allQuestions = data;
+        renderQuestions(data);
+      } catch (e) {
+        tbody.innerHTML = `<tr><td colspan="6"><div class="alert alert-error">❌ ${e.message}</div></td></tr>`;
+      }
+    }
 
-function renderQuestions(rows) {
-  const tbody = document.getElementById('q-table-body');
-  document.getElementById('q-footer').textContent = `${rows.length} soru gösteriliyor`;
-  if (!rows.length) {
-    tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><div class="empty-icon">📭</div>Soru bulunamadı</div></td></tr>`;
-    return;
-  }
-  tbody.innerHTML = rows.map(q => {
-    const catName = allCategories.find(c => c.id === q.category_id)?.name || q.category_id;
-    const optCount = [q.option_a,q.option_b,q.option_c,q.option_d,q.option_e].filter(Boolean).length;
-    return `<tr>
+    function renderQuestions(rows) {
+      const tbody = document.getElementById('q-table-body');
+      document.getElementById('q-footer').textContent = `${rows.length} soru gösteriliyor`;
+      if (!rows.length) {
+        tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><div class="empty-icon">📭</div>Soru bulunamadı</div></td></tr>`;
+        return;
+      }
+      tbody.innerHTML = rows.map(q => {
+        const catName = allCategories.find(c => c.id === q.category_id)?.name || q.category_id;
+        const optCount = [q.option_a, q.option_b, q.option_c, q.option_d, q.option_e].filter(Boolean).length;
+        return `<tr>
       <td data-label="ID" style="color:var(--muted)">${q.id}</td>
       <td data-label="Kategori"><span class="badge badge-gray">${catName}</span></td>
-      <td data-label="Soru" style="max-width:300px;" title="${esc(q.question_text)}">${esc(q.question_text.substring(0,80))}${q.question_text.length>80?'…':''}</td>
+      <td data-label="Soru" style="max-width:300px;" title="${esc(q.question_text)}">${esc(q.question_text.substring(0, 80))}${q.question_text.length > 80 ? '…' : ''}</td>
       <td data-label="Doğru"><span class="badge badge-green">${q.correct_option?.toUpperCase()}</span></td>
       <td data-label="Şık Sayısı" style="text-align:center">${optCount}</td>
       <td data-label="İşlem">
@@ -1824,88 +2121,88 @@ function renderQuestions(rows) {
         </div>
       </td>
     </tr>`;
-  }).join('');
-}
+      }).join('');
+    }
 
-function filterQuestions() {
-  const q = document.getElementById('q-search').value.toLowerCase();
-  const filtered = q ? allQuestions.filter(r => r.question_text.toLowerCase().includes(q)) : allQuestions;
-  renderQuestions(filtered);
-}
+    function filterQuestions() {
+      const q = document.getElementById('q-search').value.toLowerCase();
+      const filtered = q ? allQuestions.filter(r => r.question_text.toLowerCase().includes(q)) : allQuestions;
+      renderQuestions(filtered);
+    }
 
-function openEditQ(id) {
-  const q = allQuestions.find(q => q.id === id);
-  if (!q) return;
-  document.getElementById('qm-id').value = q.id;
-  document.getElementById('qm-question').value = q.question_text;
-  document.getElementById('qm-a').value = q.option_a || '';
-  document.getElementById('qm-b').value = q.option_b || '';
-  document.getElementById('qm-c').value = q.option_c || '';
-  document.getElementById('qm-d').value = q.option_d || '';
-  document.getElementById('qm-e').value = q.option_e || '';
-  document.getElementById('qm-correct').value = q.correct_option || 'a';
-  document.getElementById('qm-hint').value = q.hint || '';
-  document.getElementById('qm-year').value = q.year || '';
-  document.getElementById('qm-category-id').value = q.category_id || '';
-  document.getElementById('qm-frequency').value = q.frequency || 1;
-  document.getElementById('q-modal-msg').innerHTML = '';
-  document.getElementById('q-modal').classList.add('open');
-}
+    function openEditQ(id) {
+      const q = allQuestions.find(q => q.id === id);
+      if (!q) return;
+      document.getElementById('qm-id').value = q.id;
+      document.getElementById('qm-question').value = q.question_text;
+      document.getElementById('qm-a').value = q.option_a || '';
+      document.getElementById('qm-b').value = q.option_b || '';
+      document.getElementById('qm-c').value = q.option_c || '';
+      document.getElementById('qm-d').value = q.option_d || '';
+      document.getElementById('qm-e').value = q.option_e || '';
+      document.getElementById('qm-correct').value = q.correct_option || 'a';
+      document.getElementById('qm-hint').value = q.hint || '';
+      document.getElementById('qm-year').value = q.year || '';
+      document.getElementById('qm-category-id').value = q.category_id || '';
+      document.getElementById('qm-frequency').value = q.frequency || 1;
+      document.getElementById('q-modal-msg').innerHTML = '';
+      document.getElementById('q-modal').classList.add('open');
+    }
 
-function closeQModal() { document.getElementById('q-modal').classList.remove('open'); }
+    function closeQModal() { document.getElementById('q-modal').classList.remove('open'); }
 
-async function saveQuestion() {
-  const id = document.getElementById('qm-id').value;
-  const catId = document.getElementById('qm-category-id').value;
-  const yearVal = document.getElementById('qm-year').value;
-  const freqVal = document.getElementById('qm-frequency').value;
-  const body = {
-    question_text: document.getElementById('qm-question').value.trim(),
-    option_a: document.getElementById('qm-a').value.trim(),
-    option_b: document.getElementById('qm-b').value.trim(),
-    option_c: document.getElementById('qm-c').value.trim(),
-    option_d: document.getElementById('qm-d').value.trim(),
-    option_e: document.getElementById('qm-e').value.trim() || null,
-    correct_option: document.getElementById('qm-correct').value,
-    hint: document.getElementById('qm-hint').value.trim() || null,
-    category_id: catId ? parseInt(catId) : null,
-    year: yearVal.trim() || null,
-    frequency: freqVal ? parseInt(freqVal) : 1,
-  };
-  try {
-    await apiFetch(`/api/admin/questions/${id}`, { method:'PUT', body: JSON.stringify(body) });
-    closeQModal();
-    loadQuestions();
-  } catch(e) {
-    document.getElementById('q-modal-msg').innerHTML = `<div class="alert alert-error">❌ ${e.message}</div>`;
-  }
-}
+    async function saveQuestion() {
+      const id = document.getElementById('qm-id').value;
+      const catId = document.getElementById('qm-category-id').value;
+      const yearVal = document.getElementById('qm-year').value;
+      const freqVal = document.getElementById('qm-frequency').value;
+      const body = {
+        question_text: document.getElementById('qm-question').value.trim(),
+        option_a: document.getElementById('qm-a').value.trim(),
+        option_b: document.getElementById('qm-b').value.trim(),
+        option_c: document.getElementById('qm-c').value.trim(),
+        option_d: document.getElementById('qm-d').value.trim(),
+        option_e: document.getElementById('qm-e').value.trim() || null,
+        correct_option: document.getElementById('qm-correct').value,
+        hint: document.getElementById('qm-hint').value.trim() || null,
+        category_id: catId ? parseInt(catId) : null,
+        year: yearVal.trim() || null,
+        frequency: freqVal ? parseInt(freqVal) : 1,
+      };
+      try {
+        await apiFetch(`/api/admin/questions/${id}`, { method: 'PUT', body: JSON.stringify(body) });
+        closeQModal();
+        loadQuestions();
+      } catch (e) {
+        document.getElementById('q-modal-msg').innerHTML = `<div class="alert alert-error">❌ ${e.message}</div>`;
+      }
+    }
 
-async function deleteQ(id) {
-  if (!confirm(`#${id} soruyu silmek istediğine emin misin?`)) return;
-  try {
-    await apiFetch(`/api/admin/questions/${id}`, { method:'DELETE' });
-    loadQuestions();
-  } catch(e) { alert('❌ ' + e.message); }
-}
+    async function deleteQ(id) {
+      if (!confirm(`#${id} soruyu silmek istediğine emin misin?`)) return;
+      try {
+        await apiFetch(`/api/admin/questions/${id}`, { method: 'DELETE' });
+        loadQuestions();
+      } catch (e) { alert('❌ ' + e.message); }
+    }
 
-// ============================================================
-// USERS
-// ============================================================
-async function loadUsers() {
-  const tbody = document.getElementById('u-table-body');
-  tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="empty-icon">⏳</div>Yükleniyor...</div></td></tr>`;
-  try {
-    const data = await apiFetch('/api/admin/users');
-    const total = data.length;
-    const premium = data.filter(u => u.is_premium).length;
-    const today = new Date().toISOString().split('T')[0];
-    const active = data.filter(u => u.last_reset_date === today).length;
-    document.getElementById('u-total').textContent = total;
-    document.getElementById('u-premium').textContent = premium;
-    document.getElementById('u-today').textContent = active;
+    // ============================================================
+    // USERS
+    // ============================================================
+    async function loadUsers() {
+      const tbody = document.getElementById('u-table-body');
+      tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="empty-icon">⏳</div>Yükleniyor...</div></td></tr>`;
+      try {
+        const data = await apiFetch('/api/admin/users');
+        const total = data.length;
+        const premium = data.filter(u => u.is_premium).length;
+        const today = new Date().toISOString().split('T')[0];
+        const active = data.filter(u => u.last_reset_date === today).length;
+        document.getElementById('u-total').textContent = total;
+        document.getElementById('u-premium').textContent = premium;
+        document.getElementById('u-today').textContent = active;
 
-    tbody.innerHTML = data.map(u => `<tr>
+        tbody.innerHTML = data.map(u => `<tr>
       <td data-label="ID" style="color:var(--muted)">${u.id}</td>
       <td data-label="Kullanıcı"><strong>${esc(u.username)}</strong></td>
       <td data-label="Premium">${u.is_premium ? '<span class="badge badge-yellow">⭐ Premium</span>' : '<span class="badge badge-gray">Ücretsiz</span>'}</td>
@@ -1913,54 +2210,55 @@ async function loadUsers() {
       <td data-label="Kayıt" style="color:var(--muted); font-size:12px;">${u.created_at ? new Date(u.created_at).toLocaleDateString('tr') : '—'}</td>
       <td data-label="İşlem">
         ${u.is_premium
-          ? `<button class="btn btn-danger btn-sm" onclick="setPremium(${u.id}, false)">Premium Kaldır</button>`
-          : `<button class="btn btn-accent btn-sm" onclick="setPremium(${u.id}, true)">⭐ Premium Yap</button>`
-        }
+            ? `<button class="btn btn-danger btn-sm" onclick="setPremium(${u.id}, false)">Premium Kaldır</button>`
+            : `<button class="btn btn-accent btn-sm" onclick="setPremium(${u.id}, true)">⭐ Premium Yap</button>`
+          }
       </td>
     </tr>`).join('');
-  } catch(e) {
-    tbody.innerHTML = `<tr><td colspan="5"><div class="alert alert-error">❌ ${e.message}</div></td></tr>`;
-  }
-}
+      } catch (e) {
+        tbody.innerHTML = `<tr><td colspan="5"><div class="alert alert-error">❌ ${e.message}</div></td></tr>`;
+      }
+    }
 
-// ============================================================
-// HELPERS
-// ============================================================
-function showMsg(elId, msg, type) {
-  const el = document.getElementById(elId);
-  if (!el) return;
-  el.innerHTML = `<div class="alert alert-${type}">${msg}</div>`;
-  setTimeout(() => { if(el) el.innerHTML = ''; }, 4000);
-}
+    // ============================================================
+    // HELPERS
+    // ============================================================
+    function showMsg(elId, msg, type) {
+      const el = document.getElementById(elId);
+      if (!el) return;
+      el.innerHTML = `<div class="alert alert-${type}">${msg}</div>`;
+      setTimeout(() => { if (el) el.innerHTML = ''; }, 4000);
+    }
 
-function esc(str) {
-  return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-}
+    function esc(str) {
+      return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
 
-function copyCode(btn) {
-  const code = btn.parentElement.textContent.replace('kopyala','').trim();
-  navigator.clipboard.writeText(code).then(() => {
-    btn.textContent = '✓ kopyalandı';
-    setTimeout(() => btn.textContent = 'kopyala', 2000);
-  });
-}
+    function copyCode(btn) {
+      const code = btn.parentElement.textContent.replace('kopyala', '').trim();
+      navigator.clipboard.writeText(code).then(() => {
+        btn.textContent = '✓ kopyalandı';
+        setTimeout(() => btn.textContent = 'kopyala', 2000);
+      });
+    }
 
-// ============================================================
-// MOBİL SİDEBAR
-// ============================================================
-function toggleSidebar() {
-  const sidebar = document.querySelector('.sidebar');
-  const overlay = document.getElementById('sidebar-overlay');
-  sidebar.classList.toggle('open');
-  overlay.classList.toggle('open');
-}
+    // ============================================================
+    // MOBİL SİDEBAR
+    // ============================================================
+    function toggleSidebar() {
+      const sidebar = document.querySelector('.sidebar');
+      const overlay = document.getElementById('sidebar-overlay');
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('open');
+    }
 
-function closeSidebar() {
-  const sidebar = document.querySelector('.sidebar');
-  const overlay = document.getElementById('sidebar-overlay');
-  sidebar.classList.remove('open');
-  overlay.classList.remove('open');
-}
-</script>
+    function closeSidebar() {
+      const sidebar = document.querySelector('.sidebar');
+      const overlay = document.getElementById('sidebar-overlay');
+      sidebar.classList.remove('open');
+      overlay.classList.remove('open');
+    }
+  </script>
 </body>
+
 </html>
