@@ -931,9 +931,9 @@ export default function App() {
                 ✅ Notların başarıyla e-postana gönderildi! Lütfen Spam (Gereksiz) kutunu da kontrol et.
               </div>
             )}
-            {pdfResult === 'error' && (
+            {pdfResult && pdfResult !== 'success' && (
               <div style={{ background: '#fee2e2', color: '#991b1b', padding: '12px', borderRadius: 12, fontSize: 13, fontWeight: 600, textAlign: 'center', marginBottom: 12 }}>
-                ❌ Gönderilirken bir hata oluştu. Bilgilerini kontrol edip tekrar dene.
+                ❌ {pdfResult}
               </div>
             )}
 
@@ -958,10 +958,11 @@ export default function App() {
                     setPdfEmail('');
                     setPdfKvkk(false);
                   } else {
-                    setPdfResult('error');
+                    const err = await res.json().catch(() => null);
+                    setPdfResult(err?.error || 'Bir hata oluştu.');
                   }
                 } catch (e) {
-                  setPdfResult('error');
+                  setPdfResult('Bir hata oluştu. Lütfen tekrar deneyin.');
                 }
                 setPdfSending(false);
               }}

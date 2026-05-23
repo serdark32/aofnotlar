@@ -539,9 +539,30 @@ app.delete('/api/admin/pdf-courses/:id', adminAuth, async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// Herkese açık: n8n webhook'a istek atar (CORS hatasını önlemek için proxy)
+// Rate limit: aynı e-posta günde 1 kez
+const pdfRateLimit = new Map(); // email -> timestamp
+
 app.post('/api/send-pdf', async (req, res) => {
   try {
+    const email = (req.body.email || '').trim().toLowerCase();
+    if (!email) return res.status(400).json({ error: 'E-posta gerekli' });
+
+    const now = Date.now();
+    const ONE_DAY = 24 * 60 * 60 * 1000; // 24 saat
+
+    // Eski kayıtları temizle
+    for (const [key, time] of pdfRateLimit) {
+      if (now - time > ONE_DAY) pdfRateLimit.delete(key);
+    }
+
+    // Bu e-posta daha önce istekte bulundu mu?
+    if (pdfRateLimit.has(email)) {
+      const kalan = Math.ceil((ONE_DAY - (now - pdfRateLimit.get(email))) / (60 * 60 * 1000));
+      return res.status(429).json({ error: `Bu e-posta ile günde 1 kez talep yapabilirsiniz. ~${kalan} saat sonra tekrar deneyin.` });
+    }
+
+    pdfRateLimit.set(email, now);
+
     const https = require('https');
     const data = JSON.stringify(req.body);
     
