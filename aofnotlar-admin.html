@@ -2252,7 +2252,7 @@
       const tbody = document.getElementById('pdf-table-body');
       tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="empty-icon">⏳</div>Yükleniyor...</div></td></tr>`;
       try {
-        const data = await apiFetch('/api/admin/pdf-courses');
+        const data = await apiFetch('/api/pdf-courses');
         if (!data.length) {
           tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="empty-icon">📭</div>Henüz ders eklenmedi</div></td></tr>`;
           return;
