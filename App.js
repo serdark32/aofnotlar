@@ -522,7 +522,7 @@ export default function App() {
             } catch (e) { alert('Dersler yüklenemedi'); }
           }}
         >
-          <span>📄 Özet Not İndir</span>
+          <span>📄 Ders Kitabı İndir</span>
           <span style={{ color: 'rgba(255,255,255,0.6)', fontSize: 18 }}>›</span>
         </button>
 
@@ -879,8 +879,7 @@ export default function App() {
             <div style={{ fontSize: 40, textAlign: 'center', marginBottom: 10 }}>📚</div>
             <div style={s.cardTitle}>Derslerini Seç</div>
             <div style={{ fontSize: 13, color: '#6b7280', marginBottom: 16 }}>
-              İstediğin derslerin detaylı PDF özetlerini e-posta adresine otomatik olarak göndereceğiz.
-              <br /><strong style={{ color: '#ef4444' }}>(En fazla 5 ders seçebilirsin)</strong>
+              Seçtiğin dersleri size e-posta olarak göndereceğiz. En fazla 3 ders seçebilirsin.
             </div>
 
             {pdfCourses.length === 0 ? (
@@ -895,7 +894,7 @@ export default function App() {
                       checked={pdfSelected.some(p => p.id === c.id)}
                       onChange={(e) => {
                         if (e.target.checked) {
-                          if (pdfSelected.length >= 5) return alert('En fazla 5 ders seçebilirsiniz!');
+                          if (pdfSelected.length >= 3) return alert('En fazla 3 ders seçebilirsiniz!');
                           setPdfSelected([...pdfSelected, c]);
                         } else {
                           setPdfSelected(pdfSelected.filter(p => p.id !== c.id));
@@ -913,7 +912,7 @@ export default function App() {
               <label style={{ fontSize: 12, fontWeight: 700, color: '#6b7280', display: 'block', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>E-posta Adresin</label>
               <input
                 type="email"
-                placeholder="Örn: ahmet@gmail.com"
+                placeholder=""
                 value={pdfEmail}
                 onChange={e => { setPdfEmail(e.target.value); setPdfResult(null); }}
                 style={{ width: '100%', padding: '14px 16px', borderRadius: 12, border: '1.5px solid #d1d5db', fontSize: 15, outline: 'none', boxSizing: 'border-box' }}
