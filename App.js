@@ -862,6 +862,7 @@ export default function App() {
           </div>
         )}
       </div>
+    );
   }
 
   if (screen === 'pdf-download') {
