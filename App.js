@@ -948,7 +948,7 @@ export default function App() {
                     email: pdfEmail.trim(),
                     dersler: pdfSelected.map(c => ({ ad: c.name, link: c.drive_link }))
                   };
-                  const res = await fetch(N8N_WEBHOOK, {
+                  const res = await fetch(API + '/api/send-pdf', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)

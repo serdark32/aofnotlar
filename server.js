@@ -539,6 +539,38 @@ app.delete('/api/admin/pdf-courses/:id', adminAuth, async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// Herkese açık: n8n webhook'a istek atar (CORS hatasını önlemek için proxy)
+app.post('/api/send-pdf', async (req, res) => {
+  try {
+    const https = require('https');
+    const data = JSON.stringify(req.body);
+    
+    const options = {
+      hostname: 'novantera.com',
+      port: 443,
+      path: '/webhook/aof-pdf-iste',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(data)
+      }
+    };
+    
+    const request = https.request(options, (response) => {
+      res.json({ success: true });
+    });
+    
+    request.on('error', (error) => {
+      res.status(500).json({ error: error.message });
+    });
+    
+    request.write(data);
+    request.end();
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
 app.listen(process.env.PORT, () => {
   console.log('Server running on port ' + process.env.PORT);
 });
