@@ -83,6 +83,15 @@ export default function App() {
   const [vizeInput, setVizeInput] = useState('');
   const [passResult, setPassResult] = useState(null);
 
+  // PDF Not İndir
+  const [pdfCourses, setPdfCourses] = useState([]);
+  const [pdfSelected, setPdfSelected] = useState([]);
+  const [pdfEmail, setPdfEmail] = useState('');
+  const [pdfKvkk, setPdfKvkk] = useState(false);
+  const [pdfSending, setPdfSending] = useState(false);
+  const [pdfResult, setPdfResult] = useState(null); // 'success' | 'error' | null
+  const N8N_WEBHOOK = 'BURAYA_N8N_PRODUCTION_URL_GELECEK';
+
   const loadMyFeedbacks = async () => {
     try {
       const res = await fetch(API + '/api/feedback/mine', {
@@ -497,6 +506,26 @@ export default function App() {
           }
         </div>
 
+        {/* PDF Not İndir Butonu */}
+        <button
+          style={{ width: '100%', background: 'rgba(255,255,255,0.12)', border: '1.5px solid rgba(255,255,255,0.3)', borderRadius: 14, padding: '14px 18px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', color: '#fff', fontWeight: 700, fontSize: 15, marginBottom: 16 }}
+          onClick={async () => {
+            try {
+              const res = await fetch(API + '/api/pdf-courses');
+              const data = await res.json();
+              setPdfCourses(data);
+              setPdfSelected([]);
+              setPdfEmail('');
+              setPdfKvkk(false);
+              setPdfResult(null);
+              setScreen('pdf-download');
+            } catch (e) { alert('Dersler yüklenemedi'); }
+          }}
+        >
+          <span>📄 Özet Not İndir</span>
+          <span style={{ color: 'rgba(255,255,255,0.6)', fontSize: 18 }}>›</span>
+        </button>
+
         <div style={s.cardTitle2} id="pratik-yap">Pratik Yap</div>
 
         <div style={s.examTabRow}>
@@ -833,11 +862,123 @@ export default function App() {
           </div>
         )}
       </div>
+  }
+
+  if (screen === 'pdf-download') {
+    return (
+      <div style={s.bg}>
+        <div style={s.container}>
+          <div style={s.header}>
+            <button style={s.backBtn} onClick={() => setScreen('home')}>← Geri</button>
+            <div style={s.greeting}>Özet Notlar</div>
+            <div style={{ width: 60 }}></div>
+          </div>
+
+          <div style={s.card}>
+            <div style={{ fontSize: 40, textAlign: 'center', marginBottom: 10 }}>📚</div>
+            <div style={s.cardTitle}>Derslerini Seç</div>
+            <div style={{ fontSize: 13, color: '#6b7280', marginBottom: 16 }}>
+              İstediğin derslerin detaylı PDF özetlerini e-posta adresine otomatik olarak göndereceğiz.
+              <br /><strong style={{ color: '#ef4444' }}>(En fazla 5 ders seçebilirsin)</strong>
+            </div>
+
+            {pdfCourses.length === 0 ? (
+              <div style={s.empty}>Henüz ders notu eklenmemiş.</div>
+            ) : (
+              <div style={{ maxHeight: 300, overflowY: 'auto', marginBottom: 16 }}>
+                {pdfCourses.map(c => (
+                  <label key={c.id} style={{ display: 'flex', alignItems: 'center', padding: '12px 14px', border: '1.5px solid #e5e7eb', borderRadius: 12, marginBottom: 8, cursor: 'pointer', background: pdfSelected.some(p => p.id === c.id) ? '#f0faf4' : '#fff' }}>
+                    <input
+                      type="checkbox"
+                      style={{ width: 18, height: 18, marginRight: 12, accentColor: GREEN }}
+                      checked={pdfSelected.some(p => p.id === c.id)}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          if (pdfSelected.length >= 5) return alert('En fazla 5 ders seçebilirsiniz!');
+                          setPdfSelected([...pdfSelected, c]);
+                        } else {
+                          setPdfSelected(pdfSelected.filter(p => p.id !== c.id));
+                        }
+                        setPdfResult(null);
+                      }}
+                    />
+                    <span style={{ fontSize: 14, fontWeight: 600, color: '#1f2937' }}>{c.name}</span>
+                  </label>
+                ))}
+              </div>
+            )}
+
+            <div style={{ marginBottom: 16 }}>
+              <label style={{ fontSize: 12, fontWeight: 700, color: '#6b7280', display: 'block', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>E-posta Adresin</label>
+              <input
+                type="email"
+                placeholder="Örn: ahmet@gmail.com"
+                value={pdfEmail}
+                onChange={e => { setPdfEmail(e.target.value); setPdfResult(null); }}
+                style={{ width: '100%', padding: '14px 16px', borderRadius: 12, border: '1.5px solid #d1d5db', fontSize: 15, outline: 'none', boxSizing: 'border-box' }}
+              />
+            </div>
+
+            <label style={{ display: 'flex', alignItems: 'flex-start', marginBottom: 20, cursor: 'pointer' }}>
+              <input type="checkbox" checked={pdfKvkk} onChange={e => { setPdfKvkk(e.target.checked); setPdfResult(null); }} style={{ width: 16, height: 16, marginRight: 10, marginTop: 2 }} />
+              <span style={{ fontSize: 12, color: '#6b7280', lineHeight: 1.4 }}>
+                E-posta adresimin kampanya ve duyurular (YouTube vs.) için kaydedilmesini ve bana e-posta gönderilmesini onaylıyorum.
+              </span>
+            </label>
+
+            {pdfResult === 'success' && (
+              <div style={{ background: '#d1fae5', color: '#065f46', padding: '12px', borderRadius: 12, fontSize: 14, fontWeight: 700, textAlign: 'center', marginBottom: 12 }}>
+                ✅ Notların başarıyla e-postana gönderildi! Lütfen Spam (Gereksiz) kutunu da kontrol et.
+              </div>
+            )}
+            {pdfResult === 'error' && (
+              <div style={{ background: '#fee2e2', color: '#991b1b', padding: '12px', borderRadius: 12, fontSize: 13, fontWeight: 600, textAlign: 'center', marginBottom: 12 }}>
+                ❌ Gönderilirken bir hata oluştu. Bilgilerini kontrol edip tekrar dene.
+              </div>
+            )}
+
+            <button
+              style={{ ...s.btn, background: (pdfSending || pdfSelected.length === 0 || !pdfEmail || !pdfKvkk) ? '#e5e7eb' : GREEN, color: (pdfSending || pdfSelected.length === 0 || !pdfEmail || !pdfKvkk) ? '#9ca3af' : '#fff', cursor: (pdfSending || pdfSelected.length === 0 || !pdfEmail || !pdfKvkk) ? 'not-allowed' : 'pointer', fontSize: 16, padding: '16px' }}
+              disabled={pdfSending || pdfSelected.length === 0 || !pdfEmail || !pdfKvkk}
+              onClick={async () => {
+                setPdfSending(true);
+                try {
+                  const payload = {
+                    email: pdfEmail.trim(),
+                    dersler: pdfSelected.map(c => ({ ad: c.name, link: c.drive_link }))
+                  };
+                  const res = await fetch(N8N_WEBHOOK, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                  });
+                  if (res.ok) {
+                    setPdfResult('success');
+                    setPdfSelected([]);
+                    setPdfEmail('');
+                    setPdfKvkk(false);
+                  } else {
+                    setPdfResult('error');
+                  }
+                } catch (e) {
+                  setPdfResult('error');
+                }
+                setPdfSending(false);
+              }}
+            >
+              {pdfSending ? 'Gönderiliyor ⏳' : 'Notları Mailime Gönder 🚀'}
+            </button>
+          </div>
+        </div>
+      </div>
     );
   }
 
   return null;
 }
+
+// ── PDF Not İndir ekranı ayrı component olarak eklendi (App içinde)
+// Yukarıda App fonksiyonu içine zaten eklendi (screen === 'pdf-download' bloğu)
 
 const GREEN = '#1a6b3c';
 const GREEN_DARK = '#0f3d22';

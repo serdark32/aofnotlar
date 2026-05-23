@@ -27,7 +27,7 @@ function authMiddleware(req, res, next) {
     const decoded = jwt.verify(auth.split(' ')[1], process.env.JWT_SECRET);
     req.user = decoded;
     next();
-  } catch(e) {
+  } catch (e) {
     return res.status(401).json({ error: 'Token geçersiz' });
   }
 }
@@ -39,7 +39,7 @@ function adminAuth(req, res, next) {
     const decoded = jwt.verify(auth.split(' ')[1], process.env.JWT_SECRET);
     if (decoded.role !== 'admin') return res.status(403).json({ error: 'Admin değil' });
     next();
-  } catch(e) {
+  } catch (e) {
     return res.status(401).json({ error: 'Token geçersiz' });
   }
 }
@@ -57,7 +57,7 @@ function scheduleReset() {
       await pool.query('UPDATE users SET daily_questions_used = 0, last_reset_date = CURRENT_DATE');
       await pool.query("DELETE FROM daily_scores WHERE score_date < CURRENT_DATE");
       console.log('Gece yarısı sıfırlama yapıldı');
-    } catch(e) {
+    } catch (e) {
       console.error('Reset hatası:', e.message);
     }
     scheduleReset();
@@ -93,7 +93,7 @@ app.post('/api/auth/anonymous', async (req, res) => {
     }
     const token = jwt.sign({ id: user.id, role: 'user' }, process.env.JWT_SECRET, { expiresIn: '7d' });
     res.json({ token, user: { id: user.id, username: user.username, is_premium: user.is_premium, daily_questions_used: user.daily_questions_used, is_anonymous: true } });
-  } catch(e) {
+  } catch (e) {
     res.status(500).json({ error: e.message });
   }
 });
@@ -118,7 +118,7 @@ app.post('/api/auth/register', async (req, res) => {
     const user = result.rows[0];
     const token = jwt.sign({ id: user.id, role: 'user' }, process.env.JWT_SECRET, { expiresIn: '30d' });
     res.json({ token, user: { ...user, is_anonymous: false } });
-  } catch(e) {
+  } catch (e) {
     res.status(500).json({ error: e.message });
   }
 });
@@ -139,7 +139,7 @@ app.post('/api/auth/login', async (req, res) => {
     }
     const token = jwt.sign({ id: user.id, role: 'user' }, process.env.JWT_SECRET, { expiresIn: '30d' });
     res.json({ token, user: { id: user.id, email: user.email, username: user.username, is_premium: user.is_premium, daily_questions_used: user.daily_questions_used, is_anonymous: false } });
-  } catch(e) {
+  } catch (e) {
     res.status(500).json({ error: e.message });
   }
 });
@@ -158,7 +158,7 @@ app.get('/api/auth/me', authMiddleware, async (req, res) => {
     if (!result.rows[0]) return res.status(404).json({ error: 'Kullanıcı bulunamadı' });
     const user = result.rows[0];
     res.json({ ...user, is_anonymous: !user.email });
-  } catch(e) {
+  } catch (e) {
     res.status(500).json({ error: e.message });
   }
 });
@@ -174,7 +174,7 @@ app.get('/api/categories', async (req, res) => {
        GROUP BY c.id ORDER BY c.name`
     );
     res.json(result.rows);
-  } catch(e) {
+  } catch (e) {
     res.status(500).json({ error: e.message });
   }
 });
@@ -193,7 +193,7 @@ app.get('/api/questions/years/:category_id', authMiddleware, async (req, res) =>
       [req.params.category_id]
     );
     res.json(result.rows.map(r => r.year));
-  } catch(e) {
+  } catch (e) {
     res.status(500).json({ error: e.message });
   }
 });
@@ -216,7 +216,7 @@ app.get('/api/questions/:category_id', authMiddleware, async (req, res) => {
     }
     const result = await pool.query(query, params);
     res.json(result.rows);
-  } catch(e) {
+  } catch (e) {
     res.status(500).json({ error: e.message });
   }
 });
@@ -257,7 +257,7 @@ app.post('/api/answer', authMiddleware, async (req, res) => {
     }
 
     res.json({ ok: true, daily_used: dailyUsed + 1 });
-  } catch(e) {
+  } catch (e) {
     res.status(500).json({ error: e.message });
   }
 });
@@ -300,7 +300,7 @@ app.get('/api/leaderboard/general/top3', authMiddleware, async (req, res) => {
       myRank: myRank.rows[0]?.rank || null,
       myScore: myScoreResult.rows[0]?.score || 0
     });
-  } catch(e) {
+  } catch (e) {
     res.status(500).json({ error: e.message });
   }
 });
@@ -316,7 +316,7 @@ app.get('/api/leaderboard/:category_id', authMiddleware, async (req, res) => {
       [req.params.category_id, today]
     );
     res.json(result.rows);
-  } catch(e) {
+  } catch (e) {
     res.status(500).json({ error: e.message });
   }
 });
@@ -349,7 +349,7 @@ app.get('/api/admin/stats', adminAuth, async (req, res) => {
       catStats: catStats.rows,
       recentActivity: recentActivity.rows.map(r => ({ date: new Date(r.date).toLocaleDateString('tr'), count: r.count }))
     });
-  } catch(e) { res.status(500).json({ error: e.message }); }
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
 app.post('/api/admin/categories', adminAuth, async (req, res) => {
@@ -358,7 +358,7 @@ app.post('/api/admin/categories', adminAuth, async (req, res) => {
   try {
     const r = await pool.query('INSERT INTO categories (name, description) VALUES ($1, $2) RETURNING *', [name, description || null]);
     res.json(r.rows[0]);
-  } catch(e) { res.status(500).json({ error: e.message }); }
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
 app.put('/api/admin/categories/:id', adminAuth, async (req, res) => {
@@ -366,7 +366,7 @@ app.put('/api/admin/categories/:id', adminAuth, async (req, res) => {
   try {
     const r = await pool.query('UPDATE categories SET name=$1, description=$2 WHERE id=$3 RETURNING *', [name, description || null, req.params.id]);
     res.json(r.rows[0]);
-  } catch(e) { res.status(500).json({ error: e.message }); }
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
 app.delete('/api/admin/categories/:id', adminAuth, async (req, res) => {
@@ -376,7 +376,7 @@ app.delete('/api/admin/categories/:id', adminAuth, async (req, res) => {
     await pool.query('DELETE FROM questions WHERE category_id=$1', [req.params.id]);
     await pool.query('DELETE FROM categories WHERE id=$1', [req.params.id]);
     res.json({ ok: true });
-  } catch(e) { res.status(500).json({ error: e.message }); }
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
 app.get('/api/admin/questions', adminAuth, async (req, res) => {
@@ -388,7 +388,7 @@ app.get('/api/admin/questions', adminAuth, async (req, res) => {
     query += ' ORDER BY id DESC LIMIT 500';
     const r = await pool.query(query, params);
     res.json(r.rows);
-  } catch(e) { res.status(500).json({ error: e.message }); }
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
 app.post('/api/admin/questions', adminAuth, async (req, res) => {
@@ -400,7 +400,7 @@ app.post('/api/admin/questions', adminAuth, async (req, res) => {
       [category_id, question_text, option_a, option_b, option_c, option_d, option_e || null, correct_option, hint || null, year || null, frequency || 1]
     );
     res.json(r.rows[0]);
-  } catch(e) { res.status(500).json({ error: e.message }); }
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
 app.put('/api/admin/questions/:id', adminAuth, async (req, res) => {
@@ -411,7 +411,7 @@ app.put('/api/admin/questions/:id', adminAuth, async (req, res) => {
       [question_text, option_a, option_b, option_c, option_d, option_e || null, correct_option, hint || null, year || null, frequency || 1, req.params.id]
     );
     res.json(r.rows[0]);
-  } catch(e) { res.status(500).json({ error: e.message }); }
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
 app.delete('/api/admin/questions/:id', adminAuth, async (req, res) => {
@@ -419,7 +419,7 @@ app.delete('/api/admin/questions/:id', adminAuth, async (req, res) => {
     await pool.query('DELETE FROM user_answers WHERE question_id=$1', [req.params.id]);
     await pool.query('DELETE FROM questions WHERE id=$1', [req.params.id]);
     res.json({ ok: true });
-  } catch(e) { res.status(500).json({ error: e.message }); }
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
 app.post('/api/admin/questions/bulk', adminAuth, async (req, res) => {
@@ -439,7 +439,7 @@ app.post('/api/admin/questions/bulk', adminAuth, async (req, res) => {
     }
     await client.query('COMMIT');
     res.json({ inserted });
-  } catch(e) {
+  } catch (e) {
     await client.query('ROLLBACK');
     res.status(500).json({ error: e.message });
   } finally { client.release(); }
@@ -449,7 +449,7 @@ app.get('/api/admin/users', adminAuth, async (req, res) => {
   try {
     const r = await pool.query('SELECT id, email, username, is_premium, premium_until, daily_questions_used, last_reset_date, created_at FROM users ORDER BY id DESC');
     res.json(r.rows);
-  } catch(e) { res.status(500).json({ error: e.message }); }
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
 app.put('/api/admin/users/:id/premium', adminAuth, async (req, res) => {
@@ -460,14 +460,14 @@ app.put('/api/admin/users/:id/premium', adminAuth, async (req, res) => {
       [is_premium, premium_until || null, req.params.id]
     );
     res.json(r.rows[0]);
-  } catch(e) { res.status(500).json({ error: e.message }); }
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
 app.get('/api/admin/feedback', adminAuth, async (req, res) => {
   try {
     const r = await pool.query('SELECT * FROM feedback ORDER BY created_at DESC LIMIT 100');
     res.json(r.rows);
-  } catch(e) { res.status(500).json({ error: e.message }); }
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
 app.put('/api/admin/feedback/:id', adminAuth, async (req, res) => {
@@ -478,7 +478,7 @@ app.put('/api/admin/feedback/:id', adminAuth, async (req, res) => {
       [is_read !== false, admin_reply || null, req.params.id]
     );
     res.json(r.rows[0]);
-  } catch(e) { res.status(500).json({ error: e.message }); }
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
 app.get('/api/feedback/mine', authMiddleware, async (req, res) => {
@@ -488,7 +488,7 @@ app.get('/api/feedback/mine', authMiddleware, async (req, res) => {
       [req.user.id]
     );
     res.json(r.rows);
-  } catch(e) { res.status(500).json({ error: e.message }); }
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
 app.post('/api/feedback', authMiddleware, async (req, res) => {
@@ -500,11 +500,43 @@ app.post('/api/feedback', authMiddleware, async (req, res) => {
       [req.user.id, username || 'anonim', message.trim()]
     );
     res.json({ ok: true });
-  } catch(e) {
+  } catch (e) {
     // Tablo yoksa bile hata verme
     console.log('Feedback (tablo yok olabilir):', message);
     res.json({ ok: true });
   }
+});
+
+// ============================================================
+// PDF ARŞİVİ
+// ============================================================
+// Herkese açık: ders listesini döner
+app.get('/api/pdf-courses', async (req, res) => {
+  try {
+    const r = await pool.query('SELECT id, name, drive_link, created_at FROM pdf_courses ORDER BY created_at DESC');
+    res.json(r.rows);
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Admin: yeni ders ekle
+app.post('/api/admin/pdf-courses', adminAuth, async (req, res) => {
+  const { name, drive_link } = req.body;
+  if (!name || !drive_link) return res.status(400).json({ error: 'Ders adı ve link zorunlu' });
+  try {
+    const r = await pool.query(
+      'INSERT INTO pdf_courses (name, drive_link) VALUES ($1, $2) RETURNING *',
+      [name.trim(), drive_link.trim()]
+    );
+    res.json(r.rows[0]);
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Admin: ders sil
+app.delete('/api/admin/pdf-courses/:id', adminAuth, async (req, res) => {
+  try {
+    await pool.query('DELETE FROM pdf_courses WHERE id=$1', [req.params.id]);
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
 app.listen(process.env.PORT, () => {
