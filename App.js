@@ -871,7 +871,7 @@ export default function App() {
         <div style={s.container}>
           <div style={s.header}>
             <button style={s.backBtn} onClick={() => setScreen('home')}>← Geri</button>
-            <div style={s.greeting}>Özet Notlar</div>
+            <div style={s.greeting}>Ders Kitapları</div>
             <div style={{ width: 60 }}></div>
           </div>
 
