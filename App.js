@@ -767,10 +767,10 @@ export default function App() {
 
           {myRank && <div style={s.rankResult}>📍 Bugün {myRank}. sıradasın!</div>}
 
-          {/* Geçtim mi? - sadece final sınavında */}
+          {/* Başarı Notu Hesapla - sadece final sınavında */}
           {r.type === 'final' && (
             <button
-              style={{ ...s.btn, background: 'linear-gradient(135deg, #f59e0b, #d97706)', color: '#fff', marginBottom: 6, fontWeight: 800 }}
+              style={{ ...s.btn, background: GREEN, color: '#fff', marginBottom: 6, fontWeight: 800 }}
               onClick={() => { setShowPassCheck(true); setPassResult(null); setVizeInput(''); }}
             >
               💯 Başarı Notu Hesapla
@@ -815,7 +815,7 @@ export default function App() {
         {showPassCheck && (
           <div style={s.modalOverlay} onClick={() => setShowPassCheck(false)}>
             <div style={{ ...s.modalBox, maxWidth: 360 }} onClick={e => e.stopPropagation()}>
-              <div style={{ fontWeight: 900, fontSize: 18, color: '#1f2937', marginBottom: 4 }}>🎓 Geçtim mi?</div>
+              <div style={{ fontWeight: 900, fontSize: 18, color: '#1f2937', marginBottom: 4 }}>🎓 Başarı Notu Hesapla</div>
               <div style={{ fontSize: 13, color: '#6b7280', marginBottom: 16 }}>
                 Vize notunu gir, final puanınla birlikte hesaplayalım.<br/>
                 <span style={{ fontSize: 12 }}>Vize %30 + Final %70 ≥ 35 → Geçtin!</span>

@@ -1186,10 +1186,14 @@
 
         <div class="card">
           <div class="field-group">
-            <label class="field-label">Kategori Seç</label>
-            <select id="excel-cat-select">
+            <label class="field-label">Kategori Seç (veya otomatik oluştur)</label>
+            <select id="excel-cat-select" onchange="updateCategoryInput()">
               <option value="">— Önce kategori seç —</option>
             </select>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Yeni Kategori Adı (Otomatik doldurulur, düzenleyebilirsin)</label>
+            <input type="text" id="new-cat-name" placeholder="Excel dosya adından otomatik oluşur">
           </div>
 
           <div class="drop-zone" id="drop-zone" onclick="document.getElementById('file-input').click()"
@@ -2008,21 +2012,26 @@
           // Yeni format: satir_no(0) | yil(1) | soruNo(2) | soru(3) | a(4) | b(5) | c(6) | d(7) | e(8) | dogru(9) | frekans(10)
           // satir_no ve soruNo yoksayılır
           parsedRows = dataRows.filter(r => r && r[3]).map((r, i) => ({
-            question_text: String(r[3] || '').trim(),
-            option_a: String(r[4] || '').trim(),
-            option_b: String(r[5] || '').trim(),
-            option_c: String(r[6] || '').trim(),
-            option_d: String(r[7] || '').trim(),
-            option_e: String(r[8] || '').trim() || null,
-            correct_option: String(r[9] || 'a').trim().toLowerCase(),
+            question_text: String(r[3] || \"\").trim(),
+            option_a: String(r[4] || \"\").trim(),
+            option_b: String(r[5] || \"\").trim(),
+            option_c: String(r[6] || \"\").trim(),
+            option_d: String(r[7] || \"\").trim(),
+            option_e: String(r[8] || \"\").trim() || null,
+            correct_option: String(r[9] || \"a\").trim().toLowerCase(),
             frequency: parseInt(r[10]) || 1,
-            year: String(r[1] || '').trim() || null,
+            year: String(r[1] || \"\").trim() || null,
           }));
+
+          // Extract category name from file name
+          const fileName = file.name.split(".").slice(0, -1).join(".");
+          document.getElementById("new-cat-name").value = fileName;
+          document.getElementById("excel-cat-select").value = ""; // Clear selected category
 
           showPreview(parsedRows);
         } catch (err) {
-          document.getElementById('preview-msg').innerHTML = `<div class="alert alert-error">❌ Dosya okunamadı: ${err.message}</div>`;
-          document.getElementById('preview-area').style.display = 'block';
+          document.getElementById("preview-msg").innerHTML = `<div class="alert alert-error">❌ Dosya okunamadı: ${err.message}</div>`;
+          document.getElementById("preview-area").style.display = "block";
         }
       };
       reader.readAsArrayBuffer(file);
@@ -2049,11 +2058,31 @@
     }
 
     async function uploadQuestions() {
-      const catId = document.getElementById('excel-cat-select').value;
-      if (!catId) { alert('Lütfen kategori seçin!'); return; }
+      let catId = document.getElementById('excel-cat-select').value;
+      const newCatName = document.getElementById('new-cat-name').value.trim();
+      const msgEl = document.getElementById('upload-msg');
+      
+      // Kategori seçilmemişse, yeni kategori adından otomatik oluştur
+      if (!catId && newCatName) {
+        msgEl.textContent = '⏳ Kategori oluşturuluyor...';
+        try {
+          const catData = await apiFetch('/api/admin/categories', {
+            method: 'POST',
+            body: JSON.stringify({ name: newCatName, description: null })
+          });
+          catId = catData.id;
+          // Kategori listesini yenile
+          await loadCategories();
+          document.getElementById('excel-cat-select').value = catId;
+        } catch (e) {
+          msgEl.innerHTML = `<span style="color:var(--danger)">❌ Kategori oluşturulamadı: ${e.message}</span>`;
+          return;
+        }
+      }
+      
+      if (!catId) { alert('Lütfen kategori seçin veya Excel dosyası yükleyin!'); return; }
       if (!parsedRows.length) { alert('Yüklenecek soru yok!'); return; }
 
-      const msgEl = document.getElementById('upload-msg');
       msgEl.textContent = '⏳ Yükleniyor...';
 
       try {
@@ -2067,6 +2096,14 @@
         setTimeout(clearPreview, 2000);
       } catch (e) {
         msgEl.innerHTML = `<span style="color:var(--danger)">❌ ${e.message}</span>`;
+      }
+    }
+
+    function updateCategoryInput() {
+      const catId = document.getElementById('excel-cat-select').value;
+      if (catId) {
+        // Kategori seçildiğinde, yeni kategori adı alanını temizle
+        document.getElementById('new-cat-name').value = '';
       }
     }
 
