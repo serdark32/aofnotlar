@@ -535,6 +535,9 @@ export default function App() {
           <button type="button" style={examType === 'final' ? s.examTabActiveFinal : s.examTab} onClick={(e) => { e.preventDefault(); setExamType('final'); }}>
             📘 Final
           </button>
+          <button type="button" style={examType === 'yazokulu' ? s.examTabActiveYazOkulu : s.examTab} onClick={(e) => { e.preventDefault(); setExamType('yazokulu'); }}>
+            ☀️ Yaz Okulu
+          </button>
         </div>
 
         {categories.length === 0 && <div style={s.empty}>Yakında dersler eklenecek...</div>}
@@ -548,14 +551,16 @@ export default function App() {
               const hasFinal = nameLower.includes('final');
 
               // Eğer "Vize" sekmesindeysek, içinde 'vize' geçenleri veya ikisi de geçmeyenleri göster
-              if (examType === 'vize') return hasVize || (!hasVize && !hasFinal);
+              if (examType === 'vize') return nameLower.includes('vize') || (!hasVize && !hasFinal && !nameLower.includes('yaz okulu'));
               // Eğer "Final" sekmesindeysek, içinde 'final' geçenleri göster
-              if (examType === 'final') return hasFinal || (!hasVize && !hasFinal);
+              if (examType === 'final') return nameLower.includes('final') || (!hasVize && !hasFinal && !nameLower.includes('yaz okulu'));
+              // Eğer "Yaz Okulu" sekmesindeysek, içinde 'yaz okulu' geçenleri göster
+              if (examType === 'yazokulu') return nameLower.includes('yaz okulu');
               return true;
             })
             .map(cat => {
-              // (Vize) veya (Final) kelimelerini temizle
-              const cleanName = cat.name.replace(/\s*\(\s*(Vize|Final|[Vv]ize|[Ff]inal)\s*\)\s*/g, '').trim();
+              // (Vize), (Final) veya (Yaz okulu) kelimelerini temizle
+              const cleanName = cat.name.replace(/\s*\(\s*(Vize|Final|Yaz okulu|[Vv]ize|[Ff]inal|[Yy]az [Oo]kulu)\s*\)\s*/g, '').trim();
               const isFav = favorites.includes(cat.id);
 
               return (
@@ -768,7 +773,7 @@ export default function App() {
               style={{ ...s.btn, background: 'linear-gradient(135deg, #f59e0b, #d97706)', color: '#fff', marginBottom: 6, fontWeight: 800 }}
               onClick={() => { setShowPassCheck(true); setPassResult(null); setVizeInput(''); }}
             >
-              🎓 Geçtim mi?
+              💯 Başarı Notu Hesapla
             </button>
           )}
 
@@ -1048,5 +1053,6 @@ const s = {
   examTab: { flex: 1, padding: '14px 10px', borderRadius: 12, border: 'none', background: 'transparent', color: 'rgba(255,255,255,0.8)', fontWeight: 700, fontSize: 15, cursor: 'pointer', transition: 'all 0.3s' },
   examTabActiveVize: { flex: 1, padding: '14px 10px', borderRadius: 12, border: 'none', background: '#fff', color: GREEN, fontWeight: 800, fontSize: 15, cursor: 'pointer', boxShadow: '0 4px 12px rgba(0,0,0,0.15)', transition: 'all 0.3s' },
   examTabActiveFinal: { flex: 1, padding: '14px 10px', borderRadius: 12, border: 'none', background: '#f59e0b', color: '#fff', fontWeight: 800, fontSize: 15, cursor: 'pointer', boxShadow: '0 4px 12px rgba(0,0,0,0.15)', transition: 'all 0.3s' },
+  examTabActiveYazOkulu: { flex: 1, padding: '14px 10px', borderRadius: 12, border: 'none', background: '#eab308', color: '#fff', fontWeight: 800, fontSize: 15, cursor: 'pointer', boxShadow: '0 4px 12px rgba(0,0,0,0.15)', transition: 'all 0.3s' },
   examDesc: { fontSize: 13, color: 'rgba(255,255,255,0.85)', marginBottom: 20, textAlign: 'center', fontStyle: 'italic', lineHeight: 1.4 },
 };
