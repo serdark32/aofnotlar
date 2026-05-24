@@ -2012,15 +2012,15 @@
           // Yeni format: satir_no(0) | yil(1) | soruNo(2) | soru(3) | a(4) | b(5) | c(6) | d(7) | e(8) | dogru(9) | frekans(10)
           // satir_no ve soruNo yoksayılır
           parsedRows = dataRows.filter(r => r && r[3]).map((r, i) => ({
-            question_text: String(r[3] || \"\").trim(),
-            option_a: String(r[4] || \"\").trim(),
-            option_b: String(r[5] || \"\").trim(),
-            option_c: String(r[6] || \"\").trim(),
-            option_d: String(r[7] || \"\").trim(),
-            option_e: String(r[8] || \"\").trim() || null,
-            correct_option: String(r[9] || \"a\").trim().toLowerCase(),
+            question_text: String(r[3] || "").trim(),
+            option_a: String(r[4] || "").trim(),
+            option_b: String(r[5] || "").trim(),
+            option_c: String(r[6] || "").trim(),
+            option_d: String(r[7] || "").trim(),
+            option_e: String(r[8] || "").trim() || null,
+            correct_option: String(r[9] || "a").trim().toLowerCase(),
             frequency: parseInt(r[10]) || 1,
-            year: String(r[1] || \"\").trim() || null,
+            year: String(r[1] || "").trim() || null,
           }));
 
           // Extract category name from file name
