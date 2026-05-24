@@ -1055,6 +1055,9 @@
       <button class="nav-item" data-page="pdf-courses" onclick="navigate('pdf-courses', this); closeSidebar()">
         <span class="nav-icon">📄</span> PDF Arşivi
       </button>
+      <button class="nav-item" data-page="course-requests" onclick="navigate('course-requests', this); closeSidebar()">
+        <span class="nav-icon">📝</span> Ders İstekleri
+      </button>
 
       <div class="sidebar-footer">
         <div class="server-badge">
@@ -1457,6 +1460,38 @@
                 </tr>
               </thead>
               <tbody id="pdf-table-body">
+                <tr><td colspan="5"><div class="empty-state"><div class="empty-icon">⏳</div>Yükleniyor...</div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- DERS İSTEKLERİ -->
+      <div class="page" id="page-course-requests">
+        <div class="page-header">
+          <div>
+            <div class="page-title">📝 Ders İstekleri</div>
+            <div class="page-subtitle">Kullanıcıların istediği dersler — sayıya göre sıralı</div>
+          </div>
+          <button class="btn btn-ghost btn-sm" onclick="loadCourseRequests()">↻ Yenile</button>
+        </div>
+
+        <div id="cr-msg-area"></div>
+
+        <div class="card" style="padding:0; overflow:hidden;">
+          <div class="table-wrap">
+            <table class="mobile-card-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Ders Adı</th>
+                  <th>İstenme Sayısı</th>
+                  <th>Son İstek</th>
+                  <th>İşlem</th>
+                </tr>
+              </thead>
+              <tbody id="cr-table-body">
                 <tr><td colspan="5"><div class="empty-state"><div class="empty-icon">⏳</div>Yükleniyor...</div></td></tr>
               </tbody>
             </table>
@@ -2341,6 +2376,39 @@
         await apiFetch(`/api/admin/pdf-courses/${id}`, { method: 'DELETE' });
         loadPdfCourses();
         showMsg('pdf-msg-area', '🗑 Ders silindi', 'success');
+      } catch (e) { alert('❌ ' + e.message); }
+    }
+
+    // ============================================================
+    // DERS İSTEKLERİ
+    // ============================================================
+    async function loadCourseRequests() {
+      const tbody = document.getElementById('cr-table-body');
+      tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="empty-icon">⏳</div>Yükleniyor...</div></td></tr>`;
+      try {
+        const data = await apiFetch('/api/admin/course-requests');
+        if (!data.length) {
+          tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="empty-icon">📭</div>Henüz ders isteği yok</div></td></tr>`;
+          return;
+        }
+        tbody.innerHTML = data.map((r, i) => `<tr>
+          <td data-label="#">${i + 1}</td>
+          <td data-label="Ders Adı"><strong>${esc(r.course_name)}</strong></td>
+          <td data-label="İstenme Sayısı"><span class="badge badge-green">${r.request_count} kez</span></td>
+          <td data-label="Son İstek" style="color:var(--muted);font-size:12px;">${new Date(r.updated_at).toLocaleString('tr')}</td>
+          <td data-label="İşlem"><button class="btn btn-danger btn-sm" onclick="deleteCourseRequest(${r.id}, '${esc(r.course_name)}')">Sil</button></td>
+        </tr>`).join('');
+      } catch (e) {
+        tbody.innerHTML = `<tr><td colspan="5"><div class="alert alert-error">❌ ${e.message}</div></td></tr>`;
+      }
+    }
+
+    async function deleteCourseRequest(id, name) {
+      if (!confirm(`"${name}" isteğini silmek istediğine emin misin?`)) return;
+      try {
+        await apiFetch(`/api/admin/course-requests/${id}`, { method: 'DELETE' });
+        loadCourseRequests();
+        showMsg('cr-msg-area', '🗑 İstek silindi', 'success');
       } catch (e) { alert('❌ ' + e.message); }
     }
 

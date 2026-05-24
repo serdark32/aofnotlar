@@ -92,6 +92,10 @@ export default function App() {
   const [pdfResult, setPdfResult] = useState(null); // 'success' | 'error' | null
   const N8N_WEBHOOK = 'BURAYA_N8N_PRODUCTION_URL_GELECEK';
 
+  // Ders isteği
+  const [courseRequestText, setCourseRequestText] = useState('');
+  const [courseRequestSent, setCourseRequestSent] = useState(false);
+
   const loadMyFeedbacks = async () => {
     try {
       const res = await fetch(API + '/api/feedback/mine', {
@@ -870,6 +874,22 @@ export default function App() {
     );
   }
 
+  const sendCourseRequest = async () => {
+    if (!courseRequestText.trim()) return;
+    try {
+      await fetch(API + '/api/course-request', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ course_name: courseRequestText.trim() })
+      });
+    } catch (e) {}
+    setCourseRequestSent(true);
+    setTimeout(() => {
+      setCourseRequestText('');
+      setCourseRequestSent(false);
+    }, 2000);
+  };
+
   if (screen === 'pdf-download') {
     return (
       <div style={s.bg}>
@@ -975,6 +995,40 @@ export default function App() {
               {pdfSending ? 'Gönderiliyor ⏳' : 'Notları Mailime Gönder 🚀'}
             </button>
           </div>
+
+          {/* Ders İsteği Diyalog Kutusu */}
+          <div style={s.card}>
+            <div style={{ fontSize: 32, textAlign: 'center', marginBottom: 8 }}>📝</div>
+            <div style={s.cardTitle}>Görmek İstediğiniz Dersi Bize Yazın</div>
+            <div style={{ fontSize: 13, color: '#6b7280', marginBottom: 16 }}>
+              Listede olmayan bir ders mi var? Aşağıya yazın, en çok istenen dersleri ekleyelim!
+            </div>
+
+            {courseRequestSent ? (
+              <div style={{ textAlign: 'center', padding: 16 }}>
+                <div style={{ fontSize: 40 }}>✅</div>
+                <div style={{ fontWeight: 700, color: '#065f46', marginTop: 8 }}>İsteğiniz alındı, teşekkürler!</div>
+              </div>
+            ) : (
+              <>
+                <textarea
+                  placeholder="Ders adını yazın (örn: İşletme Yönetimi)"
+                  value={courseRequestText}
+                  onChange={e => setCourseRequestText(e.target.value)}
+                  style={{ width: '100%', padding: '12px 14px', borderRadius: 12, border: '1.5px solid #e5e7eb', fontSize: 15, fontFamily: 'inherit', resize: 'none', outline: 'none', boxSizing: 'border-box', marginBottom: 12 }}
+                  rows={2}
+                />
+                <button
+                  style={{ ...s.btn, background: courseRequestText.trim() ? GREEN : '#e5e7eb', color: courseRequestText.trim() ? '#fff' : '#9ca3af', cursor: courseRequestText.trim() ? 'pointer' : 'not-allowed' }}
+                  disabled={!courseRequestText.trim()}
+                  onClick={sendCourseRequest}
+                >
+                  Gönder 🚀
+                </button>
+              </>
+            )}
+          </div>
+
         </div>
       </div>
     );

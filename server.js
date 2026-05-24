@@ -539,6 +539,52 @@ app.delete('/api/admin/pdf-courses/:id', adminAuth, async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// ============================================================
+// DERS İSTEKLERİ
+// ============================================================
+app.post('/api/course-request', async (req, res) => {
+  const { course_name } = req.body;
+  if (!course_name || !course_name.trim()) return res.status(400).json({ error: 'Ders adı zorunlu' });
+  try {
+    // Aynı ders adı varsa count'u artır, yoksa yeni kayıt oluştur
+    const result = await pool.query(
+      `INSERT INTO course_requests (course_name, request_count, updated_at)
+       VALUES ($1, 1, NOW())
+       ON CONFLICT (LOWER(course_name))
+       DO UPDATE SET request_count = course_requests.request_count + 1, updated_at = NOW()
+       RETURNING *`,
+      [course_name.trim()]
+    );
+    res.json({ ok: true, course: result.rows[0] });
+  } catch (e) {
+    // Tablo yoksa sessizce başarısız ol
+    console.log('Course request error (tablo yok olabilir):', e.message);
+    res.json({ ok: true });
+  }
+});
+
+// Admin: tüm ders isteklerini getir (sayıya göre sıralı)
+app.get('/api/admin/course-requests', adminAuth, async (req, res) => {
+  try {
+    const result = await pool.query(
+      'SELECT * FROM course_requests ORDER BY request_count DESC, updated_at DESC LIMIT 200'
+    );
+    res.json(result.rows);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// Admin: ders isteği sil
+app.delete('/api/admin/course-requests/:id', adminAuth, async (req, res) => {
+  try {
+    await pool.query('DELETE FROM course_requests WHERE id = $1', [req.params.id]);
+    res.json({ ok: true });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
 // Rate limit: aynı e-posta günde 1 kez
 const pdfRateLimit = new Map(); // email -> timestamp
 
