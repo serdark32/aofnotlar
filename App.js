@@ -28,10 +28,12 @@ const getDailyJoke = (name) => {
 };
 
 export default function App() {
-  const [screen, setScreen] = useState('splash');
+  const [screen, setScreen] = useState('home');
   const [authMode, setAuthMode] = useState('login');
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
+  const [showNicknameModal, setShowNicknameModal] = useState(false);
+  const [pendingCategory, setPendingCategory] = useState(null);
   const [categories, setCategories] = useState([]);
   const [questions, setQuestions] = useState([]);
   const [currentQ, setCurrentQ] = useState(0);
@@ -149,10 +151,8 @@ export default function App() {
       fetchCategories(savedToken);
       fetchLeaderboard(savedToken);
       refreshUser(savedToken);
-      setScreen('home');
-    } else {
-      setScreen('splash');
     }
+    setScreen('home');
   }, []);
 
   // Ana sayfaya her dönüşte liderlik tablosunu yenile
@@ -167,7 +167,7 @@ export default function App() {
       const res = await fetch(API + '/api/auth/me', { headers: { Authorization: 'Bearer ' + t } });
       if (res.status === 401 || res.status === 404) {
         localStorage.removeItem('token'); localStorage.removeItem('user');
-        setToken(null); setUser(null); setScreen('splash'); return;
+        setToken(null); setUser(null); return;
       }
       if (res.ok) {
         const data = await res.json();
@@ -214,7 +214,15 @@ export default function App() {
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
       fetchCategories(data.token); fetchLeaderboard(data.token);
-      setScreen('home');
+      setShowNicknameModal(false);
+      // Eğer bekleyen kategori varsa direkt aç
+      if (pendingCategory) {
+        const cat = pendingCategory;
+        setPendingCategory(null);
+        openCategory(cat);
+      } else {
+        setScreen('home');
+      }
     } catch (e) { setAuthError('Bağlantı hatası'); }
   };
 
@@ -244,10 +252,21 @@ export default function App() {
     localStorage.removeItem('token'); localStorage.removeItem('user');
     setToken(null); setUser(null);
     setEmail(''); setPassword(''); setUsername(''); setAnonName('');
-    setScreen('splash');
+    setScreen('home');
   };
 
-  // ── KATEGORİ AÇ
+  // ── KATEGORİ AÇ (token yoksa nickname modalı göster)
+  const handleCategoryClick = (cat) => {
+    if (!token) {
+      setPendingCategory(cat);
+      setAnonName('');
+      setAuthError('');
+      setShowNicknameModal(true);
+    } else {
+      openCategory(cat);
+    }
+  };
+
   const openCategory = async (cat, year = null) => {
     setActiveCategory(cat);
     setCorrect(0); setWrong(0);
@@ -379,47 +398,20 @@ export default function App() {
   // EKRANLAR
   // ════════════════════════════════════════════════════════════
 
-  if (screen === 'splash') return (
-    <div style={s.bg}>
-      <div style={s.splashBox}>
-        <div style={s.logoText}>AOF Sesli Notlar</div>
-        <div style={s.logoSub}>Çıkmış sorularla sınava hazırlan</div>
-        <button style={s.btn} onClick={() => setScreen('anonymous')}>Anonim Devam Et 👤</button>
-        <button style={s.btnOutline} onClick={() => { setAuthMode('login'); setScreen('login'); }}>Giriş Yap / Kayıt Ol 🔑</button>
-      </div>
-    </div>
-  );
-
-  if (screen === 'anonymous') return (
-    <div style={s.bg}>
-      <div style={s.splashBox}>
+  // Nickname modalı (soru çözmeye girince gösterilir)
+  if (showNicknameModal) return (
+    <div style={s.modalOverlay} onClick={() => setShowNicknameModal(false)}>
+      <div style={{ ...s.modalBox, maxWidth: 380, textAlign: 'center' }} onClick={e => e.stopPropagation()}>
         <div style={{ fontSize: 50, marginBottom: 8 }}>👤</div>
-        <div style={s.logoText}>Kullanıcı Adı Seç</div>
-        <div style={{ ...s.logoSub, marginBottom: 24 }}>Liderlik tablosunda bu isimle görüneceksin</div>
-        <input style={s.input} placeholder="Kullanıcı adın (örn: AhmetAOF)"
+        <div style={{ fontWeight: 800, fontSize: 18, color: '#1f2937', marginBottom: 6 }}>Kullanıcı Adı Seç</div>
+        <div style={{ fontSize: 13, color: '#6b7280', marginBottom: 20 }}>Liderlik tablosunda bu isimle görüneceksin</div>
+        <input style={{ width: '100%', padding: '13px 16px', borderRadius: 12, border: '1.5px solid #d1d5db', fontSize: 15, marginBottom: 10, outline: 'none', fontFamily: 'inherit', boxSizing: 'border-box' }}
+          placeholder="Kullanıcı adın (örn: AhmetAOF)"
           value={anonName} onChange={e => setAnonName(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && handleAnonymous()} maxLength={20} />
-        {authError && <div style={s.errMsg}>⚠️ {authError}</div>}
-        <button style={s.btn} onClick={handleAnonymous}>Başla 🚀</button>
-        <button style={s.btnOutline} onClick={() => setScreen('splash')}>← Geri</button>
-      </div>
-    </div>
-  );
-
-  if (screen === 'login') return (
-    <div style={s.bg}>
-      <div style={s.splashBox}>
-        <div style={s.tabRow}>
-          <button style={authMode === 'login' ? s.tabActive : s.tab} onClick={() => { setAuthMode('login'); setAuthError(''); }}>Giriş Yap</button>
-          <button style={authMode === 'register' ? s.tabActive : s.tab} onClick={() => { setAuthMode('register'); setAuthError(''); }}>Kayıt Ol</button>
-        </div>
-        {authMode === 'register' && <input style={s.input} placeholder="Kullanıcı adın" value={username} onChange={e => setUsername(e.target.value)} />}
-        <input style={s.input} placeholder="E-posta" value={email} type="email" onChange={e => setEmail(e.target.value)} />
-        <input style={s.input} placeholder="Şifre (min 6 karakter)" value={password} type="password"
-          onChange={e => setPassword(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleAuth()} />
-        {authError && <div style={s.errMsg}>⚠️ {authError}</div>}
-        <button style={s.btn} onClick={handleAuth}>{authMode === 'login' ? 'Giriş Yap 🚀' : 'Kayıt Ol 🚀'}</button>
-        <button style={s.btnOutline} onClick={() => setScreen('splash')}>← Geri</button>
+        {authError && <div style={{ background: 'rgba(239,68,68,0.1)', color: '#dc2626', borderRadius: 8, padding: '10px 14px', fontSize: 13, marginBottom: 10, textAlign: 'left' }}>⚠️ {authError}</div>}
+        <button style={{ width: '100%', padding: 14, borderRadius: 14, border: 'none', background: GREEN, color: '#fff', fontWeight: 700, fontSize: 14, cursor: 'pointer', marginTop: 4 }} onClick={handleAnonymous}>Başla 🚀</button>
+        <button style={{ width: '100%', padding: 14, borderRadius: 14, border: '1.5px solid #e5e7eb', background: '#f3f4f6', color: '#374151', fontWeight: 700, fontSize: 14, cursor: 'pointer', marginTop: 8 }} onClick={() => setShowNicknameModal(false)}>İptal</button>
       </div>
     </div>
   );
@@ -431,7 +423,7 @@ export default function App() {
         <div style={s.header}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <div>
-              <div style={s.greeting}>Merhaba, {user?.username} 👋</div>
+              <div style={s.greeting}>Hoşgeldin, bugün hangi derse çalışacaksın? 🎯</div>
             </div>
           </div>
           <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
@@ -441,7 +433,6 @@ export default function App() {
               </svg>
             </a>
             <button style={s.feedbackIconBtn} onClick={() => { setShowFeedback(true); loadMyFeedbacks(); }}>💬</button>
-            <button style={s.logoutBtn} onClick={logout}>Çıkış</button>
           </div>
         </div>
 
@@ -568,7 +559,7 @@ export default function App() {
               const isFav = favorites.includes(cat.id);
 
               return (
-                <button key={cat.id} style={s.catBtn} onClick={() => openCategory(cat)}>
+                <button key={cat.id} style={s.catBtn} onClick={() => handleCategoryClick(cat)}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                     <div
                       onClick={(e) => { e.stopPropagation(); toggleFavorite(e, cat.id); }}
