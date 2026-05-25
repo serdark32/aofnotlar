@@ -400,24 +400,6 @@ export default function App() {
   // EKRANLAR
   // ════════════════════════════════════════════════════════════
 
-  // Nickname modalı (soru çözmeye girince gösterilir)
-  if (showNicknameModal) return (
-    <div style={s.modalOverlay} onClick={() => setShowNicknameModal(false)}>
-      <div style={{ ...s.modalBox, maxWidth: 380, textAlign: 'center' }} onClick={e => e.stopPropagation()}>
-        <div style={{ fontSize: 50, marginBottom: 8 }}>👤</div>
-        <div style={{ fontWeight: 800, fontSize: 18, color: '#1f2937', marginBottom: 6 }}>Kullanıcı Adı Seç</div>
-        <div style={{ fontSize: 13, color: '#6b7280', marginBottom: 20 }}>Liderlik tablosunda bu isimle görüneceksin</div>
-        <input style={{ width: '100%', padding: '13px 16px', borderRadius: 12, border: '1.5px solid #d1d5db', fontSize: 15, marginBottom: 10, outline: 'none', fontFamily: 'inherit', boxSizing: 'border-box' }}
-          placeholder="Kullanıcı adın (örn: AhmetAOF)"
-          value={anonName} onChange={e => setAnonName(e.target.value)}
-          onKeyDown={e => e.key === 'Enter' && handleAnonymous()} maxLength={20} />
-        {authError && <div style={{ background: 'rgba(239,68,68,0.1)', color: '#dc2626', borderRadius: 8, padding: '10px 14px', fontSize: 13, marginBottom: 10, textAlign: 'left' }}>⚠️ {authError}</div>}
-        <button style={{ width: '100%', padding: 14, borderRadius: 14, border: 'none', background: GREEN, color: '#fff', fontWeight: 700, fontSize: 14, cursor: 'pointer', marginTop: 4 }} onClick={handleAnonymous}>Başla 🚀</button>
-        <button style={{ width: '100%', padding: 14, borderRadius: 14, border: '1.5px solid #e5e7eb', background: '#f3f4f6', color: '#374151', fontWeight: 700, fontSize: 14, cursor: 'pointer', marginTop: 8 }} onClick={() => setShowNicknameModal(false)}>İptal</button>
-      </div>
-    </div>
-  );
-
   if (screen === 'home') return (
     <div style={s.bg}>
       <div style={s.container}>
@@ -437,6 +419,23 @@ export default function App() {
             <button style={s.feedbackIconBtn} onClick={() => { setShowFeedback(true); loadMyFeedbacks(); }}>💬</button>
           </div>
         </div>
+
+        {showNicknameModal && (
+          <div style={s.modalOverlay} onClick={() => setShowNicknameModal(false)}>
+            <div style={{ ...s.modalBox, maxWidth: 380, textAlign: 'center' }} onClick={e => e.stopPropagation()}>
+              <div style={{ fontSize: 50, marginBottom: 8 }}>👤</div>
+              <div style={{ fontWeight: 800, fontSize: 18, color: '#1f2937', marginBottom: 6 }}>Kullanıcı Adı Seç</div>
+              <div style={{ fontSize: 13, color: '#6b7280', marginBottom: 20 }}>Liderlik tablosunda bu isimle görüneceksin</div>
+              <input style={{ width: '100%', padding: '13px 16px', borderRadius: 12, border: '1.5px solid #d1d5db', fontSize: 15, marginBottom: 10, outline: 'none', fontFamily: 'inherit', boxSizing: 'border-box' }}
+                placeholder="Kullanıcı adın (örn: AhmetAOF)"
+                value={anonName} onChange={e => setAnonName(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && handleAnonymous()} maxLength={20} />
+              {authError && <div style={{ background: 'rgba(239,68,68,0.1)', color: '#dc2626', borderRadius: 8, padding: '10px 14px', fontSize: 13, marginBottom: 10, textAlign: 'left' }}>⚠️ {authError}</div>}
+              <button style={{ width: '100%', padding: 14, borderRadius: 14, border: 'none', background: GREEN, color: '#fff', fontWeight: 700, fontSize: 14, cursor: 'pointer', marginTop: 4 }} onClick={handleAnonymous}>Başla 🚀</button>
+              <button style={{ width: '100%', padding: 14, borderRadius: 14, border: '1.5px solid #e5e7eb', background: '#f3f4f6', color: '#374151', fontWeight: 700, fontSize: 14, cursor: 'pointer', marginTop: 8 }} onClick={() => setShowNicknameModal(false)}>İptal</button>
+            </div>
+          </div>
+        )}
 
         {showFeedback && (
           <div style={s.modalOverlay} onClick={() => setShowFeedback(false)}>
