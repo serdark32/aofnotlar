@@ -217,11 +217,11 @@ export default function App() {
       localStorage.setItem('user', JSON.stringify(data.user));
       fetchCategories(data.token); fetchLeaderboard(data.token);
       setShowNicknameModal(false);
-      // Eğer bekleyen kategori varsa direkt aç
+      // Eğer bekleyen kategori varsa direkt aç (token'ı parametre olarak geç - state henüz güncellenmemiş olabilir)
       if (pendingCategory) {
         const cat = pendingCategory;
         setPendingCategory(null);
-        openCategory(cat);
+        openCategoryWithToken(cat, data.token);
       } else {
         setScreen('home');
       }
@@ -287,6 +287,29 @@ export default function App() {
       ? `/api/questions/${cat.id}?year=${encodeURIComponent(targetYear)}&examType=${examType}`
       : `/api/questions/${cat.id}?examType=${examType}`;
     const res = await fetch(API + url, { headers: { Authorization: 'Bearer ' + token } });
+    const data = await res.json();
+    setQuestions(data);
+    setScreen('quiz');
+  };
+
+  const openCategoryWithToken = async (cat, t, year = null) => {
+    setActiveCategory(cat);
+    setCorrect(0); setWrong(0);
+    setCurrentQ(0); setSelected(null);
+
+    const yearsRes = await fetch(API + `/api/questions/years/${cat.id}`, {
+      headers: { Authorization: 'Bearer ' + t }
+    });
+    const years = await yearsRes.json();
+    setAvailableYears(years);
+
+    const targetYear = year || (years.length > 0 ? years[0] : null);
+    setSelectedYear(targetYear);
+
+    const url = targetYear
+      ? `/api/questions/${cat.id}?year=${encodeURIComponent(targetYear)}&examType=${examType}`
+      : `/api/questions/${cat.id}?examType=${examType}`;
+    const res = await fetch(API + url, { headers: { Authorization: 'Bearer ' + t } });
     const data = await res.json();
     setQuestions(data);
     setScreen('quiz');
@@ -417,6 +440,7 @@ export default function App() {
               </svg>
             </a>
             <button style={s.feedbackIconBtn} onClick={() => { setShowFeedback(true); loadMyFeedbacks(); }}>💬</button>
+            {user && <button style={s.logoutBtn} onClick={logout}>Çıkış</button>}
           </div>
         </div>
 
