@@ -148,10 +148,11 @@ export default function App() {
     if (savedToken && savedUser) {
       setToken(savedToken);
       setUser(JSON.parse(savedUser));
-      fetchCategories(savedToken);
       fetchLeaderboard(savedToken);
       refreshUser(savedToken);
     }
+    // Kategoriler public endpoint (auth gerekmez), her zaman yüklenir
+    fetchCategories();
     setScreen('home');
   }, []);
 
@@ -179,8 +180,9 @@ export default function App() {
 
   const fetchCategories = async (t) => {
     try {
-      const res = await fetch(API + '/api/categories', { headers: { Authorization: 'Bearer ' + t } });
-      setCategories(await res.json());
+      const headers = t ? { Authorization: 'Bearer ' + t } : {};
+      const res = await fetch(API + '/api/categories', { headers });
+      if (res.ok) setCategories(await res.json());
     } catch (e) { }
   };
 
