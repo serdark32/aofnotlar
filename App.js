@@ -150,16 +150,19 @@ export default function App() {
       setUser(JSON.parse(savedUser));
       fetchLeaderboard(savedToken);
       refreshUser(savedToken);
+    } else {
+      // Token yoksa da liderlik tablosunu auth'suz çağır
+      fetchLeaderboard(null);
     }
     // Kategoriler public endpoint (auth gerekmez), her zaman yüklenir
     fetchCategories();
     setScreen('home');
   }, []);
 
-  // Ana sayfaya her dönüşte liderlik tablosunu yenile
+  // Ana sayfaya her dönüşte liderlik tablosunu yenile (token olsa da olmasa da)
   useEffect(() => {
-    if (screen === 'home' && token) {
-      fetchLeaderboard(token);
+    if (screen === 'home') {
+      fetchLeaderboard(token || null);
     }
   }, [screen]);
 
@@ -188,7 +191,8 @@ export default function App() {
 
   const fetchLeaderboard = async (t) => {
     try {
-      const res = await fetch(API + '/api/leaderboard/general/top3', { headers: { Authorization: 'Bearer ' + t } });
+      const headers = t ? { Authorization: 'Bearer ' + t } : {};
+      const res = await fetch(API + '/api/leaderboard/general/top3', { headers });
       if (res.ok) {
         const data = await res.json();
         setTop3(data.top3 || []);
@@ -430,7 +434,7 @@ export default function App() {
         <div style={s.header}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <div>
-              <div style={s.greeting}>Hoşgeldin, bugün hangi derse çalışacaksın? 🎯</div>
+              <div style={s.greeting}>{user?.username ? `Hoşgeldin, ${user.username} 👋` : 'Hoşgeldin'}</div>
             </div>
           </div>
           <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
@@ -512,7 +516,7 @@ export default function App() {
             </div>
           )}
 
-          {top3.length === 0 ? (
+          {(!top3 || top3.length === 0) ? (
             <div style={{ color: '#9ca3af', fontSize: 13, textAlign: 'center', padding: '8px 0' }}>Henüz soru çözülmedi. İlk sen ol!</div>
           ) : top3.map((p, i) => (
             <div key={i} style={s.lbRow}>
