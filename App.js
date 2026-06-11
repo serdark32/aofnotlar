@@ -434,7 +434,7 @@ export default function App() {
         <div style={s.header}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <div>
-              <div style={s.greeting}>{user?.username ? `Hoşgeldin, ${user.username} 👋` : 'Hoşgeldin'}</div>
+              <div style={s.greeting}>{user?.username ? `Hoşgeldin, ${user.username}! 👋` : 'Hoşgeldin!'}</div>
             </div>
           </div>
           <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>

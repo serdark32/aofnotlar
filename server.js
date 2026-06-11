@@ -265,7 +265,7 @@ app.post('/api/answer', authMiddleware, async (req, res) => {
 // ============================================================
 // LİDERLİK TABLOSU
 // ============================================================
-app.get('/api/leaderboard/general/top3', authMiddleware, async (req, res) => {
+app.get('/api/leaderboard/general/top3', async (req, res) => {
   try {
     const today = new Date().toISOString().split('T')[0];
     const top3 = await pool.query(
@@ -277,28 +277,42 @@ app.get('/api/leaderboard/general/top3', authMiddleware, async (req, res) => {
       [today]
     );
 
-    // Kullanıcının kendi sırası
-    const myRank = await pool.query(
-      `SELECT rank FROM (
-         SELECT user_id, RANK() OVER (ORDER BY SUM(total_score) DESC) as rank
-         FROM daily_scores WHERE score_date = $1
-         GROUP BY user_id
-       ) ranked WHERE user_id = $2`,
-      [today, req.user.id]
-    );
+    // Token varsa kullanıcıya özel verileri de döndür
+    let myRank = null;
+    let myScore = 0;
 
-    // Kullanıcının kendi günlük skoru
-    const myScoreResult = await pool.query(
-      `SELECT COALESCE(SUM(total_score), 0)::int as score
-       FROM daily_scores
-       WHERE user_id = $1 AND score_date = $2`,
-      [req.user.id, today]
-    );
+    const auth = req.headers['authorization'];
+    if (auth && auth.startsWith('Bearer ')) {
+      try {
+        const decoded = jwt.verify(auth.split(' ')[1], process.env.JWT_SECRET);
+        const userId = decoded.id;
+
+        const rankResult = await pool.query(
+          `SELECT rank FROM (
+             SELECT user_id, RANK() OVER (ORDER BY SUM(total_score) DESC) as rank
+             FROM daily_scores WHERE score_date = $1
+             GROUP BY user_id
+           ) ranked WHERE user_id = $2`,
+          [today, userId]
+        );
+        myRank = rankResult.rows[0]?.rank || null;
+
+        const scoreResult = await pool.query(
+          `SELECT COALESCE(SUM(total_score), 0)::int as score
+           FROM daily_scores
+           WHERE user_id = $1 AND score_date = $2`,
+          [userId, today]
+        );
+        myScore = scoreResult.rows[0]?.score || 0;
+      } catch (e) {
+        // Token geçersizse sessizce devam et
+      }
+    }
 
     res.json({
       top3: top3.rows,
-      myRank: myRank.rows[0]?.rank || null,
-      myScore: myScoreResult.rows[0]?.score || 0
+      myRank,
+      myScore
     });
   } catch (e) {
     res.status(500).json({ error: e.message });
