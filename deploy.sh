@@ -24,3 +24,6 @@ pm2 restart aofnotlar
 
 echo "✅ Deploy tamamlandı!"
 cp /var/www/aofnotlar/aofnotlar-admin.html /var/www/aofnotlar/frontend/build/admin.html
+cp /var/www/aofnotlar/shopier_promo_modules.html /var/www/aofnotlar/frontend/build/shopier_promo_modules.html
+cp /var/www/aofnotlar/shopier_promo_modules.html /var/www/aofnotlar/frontend/build/shopier.html
+
