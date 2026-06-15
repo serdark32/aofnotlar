@@ -369,6 +369,18 @@
       margin-bottom: 24px;
     }
 
+    .dashboard-split-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 768px) {
+      .dashboard-split-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
     .stat-card {
       background: white;
       border-radius: 12px;
@@ -515,6 +527,11 @@
     .badge-gray {
       background: #f3f4f6;
       color: #374151;
+    }
+
+    .badge-blue {
+      background: #eff6ff;
+      color: #1d4ed8;
     }
 
     /* ALERT */
@@ -1049,9 +1066,6 @@
       <button class="nav-item" data-page="feedback" onclick="navigate('feedback', this); closeSidebar()">
         <span class="nav-icon">💬</span> Geri Bildirimler
       </button>
-      <button class="nav-item" data-page="git-setup" onclick="navigate('git-setup', this); closeSidebar()">
-        <span class="nav-icon">🔧</span> Git Kurulum
-      </button>
       <button class="nav-item" data-page="pdf-courses" onclick="navigate('pdf-courses', this); closeSidebar()">
         <span class="nav-icon">📄</span> PDF Arşivi
       </button>
@@ -1100,20 +1114,22 @@
           </div>
         </div>
 
-        <div class="card">
-          <div class="card-title">📅 Son 7 Günlük Cevaplar</div>
-          <div id="activity-list">
-            <div class="empty-state">
-              <div class="empty-icon">⏳</div>Yükleniyor...
+        <div class="dashboard-split-grid">
+          <div class="card">
+            <div class="card-title">📈 Kategoriye Göre Çözülen Soru Sayısı</div>
+            <div id="cat-stats">
+              <div class="empty-state">
+                <div class="empty-icon">⏳</div>Yükleniyor...
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="card">
-          <div class="card-title">📈 Kategoriye Göre Çözülen Soru Sayısı</div>
-          <div id="cat-stats">
-            <div class="empty-state">
-              <div class="empty-icon">⏳</div>Yükleniyor...
+          <div class="card">
+            <div class="card-title">📅 Günlük Çözüm Detayı</div>
+            <div id="daily-cat-stats">
+              <div class="empty-state">
+                <div class="empty-icon">⏳</div>Yükleniyor...
+              </div>
             </div>
           </div>
         </div>
@@ -1499,111 +1515,7 @@
         </div>
       </div>
 
-      <!-- GIT KURULUM -->
-      <div class="page" id="page-git-setup">
-        <div class="page-header">
-          <div>
-            <div class="page-title">🔧 Git Kurulum</div>
-            <div class="page-subtitle">Kod güncellemeyi kolaylaştır — scp'den kurtar</div>
-          </div>
-        </div>
 
-        <div class="card">
-          <div class="card-title">🎯 Hedef</div>
-          <p style="font-size:13px; color:var(--muted); line-height:1.7;">
-            Şu an her değişiklik için <code>scp</code> kullanıyorsun. Git kurulunca:<br>
-            Mac'te değişiklik yap → <code>git push</code> → sunucu otomatik güncellenir.
-          </p>
-        </div>
-
-        <div class="card">
-          <div class="card-title">1️⃣ Sunucuda Git Repo Kur</div>
-          <p style="font-size:12px; color:var(--muted); margin-bottom:8px;">SSH ile sunucuya bağlan ve şu komutları
-            çalıştır:</p>
-
-          <div class="step-row">
-            <span class="step-num">1</span>
-            <div class="step-content">
-              <div class="step-title">Git'i başlat</div>
-              <div class="step-desc">Proje dizinine git, repo oluştur</div>
-              <div class="code-block">cd /var/www/aofnotlar
-                git init
-                git add .
-                git commit -m "ilk commit"<button class="copy-btn" onclick="copyCode(this)">kopyala</button></div>
-            </div>
-          </div>
-
-          <div class="step-row">
-            <span class="step-num">2</span>
-            <div class="step-content">
-              <div class="step-title">GitHub'a bağla</div>
-              <div class="step-desc">GitHub'da yeni private repo aç (aofnotlar), sonra:</div>
-              <div class="code-block">git remote add origin https://github.com/KULLANICIADI/aofnotlar.git
-                git branch -M main
-                git push -u origin main<button class="copy-btn" onclick="copyCode(this)">kopyala</button></div>
-            </div>
-          </div>
-
-          <div class="step-row">
-            <span class="step-num">3</span>
-            <div class="step-content">
-              <div class="step-title">.gitignore oluştur</div>
-              <div class="step-desc">.env ve node_modules'ü dışarıda tut</div>
-              <div class="code-block">cat > /var/www/aofnotlar/.gitignore << 'EOF' node_modules/ frontend/node_modules/
-                  frontend/build/ .env *.log EOF<button class="copy-btn" onclick="copyCode(this)">kopyala</button></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-title">2️⃣ Mac'te Kur</div>
-
-          <div class="step-row">
-            <span class="step-num">4</span>
-            <div class="step-content">
-              <div class="step-title">Mac'e clone et</div>
-              <div class="step-desc">Mac terminalinde:</div>
-              <div class="code-block">cd ~/Projects # veya istediğin dizin
-                git clone https://github.com/KULLANICIADI/aofnotlar.git
-                cd aofnotlar<button class="copy-btn" onclick="copyCode(this)">kopyala</button></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-title">3️⃣ Otomatik Deploy Scripti (Sunucuda)</div>
-
-          <div class="step-row">
-            <span class="step-num">5</span>
-            <div class="step-content">
-              <div class="step-title">deploy.sh scripti oluştur</div>
-              <div class="step-desc">Sunucuda bu scripti çalıştırınca her şey güncellenir:</div>
-              <div class="code-block">cat > /var/www/aofnotlar/deploy.sh << 'EOF' #!/bin/bash
-                  echo "🔄 Deploy başlıyor..." cd /var/www/aofnotlar git pull origin main npm install --production cd
-                  frontend npm install npm run build cd .. pm2 restart aofnotlar echo "✅ Deploy tamamlandı!" EOF chmod
-                  +x /var/www/aofnotlar/deploy.sh<button class="copy-btn" onclick="copyCode(this)">kopyala</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-title">⚡ Günlük Kullanım</div>
-          <p style="font-size:12px; color:var(--muted); margin-bottom:8px;">Mac'te değişiklik yaptıktan sonra:</p>
-          <div class="code-block">## Mac'te:
-            git add .
-            git commit -m "değişiklik açıklaması"
-            git push
-
-            ## Sonra sunucuda (SSH ile):
-            cd /var/www/aofnotlar && ./deploy.sh<button class="copy-btn" onclick="copyCode(this)">kopyala</button></div>
-
-          <div class="alert alert-info" style="margin-top:12px;">
-            💡 <strong>İlerisi için:</strong> GitHub Actions ile push yapınca sunucu otomatik deploy olabilir. İstersen
-            o adımı da ekleriz.
-          </div>
-        </div>
-      </div>
 
     </div><!-- /main -->
   </div><!-- /app -->
@@ -1894,15 +1806,15 @@
           catEl.innerHTML = `<div class="empty-state"><div class="empty-icon">📭</div>Henüz veri yok</div>`;
         }
 
-        // Activity
-        const actEl = document.getElementById('activity-list');
-        if (data.recentActivity && data.recentActivity.length) {
-          actEl.innerHTML = `<div class="table-wrap"><table>
-        <thead><tr><th>Tarih</th><th>Cevap Sayısı</th></tr></thead>
-        <tbody>${data.recentActivity.map(r => `<tr><td>${r.date}</td><td>${r.count}</td></tr>`).join('')}</tbody>
+        // Daily stats
+        const dailyCatEl = document.getElementById('daily-cat-stats');
+        if (data.dailyCatStats && data.dailyCatStats.length) {
+          dailyCatEl.innerHTML = `<div class="table-wrap"><table>
+        <thead><tr><th>Tarih</th><th>Ders Adı</th><th>Çözülen Soru</th></tr></thead>
+        <tbody>${data.dailyCatStats.map(r => `<tr><td>${r.date}</td><td><strong>${r.name}</strong></td><td><span class="badge badge-blue">${r.count}</span></td></tr>`).join('')}</tbody>
       </table></div>`;
         } else {
-          actEl.innerHTML = `<div class="empty-state"><div class="empty-icon">📭</div>Henüz aktivite yok</div>`;
+          dailyCatEl.innerHTML = `<div class="empty-state"><div class="empty-icon">📭</div>Henüz veri yok</div>`;
         }
       } catch (e) {
         showMsg('dashboard-error', `❌ Yüklenemedi: ${e.message}`, 'error');

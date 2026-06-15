@@ -437,7 +437,7 @@ export default function App() {
       <div style={s.container}>
         {showHeroBanner && (
           <div style={s.heroBanner} onClick={() => { setPrevScreen('home'); setScreen('product-detail'); }}>
-            <span style={s.heroText}>💡 Sınav Algoritmasına Göre Hazırlanmış Özet PDF'ini İncele ›</span>
+            <span style={s.heroText}>💡 Vakti Olmayanlara Özet Çalışma Sayfaları →</span>
             <button style={s.heroClose} onClick={(e) => { e.stopPropagation(); setShowHeroBanner(false); }} aria-label="Kapat">&times;</button>
           </div>
         )}
@@ -825,7 +825,7 @@ export default function App() {
               <div style={s.promoCardContent}>
                 <h3 style={s.promoCardTitle}>Sınavı Şansa Bırakma!</h3>
                 <p style={s.promoCardText}>
-                  Netlerini artırmak için Sınav Algoritmasına Göre Hazırlanmış Özet PDF'ini İncele ›
+                  Netlerini artırmak için Sınav Algoritmasına Göre Hazırlanmış Özet PDF'leri İncele ›
                 </p>
               </div>
             </div>
@@ -970,8 +970,24 @@ export default function App() {
             </div>
             
             <div style={s.cardTitle}>AÖF Sınavı Şansa Bırakılmaz!</div>
-            <div style={{ fontSize: 13, color: '#4b5563', lineHeight: 1.6, marginBottom: 20 }}>
+            <div style={{ fontSize: 13, color: '#4b5563', lineHeight: 1.6, marginBottom: 16 }}>
               Sınav algoritmasına göre hazırlanmış özet PDF notları ile derslerinizi kolayca geçin. Hangi konuların tekrar tekrar sorulduğu çıkmış sorulardan analiz edilerek bu evrak özenle hazırlandı.
+            </div>
+
+            <div style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 6,
+              background: '#eff6ff',
+              color: '#1d4ed8',
+              padding: '6px 12px',
+              borderRadius: 20,
+              fontSize: 12,
+              fontWeight: 700,
+              marginBottom: 18,
+              border: '1px solid rgba(29, 78, 216, 0.12)'
+            }}>
+              <span>📚</span> 10+ Aktif Ders Seçeneği
             </div>
 
             <div style={{ marginBottom: 20 }}>

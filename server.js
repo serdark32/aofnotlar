@@ -354,14 +354,32 @@ app.get('/api/admin/stats', adminAuth, async (req, res) => {
       pool.query('SELECT COUNT(*) FROM user_answers'),
     ]);
     const catStats = await pool.query(`SELECT c.name, COUNT(ua.id)::int as count FROM categories c LEFT JOIN questions q ON q.category_id = c.id LEFT JOIN user_answers ua ON ua.question_id = q.id GROUP BY c.id, c.name ORDER BY count DESC`);
-    const recentActivity = await pool.query(`SELECT DATE(answered_at) as date, COUNT(*)::int as count FROM user_answers WHERE answered_at >= NOW() - INTERVAL '7 days' GROUP BY DATE(answered_at) ORDER BY date DESC`);
+    
+    // Her gün hangi dersten kaç soru çözüldü
+    const dailyCatStats = await pool.query(`
+      SELECT 
+        DATE(ua.answered_at) as date, 
+        c.name, 
+        COUNT(*)::int as count 
+      FROM user_answers ua 
+      JOIN questions q ON ua.question_id = q.id 
+      JOIN categories c ON q.category_id = c.id 
+      WHERE ua.answered_at >= NOW() - INTERVAL '30 days' 
+      GROUP BY DATE(ua.answered_at), c.name 
+      ORDER BY date DESC, count DESC
+    `);
+
     res.json({
       users: parseInt(users.rows[0].count),
       questions: parseInt(questions.rows[0].count),
       categories: parseInt(categories.rows[0].count),
       answers: parseInt(answers.rows[0].count),
       catStats: catStats.rows,
-      recentActivity: recentActivity.rows.map(r => ({ date: new Date(r.date).toLocaleDateString('tr'), count: r.count }))
+      dailyCatStats: dailyCatStats.rows.map(r => ({
+        date: new Date(r.date).toLocaleDateString('tr'),
+        name: r.name,
+        count: r.count
+      }))
     });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
