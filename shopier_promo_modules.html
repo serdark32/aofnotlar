@@ -224,10 +224,10 @@
 
     /* Previews */
     .preview-container {
-      background: #f1f5f9; /* Light background to mock the user's white website background */
+      background: #f1f5f9;
       border-radius: 12px;
       padding: 40px 20px;
-      min-height: 200px;
+      min-height: 150px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -332,7 +332,7 @@
     /* Code Block Area */
     .code-container {
       position: relative;
-      display: none; /* Controlled by JS tabs */
+      display: none;
     }
 
     .code-container.active {
@@ -457,379 +457,137 @@
 
   </style>
 
-  <!-- ==================== MODULE 1 STYLES ==================== -->
-  <style id="style-module-1">
-    /* Modül 1: Ana Sayfa Hero Banner */
+  <!-- ==================== COMPACT MODULE STYLES ==================== -->
+  <style>
+    /* Modül 1: İnce Tıklanabilir Şerit */
     .aof-hero-banner {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-family: 'Inter', sans-serif;
       background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 50%, #1e3a8a 100%);
       color: #ffffff;
-      padding: 12px 24px;
+      padding: 8px 12px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 16px;
-      box-shadow: 0 4px 12px rgba(29, 78, 216, 0.15);
-      position: relative;
-      z-index: 999;
-      box-sizing: border-box;
-      width: 100%;
-      border-radius: 0px; /* Sitenin en üstü için */
-      transition: all 0.3s ease;
-    }
-
-    .aof-hero-banner-content {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-grow: 1;
-    }
-
-    .aof-hero-badge {
-      background: rgba(255, 255, 255, 0.2);
-      padding: 4px 10px;
-      border-radius: 99px;
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      white-space: nowrap;
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      animation: pulseBadge 2s infinite;
-      display: inline-block;
-    }
-
-    @keyframes pulseBadge {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-      100% { transform: scale(1); }
-    }
-
-    .aof-hero-text {
-      margin: 0;
-      font-size: 14px;
-      font-weight: 500;
-      line-height: 1.5;
-    }
-
-    .aof-hero-banner-actions {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .aof-hero-button {
-      background: #ffffff;
-      color: #1d4ed8;
-      padding: 8px 18px;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 600;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
       gap: 8px;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      white-space: nowrap;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    .aof-hero-button:hover {
-      background: #f8fafc;
-      color: #1e3a8a;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    }
-
-    .aof-hero-button svg {
+      box-shadow: 0 4px 10px rgba(29, 78, 216, 0.12);
+      border-radius: 10px;
+      width: 100%;
+      cursor: pointer;
+      box-sizing: border-box;
+      position: relative;
       transition: transform 0.2s ease;
     }
-
-    .aof-hero-button:hover svg {
-      transform: translateX(3px);
+    .aof-hero-banner:hover {
+      transform: translateY(-1px);
     }
-
+    .aof-hero-text {
+      margin: 0;
+      font-size: 11px;
+      font-weight: 700;
+      line-height: 1.4;
+      color: #ffffff;
+      flex-grow: 1;
+      text-align: left;
+    }
     .aof-hero-close {
       background: none;
       border: none;
-      color: rgba(255, 255, 255, 0.7);
-      font-size: 24px;
+      color: rgba(255,255,255,0.7);
+      font-size: 18px;
       cursor: pointer;
       line-height: 1;
-      padding: 0;
-      transition: color 0.2s ease;
+      padding: 2px 4px;
+      z-index: 10;
     }
-
     .aof-hero-close:hover {
       color: #ffffff;
     }
 
-    /* Responsive */
-    @media (max-width: 992px) {
-      .aof-hero-banner {
-        flex-direction: column;
-        text-align: center;
-        padding: 16px;
-        gap: 12px;
-      }
-      
-      .aof-hero-banner-content {
-        flex-direction: column;
-        gap: 8px;
-      }
-      
-      .aof-hero-banner-actions {
-        width: 100%;
-        justify-content: center;
-      }
-      
-      .aof-hero-button {
-        width: 100%;
-        justify-content: center;
-        padding: 12px;
-      }
-      
-      .aof-hero-close {
-        position: absolute;
-        top: 8px;
-        right: 12px;
-      }
-    }
-  </style>
-
-  <!-- ==================== MODULE 2 STYLES ==================== -->
-  <style id="style-module-2">
-    /* Modül 2: Test Arası / Sonuç Ekranı Kutusu */
+    /* Modül 2: Kompakt Sonuç Kartı */
     .aof-card-promo {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-family: 'Inter', sans-serif;
       width: 100%;
       max-width: 600px;
-      margin: 24px auto;
       background: #ffffff;
-      border-radius: 16px;
-      border: 1px solid rgba(79, 70, 229, 0.15);
-      box-shadow: 0 10px 30px rgba(79, 70, 229, 0.08);
+      border-radius: 12px;
+      border: 1px solid rgba(79, 70, 229, 0.12);
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.05);
       position: relative;
       overflow: hidden;
       display: flex;
       flex-direction: column;
+      cursor: pointer;
       box-sizing: border-box;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      transition: transform 0.2s ease;
     }
-
     .aof-card-promo:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 15px 35px rgba(79, 70, 229, 0.12);
+      transform: translateY(-1px);
     }
-
     .aof-card-accent-line {
-      height: 4px;
+      height: 3px;
       background: linear-gradient(90deg, #3b82f6, #6366f1, #8b5cf6);
       width: 100%;
     }
-
     .aof-card-body {
-      padding: 24px;
+      padding: 12px;
       display: flex;
-      gap: 20px;
-      align-items: flex-start;
+      gap: 10px;
+      align-items: center;
       text-align: left;
     }
-
     .aof-card-icon-container {
-      background: rgba(79, 70, 229, 0.08);
-      border-radius: 12px;
-      padding: 12px;
+      background: rgba(79, 70, 229, 0.06);
+      border-radius: 8px;
+      padding: 6px;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
     }
-
     .aof-card-icon {
-      width: 32px;
-      height: 32px;
+      width: 20px;
+      height: 20px;
       color: #4f46e5;
     }
-
     .aof-card-content {
       flex-grow: 1;
     }
-
-    .aof-card-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 12px;
-    }
-
-    .aof-card-tag {
-      background: rgba(239, 68, 68, 0.1);
-      color: #dc2626;
-      font-size: 11px;
-      font-weight: 700;
-      padding: 3px 8px;
-      border-radius: 6px;
-      letter-spacing: 0.5px;
-    }
-
-    .aof-card-delivery {
-      background: rgba(16, 185, 129, 0.1);
-      color: #059669;
-      font-size: 11px;
-      font-weight: 700;
-      padding: 3px 8px;
-      border-radius: 6px;
-    }
-
     .aof-card-title {
-      margin: 0 0 10px 0;
-      font-size: 20px;
-      font-weight: 700;
-      color: #1e293b;
-      line-height: 1.3;
-    }
-
-    .aof-card-text {
-      margin: 0 0 16px 0;
+      margin: 0 0 2px 0;
       font-size: 14px;
-      color: #475569;
-      line-height: 1.6;
+      font-weight: 800;
+      color: #1e293b;
     }
-
+    .aof-card-text {
+      margin: 0;
+      font-size: 12px;
+      color: #475569;
+      line-height: 1.4;
+    }
     .aof-card-text strong {
       color: #4f46e5;
-      font-weight: 600;
     }
 
-    .aof-card-features {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 8px;
-      margin-top: 12px;
-    }
-
-    .aof-feature-item {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 12px;
-      color: #64748b;
-      font-weight: 500;
-    }
-
-    .aof-check-icon {
-      width: 14px;
-      height: 14px;
-      color: #10b981;
-      flex-shrink: 0;
-    }
-
-    .aof-card-action-bar {
-      padding: 0 24px 24px 24px;
-    }
-
-    .aof-card-button {
-      background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
-      color: #ffffff;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 15px;
-      padding: 14px 24px;
-      border-radius: 10px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
-    }
-
-    .aof-card-button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(79, 70, 229, 0.3);
-      background: linear-gradient(135deg, #4338ca 0%, #4f46e5 100%);
-    }
-
-    .aof-btn-arrow {
-      width: 18px;
-      height: 18px;
-      transition: transform 0.2s ease;
-    }
-
-    .aof-card-button:hover .aof-btn-arrow {
-      transform: translateX(4px);
-    }
-
-    /* Responsive */
-    @media (max-width: 600px) {
-      .aof-card-body {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        padding: 20px;
-        gap: 16px;
-      }
-      
-      .aof-card-icon-container {
-        width: 48px;
-        height: 48px;
-        padding: 8px;
-      }
-      
-      .aof-card-icon {
-        width: 28px;
-        height: 28px;
-      }
-      
-      .aof-card-meta {
-        justify-content: center;
-      }
-      
-      .aof-card-features {
-        justify-content: center;
-        text-align: left;
-        display: inline-block;
-      }
-      
-      .aof-feature-item {
-        margin-bottom: 6px;
-      }
-      
-      .aof-card-action-bar {
-        padding: 0 20px 20px 20px;
-      }
-      
-      .aof-card-button {
-        font-size: 14px;
-        padding: 12px 16px;
-      }
-    }
-  </style>
-
-  <!-- ==================== MODULE 3 STYLES ==================== -->
-  <style id="style-module-3">
-    /* Modül 3: Mobil Sticky Bottom Bar */
+    /* Modül 3: Mobil İnce Sticky Bar */
     .aof-sticky-bottom {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-family: 'Inter', sans-serif;
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
-      background: rgba(15, 23, 42, 0.96);
+      background: rgba(15, 23, 42, 0.95);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
       border-top: 1px solid rgba(255, 255, 255, 0.1);
-      box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.2);
-      padding: 12px 24px;
+      box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.15);
+      padding: 8px 12px;
       z-index: 9999;
       display: flex;
       justify-content: center;
       align-items: center;
+      cursor: pointer;
       box-sizing: border-box;
     }
-
-    /* Cihaz içi önizleme için özel overrides (kopyalanan kodda olmayacak) */
     .phone-screen .aof-sticky-bottom {
       position: absolute;
       left: 0;
@@ -837,128 +595,35 @@
       bottom: 0;
       z-index: 999;
     }
-
     .aof-sticky-container {
       display: flex;
       width: 100%;
-      max-width: 1200px;
+      max-width: 480px;
       justify-content: space-between;
       align-items: center;
-      gap: 16px;
+      gap: 10px;
     }
-
-    .aof-sticky-content {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      color: #ffffff;
-      text-align: left;
-    }
-
-    .aof-sticky-badge {
-      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-      color: #ffffff;
-      font-size: 10px;
-      font-weight: 700;
-      padding: 4px 8px;
-      border-radius: 6px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      white-space: nowrap;
-      display: inline-block;
-    }
-
     .aof-sticky-text {
       margin: 0;
-      font-size: 14px;
-      font-weight: 500;
-      line-height: 1.4;
-    }
-
-    .aof-sticky-button {
-      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      font-size: 11px;
+      font-weight: 700;
+      line-height: 1.3;
       color: #ffffff;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 13px;
-      padding: 10px 20px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      white-space: nowrap;
-      box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
-      transition: all 0.2s ease;
+      flex-grow: 1;
+      text-align: left;
     }
-
-    .aof-sticky-button:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 6px 14px rgba(59, 130, 246, 0.4);
-      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-    }
-
-    .aof-sticky-arrow {
-      width: 14px;
-      height: 14px;
-      transition: transform 0.2s ease;
-    }
-
-    .aof-sticky-button:hover .aof-sticky-arrow {
-      transform: translateX(3px);
-    }
-
     .aof-sticky-close {
-      position: absolute;
-      top: 50%;
-      right: 12px;
-      transform: translateY(-50%);
       background: none;
       border: none;
       color: rgba(255, 255, 255, 0.5);
-      font-size: 20px;
+      font-size: 16px;
       cursor: pointer;
-      padding: 4px;
+      padding: 2px 4px;
+      z-index: 10;
       line-height: 1;
-      transition: color 0.2s ease;
     }
-
     .aof-sticky-close:hover {
       color: #ffffff;
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-      .aof-sticky-bottom {
-        padding: 10px 40px 10px 16px;
-      }
-      
-      .aof-sticky-container {
-        gap: 12px;
-      }
-      
-      .aof-sticky-content {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 4px;
-      }
-      
-      .aof-sticky-badge {
-        font-size: 9px;
-        padding: 2px 6px;
-      }
-      
-      .aof-sticky-text {
-        font-size: 12px;
-      }
-      
-      .aof-sticky-button {
-        font-size: 12px;
-        padding: 8px 14px;
-      }
-      
-      .aof-sticky-close {
-        right: 8px;
-      }
     }
   </style>
 </head>
@@ -966,9 +631,9 @@
 
   <div class="container">
     <header>
-      <div class="badge-top">Satış Psikolojisi & Dönüşüm Odaklı</div>
-      <h1>AÖF Notlar Shopier Modülleri</h1>
-      <p>Öğrencilerin sınav stresini azaltıp güven veren, responsive, saf HTML/CSS Shopier reklam ve satış modülleri.</p>
+      <div class="badge-top">İnce, Kompakt & Yönlendirmeli</div>
+      <h1>AÖF Notlar Yeni Satış Akışı</h1>
+      <p>Modüller tıklanır tıklanmaz Shopier yerine sitemizdeki ürün detay sayfasına yönlendirir; oradan satın alma tetiklenir.</p>
     </header>
 
     <!-- URL Configurator -->
@@ -979,7 +644,7 @@
       </div>
       <p style="color: var(--text-muted); font-size: 14px; margin-top: -8px;">Aşağıya Shopier ödeme veya ürün linkinizi girin, tüm butonlar ve kopyalanabilir kodlar otomatik olarak bu linkle güncellenecektir.</p>
       <div class="config-input-group">
-        <input type="text" id="shopier-url-input" class="config-input" value="https://www.shopier.com/aofnotlar-ozet-pdf" placeholder="https://www.shopier.com/...">
+        <input type="text" id="shopier-url-input" class="config-input" value="https://www.shopier.com/aofseslinotlar" placeholder="https://www.shopier.com/...">
         <button class="config-btn" onclick="updateShopierUrls()">Güncelle</button>
       </div>
     </div>
@@ -989,7 +654,7 @@
       <div class="module-header">
         <div class="module-title">
           <span class="module-number">1</span>
-          <span>Ana Sayfa Hero Banner (Sayfa Üstü Şerit)</span>
+          <span>Ana Sayfa Hero Banner (İnce Tıklanabilir Şerit)</span>
         </div>
         <div class="module-tabs">
           <button class="tab-btn active" onclick="switchTab(this, 'm1-preview')">Canlı Önizleme</button>
@@ -999,20 +664,11 @@
       <div class="module-content">
         <!-- Live Preview Content -->
         <div id="m1-preview" class="tab-content-pane active">
-          <div class="preview-container" style="padding: 0;">
+          <div class="preview-container" style="padding: 12px;">
             <!-- Render Banner -->
-            <div class="aof-hero-banner" id="demoHeroBanner">
-              <div class="aof-hero-banner-content">
-                <span class="aof-hero-badge">💡 NOKTA ATIŞI</span>
-                <p class="aof-hero-text">Yüzlerce soru çözmekle vakit kaybetme! 2500 soruluk analizle hazırlanan Nokta Atışı Özet PDF'i hemen indir.</p>
-              </div>
-              <div class="aof-hero-banner-actions">
-                <a href="https://www.shopier.com/aofnotlar-ozet-pdf" target="_blank" class="aof-hero-button shopier-link-target">
-                  <span>Özeti İncele (Shopier)</span>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                </a>
-                <button class="aof-hero-close" onclick="resetDemoBanner()">&times;</button>
-              </div>
+            <div class="aof-hero-banner" id="demoHeroBanner" onclick="alert('React uygulamanızda: setScreen(\'product-detail\') tetiklenecek')">
+              <span class="aof-hero-text">💡 2500 Soruluk Nokta Atışı Özet PDF'ini İncele ›</span>
+              <button class="aof-hero-close" onclick="event.stopPropagation(); resetDemoBanner()">&times;</button>
             </div>
           </div>
           
@@ -1022,10 +678,8 @@
               <span>Satış Psikolojisi & Tasarım Analizi (CRO)</span>
             </div>
             <ul class="cro-list">
-              <li class="cro-item"><span class="cro-item-icon">✓</span> <span><strong>Zaman Kazanma Odaklı:</strong> "Yüzlerce soru çözmekle vakit kaybetme" ifadesi, sınava az zamanı kalan öğrencinin en büyük acı noktasına (vakit darlığı) hitap eder.</span></li>
-              <li class="cro-item"><span class="cro-item-icon">✓</span> <span><strong>Kanıtlanmış Veri Gücü:</strong> "2500 soruluk analiz" ifadesi rasyonel güven tesis eder, notun arkasındaki emeği ve geçerliliği kanıtlar.</span></li>
-              <li class="cro-item"><span class="cro-item-icon">✓</span> <span><strong>Sıcak/Güven Veren Kontrast:</strong> Güven verici derin mavi/indigo gradyanı üzerinde yüksek kontrastlı beyaz buton gözü doğrudan CTA'ya yönlendirir.</span></li>
-              <li class="cro-item"><span class="cro-item-icon">✓</span> <span><strong>Mikro-Animasyon:</strong> "Nokta Atışı" rozetindeki hafif periyodik büyüme hareketi, gözü yormadan dikkat çeker.</span></li>
+              <li class="cro-item"><span class="cro-item-icon">✓</span> <span><strong>Ultra İnce Tasarım:</strong> Buton ve rozetleri çıkarıp tüm şeridi tıklanabilir yaparak dikey yüksekliği 34px'e indirdik. Mobilde asla yer kaplamaz.</span></li>
+              <li class="cro-item"><span class="cro-item-icon">✓</span> <span><strong>Yönlendirmeli Akış:</strong> Direkt Shopier yerine ürün detay sayfasına yönlendirerek öğrencinin "Önizleme görme" ve "Güven" ihtiyacını önceden karşılar.</span></li>
             </ul>
           </div>
         </div>
@@ -1046,7 +700,7 @@
       <div class="module-header">
         <div class="module-title">
           <span class="module-number">2</span>
-          <span>Test Arası / Sonuç Ekranı Kutusu (Bağlamsal Kart)</span>
+          <span>Test Arası / Sonuç Ekranı Kutusu (Kompakt Kart)</span>
         </div>
         <div class="module-tabs">
           <button class="tab-btn active" onclick="switchTab(this, 'm2-preview')">Canlı Önizleme</button>
@@ -1058,51 +712,22 @@
         <div id="m2-preview" class="tab-content-pane active">
           <div class="preview-container">
             <!-- Render Card -->
-            <div class="aof-card-promo">
+            <div class="aof-card-promo" onclick="alert('React uygulamanızda: setScreen(\'product-detail\') tetiklenecek')">
               <div class="aof-card-accent-line"></div>
               <div class="aof-card-body">
                 <div class="aof-card-icon-container">
                   <svg class="aof-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
                     <polyline points="14 2 14 8 20 8"/>
-                    <line x1="16" y1="13" x2="8" y2="13"/>
-                    <line x1="16" y1="17" x2="8" y2="17"/>
-                    <line x1="10" y1="9" x2="8" y2="9"/>
                   </svg>
                 </div>
                 
                 <div class="aof-card-content">
-                  <div class="aof-card-meta">
-                    <span class="aof-card-tag">🔥 EN ÇOK TERCİH EDİLEN</span>
-                    <span class="aof-card-delivery">⚡ Anında Teslimat</span>
-                  </div>
                   <h3 class="aof-card-title">Sınavı Şansa Bırakma!</h3>
                   <p class="aof-card-text">
-                    Netlerini artırmak için sadece çıkmış sorular yetmez. Sınavda çıkması muhtemel konuları öğrenmek için <strong>15 Sayfalık Özel Algoritma Notlarına</strong> Göz At!
+                    Netlerini artırmak için sınavda çıkması muhtemel <strong>15 Sayfalık Özel Algoritma Notlarını</strong> İncele ›
                   </p>
-                  
-                  <div class="aof-card-features">
-                    <div class="aof-feature-item">
-                      <svg class="aof-check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                      <span>2500 Soru Analizi</span>
-                    </div>
-                    <div class="aof-feature-item">
-                      <svg class="aof-check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                      <span>Nokta Atışı Bilgiler</span>
-                    </div>
-                    <div class="aof-feature-item">
-                      <svg class="aof-check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                      <span>AÖF Müfredat Uyumlu</span>
-                    </div>
-                  </div>
                 </div>
-              </div>
-              
-              <div class="aof-card-action-bar">
-                <a href="https://www.shopier.com/aofnotlar-ozet-pdf" target="_blank" class="aof-card-button shopier-link-target">
-                  <span>Hemen İndir ve Puanını Artır</span>
-                  <svg class="aof-btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-                </a>
               </div>
             </div>
           </div>
@@ -1113,10 +738,8 @@
               <span>Satış Psikolojisi & Tasarım Analizi (CRO)</span>
             </div>
             <ul class="cro-list">
-              <li class="cro-item"><span class="cro-item-icon">✓</span> <span><strong>Korku ve Risk Yönetimi (Loss Aversion):</strong> "Sınavı şansa bırakma" başlığı, başarısızlık ihtimalini azaltma dürtüsünü harekete geçirir.</span></li>
-              <li class="cro-item"><span class="cro-item-icon">✓</span> <span><strong>Somut Fayda Vurgusu:</strong> "15 Sayfalık Özel Algoritma Notları" ibaresi, ürünün kısa, öz ve pratik olduğunu net bir rakamla gösterir.</span></li>
-              <li class="cro-item"><span class="cro-item-icon">✓</span> <span><strong>Uyumlu ve Ayrışan Tasarım:</strong> Beyaz arka plan sayesinde her türlü açık renkli soru çözme sayfasına sırıtmadan yerleşir; üstündeki gökkuşağı çizgisi ve mor butonla kalitesini hissettirir.</span></li>
-              <li class="cro-item"><span class="cro-item-icon">✓</span> <span><strong>Karar Kolaylığı (Features):</strong> Alt kısımdaki 3 maddelik onay listesi ("2500 Soru Analizi" vb.), kullanıcının satın alma kararındaki engelleri kaldırır.</span></li>
+              <li class="cro-item"><span class="cro-item-icon">✓</span> <span><strong>Küçültülmüş Yükseklik:</strong> Kalabalık maddeler ve buton alanları kaldırılarak sadece başlık ve tek satırlık yönlendirme ile kart yüksekliği %50 azaltıldı.</span></li>
+              <li class="cro-item"><span class="cro-item-icon">✓</span> <span><strong>Bilişsel Yükü Azaltma:</strong> Test sonrasında yorgun olan öğrenciye doğrudan ödeme butonu yerine yumuşak bir detay inceleme çağrısı sunulur.</span></li>
             </ul>
           </div>
         </div>
@@ -1137,7 +760,7 @@
       <div class="module-header">
         <div class="module-title">
           <span class="module-number">3</span>
-          <span>Mobil Sticky Bottom Bar (Alt Sabit Şerit)</span>
+          <span>Mobil Sticky Bottom Bar (İnce Tıklanabilir Alt Şerit)</span>
         </div>
         <div class="module-tabs">
           <button class="tab-btn active" onclick="switchTab(this, 'm3-preview')">Canlı Önizleme</button>
@@ -1169,20 +792,13 @@
                 
                 <button class="mock-nav-btn">Sonraki Soruya Geç</button>
                 
-                <div style="height: 120px;"></div> <!-- space for bottom bar -->
+                <div style="height: 80px;"></div> <!-- space for bottom bar -->
                 
                 <!-- Render Sticky Bottom Bar inside the phone screen -->
-                <div class="aof-sticky-bottom" id="demoStickyBottom">
-                  <button class="aof-sticky-close" onclick="resetDemoSticky()">&times;</button>
+                <div class="aof-sticky-bottom" id="demoStickyBottom" onclick="alert('React uygulamanızda: setScreen(\'product-detail\') tetiklenecek')">
+                  <button class="aof-sticky-close" onclick="event.stopPropagation(); resetDemoSticky()">&times;</button>
                   <div class="aof-sticky-container">
-                    <div class="aof-sticky-content">
-                      <span class="aof-sticky-badge">🔥 ALTIN NOTLAR</span>
-                      <p class="aof-sticky-text">Sınav Sabahı Hayat Kurtaracak 25 Altın Bilgi!</p>
-                    </div>
-                    <a href="https://www.shopier.com/aofnotlar-ozet-pdf" target="_blank" class="aof-sticky-button shopier-link-target">
-                      <span>PDF'i Al</span>
-                      <svg class="aof-sticky-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-                    </a>
+                    <p class="aof-sticky-text">🔥 Sınav Sabahı Hayat Kurtaracak 25 Altın Bilgi ›</p>
                   </div>
                 </div>
                 
@@ -1196,10 +812,8 @@
               <span>Satış Psikolojisi & Tasarım Analizi (CRO)</span>
             </div>
             <ul class="cro-list">
-              <li class="cro-item"><span class="cro-item-icon">✓</span> <span><strong>Aciliyet ve Can Simidi Etkisi:</strong> "Sınav sabahı hayat kurtaracak" tabiri son dakika ders çalışan öğrencinin paniğine şifa niteliğinde bir güven sunar.</span></li>
-              <li class="cro-item"><span class="cro-item-icon">✓</span> <span><strong>Merak Uyandırma (Curiosity Gap):</strong> "25 Altın Bilgi" başlığı, öğrencinin "Acaba bu 25 bilgi ne? Kesin sınavda çıkar, kaçırmayayım" diyerek meraklanmasını sağlar.</span></li>
-              <li class="cro-item"><span class="cro-item-icon">✓</span> <span><strong>Yüksek Kontrastlı Koyu Tema:</strong> Soru çözme ekranı genellikle beyaz ve açık renklidir. Alt kısımda duran derin lacivert/siyah tonlarındaki bu bar, ekrandan mükemmel şekilde sıyrılır ve görünür olur.</span></li>
-              <li class="cro-item"><span class="cro-item-icon">✓</span> <span><strong>UX Dostu Kapatma (Dismiss):</strong> Öğrencinin soru çözerken rahatsız olmaması ve sayfaya sinirlenmemesi için eklenen küçük "X" butonu, kullanıcı dostu satış felsefesinin en kritik kuralıdır.</span></li>
+              <li class="cro-item"><span class="cro-item-icon">✓</span> <span><strong>Minimum Alan Kaplama:</strong> Butonu kaldırarak tek satırda bitecek şekilde tasarladık. Soru şıklarını veya butonları kapatmaz.</span></li>
+              <li class="cro-item"><span class="cro-item-icon">✓</span> <span><strong>Kolay Kapatılabilirlik:</strong> Sol veya sağ kenarda tek dokunuşla kapanabilen minimalist yapı.</span></li>
             </ul>
           </div>
         </div>
@@ -1219,14 +833,10 @@
   <script>
     // Tab switching logic
     function switchTab(btn, paneId) {
-      // Find parent header and content container
       const section = btn.closest('.module-section');
-      
-      // Update active tab buttons
       section.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       
-      // Update active content panes
       section.querySelectorAll('.tab-content-pane').forEach(pane => {
         pane.classList.remove('active');
       });
@@ -1237,13 +847,6 @@
     function updateShopierUrls() {
       const inputUrl = document.getElementById('shopier-url-input').value.trim();
       if (!inputUrl) return;
-      
-      // Update interactive previews
-      document.querySelectorAll('.shopier-link-target').forEach(link => {
-        link.href = inputUrl;
-      });
-      
-      // Update code blocks
       generateCodeBlocks(inputUrl);
     }
 
@@ -1251,597 +854,211 @@
     function resetDemoBanner() {
       const banner = document.getElementById('demoHeroBanner');
       banner.style.opacity = '0';
-      setTimeout(() => {
-        banner.style.opacity = '1';
-      }, 500);
+      setTimeout(() => { banner.style.opacity = '1'; }, 500);
     }
 
     function resetDemoSticky() {
       const sticky = document.getElementById('demoStickyBottom');
       sticky.style.opacity = '0';
-      setTimeout(() => {
-        sticky.style.opacity = '1';
-      }, 500);
+      setTimeout(() => { sticky.style.opacity = '1'; }, 500);
     }
 
     // Code Templates Generator
     function generateCodeBlocks(shopierUrl) {
       // Modül 1 Code Template
-      const m1Code = `<!-- Modül 1: Ana Sayfa Hero Banner (Sayfanın En Üstü İçin Şerit) -->
-<div class="aof-hero-banner" id="aofHeroBanner">
-  <div class="aof-hero-banner-content">
-    <span class="aof-hero-badge">💡 NOKTA ATIŞI</span>
-    <p class="aof-hero-text">Yüzlerce soru çözmekle vakit kaybetme! 2500 soruluk analizle hazırlanan Nokta Atışı Özet PDF'i hemen indir.</p>
-  </div>
-  <div class="aof-hero-banner-actions">
-    <a href="${shopierUrl}" target="_blank" class="aof-hero-button">
-      <span>Özeti İncele (Shopier)</span>
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-    </a>
-    <button class="aof-hero-close" onclick="document.getElementById('aofHeroBanner').style.display='none'" aria-label="Kapat">&times;</button>
-  </div>
+      const m1Code = `<!-- Modül 1: İnce Tıklanabilir Şerit (React Entegrasyonu İçin) -->
+<div class="aof-hero-banner" id="aofHeroBanner" onClick={() => { setPrevScreen('home'); setScreen('product-detail'); }}>
+  <span class="aof-hero-text">💡 2500 Soruluk Nokta Atışı Özet PDF'ini İncele ›</span>
+  <button class="aof-hero-close" onClick={(e) => { e.stopPropagation(); setShowHeroBanner(false); }} aria-label="Kapat">&times;</button>
 </div>
 
 <style>
   /* Hero Banner CSS */
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
   .aof-hero-banner {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-family: 'Inter', sans-serif;
     background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 50%, #1e3a8a 100%);
     color: #ffffff;
-    padding: 12px 24px;
+    padding: 8px 12px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 16px;
-    box-shadow: 0 4px 12px rgba(29, 78, 216, 0.15);
-    position: relative;
-    z-index: 999;
-    box-sizing: border-box;
-    width: 100%;
-    transition: all 0.3s ease;
-  }
-
-  .aof-hero-banner-content {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-grow: 1;
-  }
-
-  .aof-hero-badge {
-    background: rgba(255, 255, 255, 0.2);
-    padding: 4px 10px;
-    border-radius: 99px;
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    white-space: nowrap;
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    animation: pulseBadge 2s infinite;
-    display: inline-block;
-  }
-
-  @keyframes pulseBadge {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
-  }
-
-  .aof-hero-text {
-    margin: 0;
-    font-size: 14px;
-    font-weight: 500;
-    line-height: 1.5;
-  }
-
-  .aof-hero-banner-actions {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-
-  .aof-hero-button {
-    background: #ffffff;
-    color: #1d4ed8;
-    padding: 8px 18px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 600;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
     gap: 8px;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    white-space: nowrap;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  }
-
-  .aof-hero-button:hover {
-    background: #f8fafc;
-    color: #1e3a8a;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  }
-
-  .aof-hero-button svg {
+    box-shadow: 0 4px 10px rgba(29, 78, 216, 0.12);
+    border-radius: 10px;
+    width: 100%;
+    cursor: pointer;
+    box-sizing: border-box;
+    position: relative;
     transition: transform 0.2s ease;
   }
-
-  .aof-hero-button:hover svg {
-    transform: translateX(3px);
+  .aof-hero-banner:hover {
+    transform: translateY(-1px);
   }
-
+  .aof-hero-text {
+    margin: 0;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.4;
+    color: #ffffff;
+    flex-grow: 1;
+    text-align: left;
+  }
   .aof-hero-close {
     background: none;
     border: none;
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 24px;
+    color: rgba(255,255,255,0.7);
+    font-size: 18px;
     cursor: pointer;
     line-height: 1;
-    padding: 0;
-    transition: color 0.2s ease;
-  }
-
-  .aof-hero-close:hover {
-    color: #ffffff;
-  }
-
-  @media (max-width: 992px) {
-    .aof-hero-banner {
-      flex-direction: column;
-      text-align: center;
-      padding: 16px;
-      gap: 12px;
-    }
-    
-    .aof-hero-banner-content {
-      flex-direction: column;
-      gap: 8px;
-    }
-    
-    .aof-hero-banner-actions {
-      width: 100%;
-      justify-content: center;
-    }
-    
-    .aof-hero-button {
-      width: 100%;
-      justify-content: center;
-      padding: 12px;
-    }
-    
-    .aof-hero-close {
-      position: absolute;
-      top: 8px;
-      right: 12px;
-    }
+    padding: 2px 4px;
+    z-index: 10;
   }
 </style>`;
 
       // Modül 2 Code Template
-      const m2Code = `<!-- Modül 2: Test Arası / Sonuç Ekranı Kutusu (Bağlamsal Kart) -->
-<div class="aof-card-promo">
+      const m2Code = `<!-- Modül 2: Test Arası / Sonuç Ekranı Kutusu (Kompakt Kart) -->
+<div class="aof-card-promo" onClick={() => { setPrevScreen('result'); setScreen('product-detail'); }}>
   <div class="aof-card-accent-line"></div>
   <div class="aof-card-body">
     <div class="aof-card-icon-container">
       <svg class="aof-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
         <polyline points="14 2 14 8 20 8"/>
-        <line x1="16" y1="13" x2="8" y2="13"/>
-        <line x1="16" y1="17" x2="8" y2="17"/>
-        <line x1="10" y1="9" x2="8" y2="9"/>
       </svg>
     </div>
     
     <div class="aof-card-content">
-      <div class="aof-card-meta">
-        <span class="aof-card-tag">🔥 EN ÇOK TERCİH EDİLEN</span>
-        <span class="aof-card-delivery">⚡ Anında Teslimat</span>
-      </div>
       <h3 class="aof-card-title">Sınavı Şansa Bırakma!</h3>
       <p class="aof-card-text">
-        Netlerini artırmak için sadece çıkmış sorular yetmez. Sınavda çıkması muhtemel konuları öğrenmek için <strong>15 Sayfalık Özel Algoritma Notlarına</strong> Göz At!
+        Netlerini artırmak için sınavda çıkması muhtemel <strong>15 Sayfalık Özel Algoritma Notlarını</strong> İncele ›
       </p>
-      
-      <div class="aof-card-features">
-        <div class="aof-feature-item">
-          <svg class="aof-check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-          <span>2500 Soru Analizi</span>
-        </div>
-        <div class="aof-feature-item">
-          <svg class="aof-check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-          <span>Nokta Atışı Bilgiler</span>
-        </div>
-        <div class="aof-feature-item">
-          <svg class="aof-check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-          <span>AÖF Müfredat Uyumlu</span>
-        </div>
-      </div>
     </div>
-  </div>
-  
-  <div class="aof-card-action-bar">
-    <a href="${shopierUrl}" target="_blank" class="aof-card-button">
-      <span>Hemen İndir ve Puanını Artır</span>
-      <svg class="aof-btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-    </a>
   </div>
 </div>
 
 <style>
   /* Kart CSS */
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
   .aof-card-promo {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-family: 'Inter', sans-serif;
     width: 100%;
     max-width: 600px;
-    margin: 24px auto;
     background: #ffffff;
-    border-radius: 16px;
-    border: 1px solid rgba(79, 70, 229, 0.15);
-    box-shadow: 0 10px 30px rgba(79, 70, 229, 0.08);
+    border-radius: 12px;
+    border: 1px solid rgba(79, 70, 229, 0.12);
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.05);
     position: relative;
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    cursor: pointer;
     box-sizing: border-box;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.2s ease;
   }
-
   .aof-card-promo:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 15px 35px rgba(79, 70, 229, 0.12);
+    transform: translateY(-1px);
   }
-
   .aof-card-accent-line {
-    height: 4px;
+    height: 3px;
     background: linear-gradient(90deg, #3b82f6, #6366f1, #8b5cf6);
     width: 100%;
   }
-
   .aof-card-body {
-    padding: 24px;
-    display: flex;
-    gap: 20px;
-    align-items: flex-start;
-  }
-
-  .aof-card-icon-container {
-    background: rgba(79, 70, 229, 0.08);
-    border-radius: 12px;
     padding: 12px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    text-align: left;
+  }
+  .aof-card-icon-container {
+    background: rgba(79, 70, 229, 0.06);
+    border-radius: 8px;
+    padding: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
   }
-
   .aof-card-icon {
-    width: 32px;
-    height: 32px;
+    width: 20px;
+    height: 20px;
     color: #4f46e5;
   }
-
   .aof-card-content {
     flex-grow: 1;
   }
-
-  .aof-card-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 12px;
-  }
-
-  .aof-card-tag {
-    background: rgba(239, 68, 68, 0.1);
-    color: #dc2626;
-    font-size: 11px;
-    font-weight: 700;
-    padding: 3px 8px;
-    border-radius: 6px;
-    letter-spacing: 0.5px;
-  }
-
-  .aof-card-delivery {
-    background: rgba(16, 185, 129, 0.1);
-    color: #059669;
-    font-size: 11px;
-    font-weight: 700;
-    padding: 3px 8px;
-    border-radius: 6px;
-  }
-
   .aof-card-title {
-    margin: 0 0 10px 0;
-    font-size: 20px;
-    font-weight: 700;
-    color: #1e293b;
-    line-height: 1.3;
-  }
-
-  .aof-card-text {
-    margin: 0 0 16px 0;
+    margin: 0 0 2px 0;
     font-size: 14px;
-    color: #475569;
-    line-height: 1.6;
+    font-weight: 800;
+    color: #1e293b;
   }
-
-  .aof-card-text strong {
-    color: #4f46e5;
-    font-weight: 600;
-  }
-
-  .aof-card-features {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 8px;
-    margin-top: 12px;
-  }
-
-  .aof-feature-item {
-    display: flex;
-    align-items: center;
-    gap: 6px;
+  .aof-card-text {
+    margin: 0;
     font-size: 12px;
-    color: #64748b;
-    font-weight: 500;
-  }
-
-  .aof-check-icon {
-    width: 14px;
-    height: 14px;
-    color: #10b981;
-    flex-shrink: 0;
-  }
-
-  .aof-card-action-bar {
-    padding: 0 24px 24px 24px;
-  }
-
-  .aof-card-button {
-    background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
-    color: #ffffff;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 15px;
-    padding: 14px 24px;
-    border-radius: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
-  }
-
-  .aof-card-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(79, 70, 229, 0.3);
-    background: linear-gradient(135deg, #4338ca 0%, #4f46e5 100%);
-  }
-
-  .aof-btn-arrow {
-    width: 18px;
-    height: 18px;
-    transition: transform 0.2s ease;
-  }
-
-  .aof-card-button:hover .aof-btn-arrow {
-    transform: translateX(4px);
-  }
-
-  @media (max-width: 600px) {
-    .aof-card-body {
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      padding: 20px;
-      gap: 16px;
-    }
-    
-    .aof-card-icon-container {
-      width: 48px;
-      height: 48px;
-      padding: 8px;
-    }
-    
-    .aof-card-icon {
-      width: 28px;
-      height: 28px;
-    }
-    
-    .aof-card-meta {
-      justify-content: center;
-    }
-    
-    .aof-card-features {
-      justify-content: center;
-      text-align: left;
-      display: inline-block;
-    }
-    
-    .aof-feature-item {
-      margin-bottom: 6px;
-    }
-    
-    .aof-card-action-bar {
-      padding: 0 20px 20px 20px;
-    }
-    
-    .aof-card-button {
-      font-size: 14px;
-      padding: 12px 16px;
-    }
+    color: #475569;
+    line-height: 1.4;
   }
 </style>`;
 
       // Modül 3 Code Template
-      const m3Code = `<!-- Modül 3: Mobil Sticky Bottom Bar (Mobilde Alt Kısımda Sabit) -->
-<div class="aof-sticky-bottom" id="aofStickyBottom">
-  <button class="aof-sticky-close" onclick="document.getElementById('aofStickyBottom').style.display='none'" aria-label="Kapat">&times;</button>
+      const m3Code = `<!-- Modül 3: Mobil Sticky Bottom Bar (İnce Tıklanabilir Alt Şerit) -->
+<div class="aof-sticky-bottom" onClick={() => { setPrevScreen('quiz'); setScreen('product-detail'); }}>
+  <button class="aof-sticky-close" onClick={(e) => { e.stopPropagation(); setShowStickyBottom(false); }} aria-label="Kapat">&times;</button>
   <div class="aof-sticky-container">
-    <div class="aof-sticky-content">
-      <span class="aof-sticky-badge">🔥 ALTIN NOTLAR</span>
-      <p class="aof-sticky-text">Sınav Sabahı Hayat Kurtaracak 25 Altın Bilgi!</p>
-    </div>
-    <a href="${shopierUrl}" target="_blank" class="aof-sticky-button">
-      <span>PDF'i Al</span>
-      <svg class="aof-sticky-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-    </a>
+    <p class="aof-sticky-text">🔥 Sınav Sabahı Hayat Kurtaracak 25 Altın Bilgi ›</p>
   </div>
 </div>
 
 <style>
   /* Sticky Bottom Bar CSS */
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
   .aof-sticky-bottom {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-family: 'Inter', sans-serif;
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
-    background: rgba(15, 23, 42, 0.96);
+    background: rgba(15, 23, 42, 0.95);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border-top: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.2);
-    padding: 12px 24px;
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.15);
+    padding: 8px 12px;
     z-index: 9999;
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
     box-sizing: border-box;
   }
-
   .aof-sticky-container {
     display: flex;
     width: 100%;
-    max-width: 1200px;
+    max-width: 480px;
     justify-content: space-between;
     align-items: center;
-    gap: 16px;
+    gap: 10px;
   }
-
-  .aof-sticky-content {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    color: #ffffff;
-  }
-
-  .aof-sticky-badge {
-    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-    color: #ffffff;
-    font-size: 10px;
-    font-weight: 700;
-    padding: 4px 8px;
-    border-radius: 6px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    white-space: nowrap;
-    display: inline-block;
-  }
-
   .aof-sticky-text {
     margin: 0;
-    font-size: 14px;
-    font-weight: 500;
-    line-height: 1.4;
-  }
-
-  .aof-sticky-button {
-    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.3;
     color: #ffffff;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 13px;
-    padding: 10px 20px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    white-space: nowrap;
-    box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
-    transition: all 0.2s ease;
+    flex-grow: 1;
+    text-align: left;
   }
-
-  .aof-sticky-button:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 6px 14px rgba(59, 130, 246, 0.4);
-    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-  }
-
-  .aof-sticky-arrow {
-    width: 14px;
-    height: 14px;
-    transition: transform 0.2s ease;
-  }
-
-  .aof-sticky-button:hover .aof-sticky-arrow {
-    transform: translateX(3px);
-  }
-
   .aof-sticky-close {
-    position: absolute;
-    top: 50%;
-    right: 12px;
-    transform: translateY(-50%);
     background: none;
     border: none;
     color: rgba(255, 255, 255, 0.5);
-    font-size: 20px;
+    font-size: 16px;
     cursor: pointer;
-    padding: 4px;
+    padding: 2px 4px;
     line-height: 1;
-    transition: color 0.2s ease;
-  }
-
-  .aof-sticky-close:hover {
-    color: #ffffff;
-  }
-
-  @media (max-width: 768px) {
-    .aof-sticky-bottom {
-      padding: 10px 40px 10px 16px;
-    }
-    
-    .aof-sticky-container {
-      gap: 12px;
-    }
-    
-    .aof-sticky-content {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 4px;
-    }
-    
-    .aof-sticky-badge {
-      font-size: 9px;
-      padding: 2px 6px;
-    }
-    
-    .aof-sticky-text {
-      font-size: 12px;
-    }
-    
-    .aof-sticky-button {
-      font-size: 12px;
-      padding: 8px 14px;
-    }
-    
-    .aof-sticky-close {
-      right: 8px;
-    }
+    z-index: 10;
   }
 </style>`;
 
-      // Inject codes escaping HTML tag markers
       document.getElementById('m1-code-block').textContent = m1Code;
       document.getElementById('m2-code-block').textContent = m2Code;
       document.getElementById('m3-code-block').textContent = m3Code;
@@ -1853,7 +1070,6 @@
       const text = codeElement.textContent;
       
       navigator.clipboard.writeText(text).then(() => {
-        // Show feedback on the copy button
         const btn = codeElement.closest('.code-container').querySelector('.copy-btn');
         const origContent = btn.innerHTML;
         btn.innerHTML = `
@@ -1869,9 +1085,8 @@
       });
     }
 
-    // Init
     window.onload = function() {
-      generateCodeBlocks("https://www.shopier.com/aofnotlar-ozet-pdf");
+      generateCodeBlocks("https://www.shopier.com/aofseslinotlar");
     };
   </script>
 

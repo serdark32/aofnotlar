@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 
 // Varsa kendi API sunucunu buraya yaz, şu an boş bırakıldığı için bağlantı hatası veriyordu:
 const API = 'https://aofnotlar.com';
-const SHOPIER_URL = 'https://www.shopier.com/aofnotlar-ozet-pdf';
+const SHOPIER_URL = 'https://www.shopier.com/aofseslinotlar';
 
 
 // ── ESPRİ LİSTESİ
@@ -33,6 +33,7 @@ export default function App() {
   const [screen, setScreen] = useState('home');
   const [showHeroBanner, setShowHeroBanner] = useState(true);
   const [showStickyBottom, setShowStickyBottom] = useState(true);
+  const [prevScreen, setPrevScreen] = useState('home');
   const [authMode, setAuthMode] = useState('login');
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
@@ -435,18 +436,9 @@ export default function App() {
     <div style={s.bg}>
       <div style={s.container}>
         {showHeroBanner && (
-          <div style={s.heroBanner}>
-            <div style={s.heroBannerContent}>
-              <span style={s.heroBadge}>💡 NOKTA ATIŞI</span>
-              <p style={s.heroText}>Yüzlerce soru çözmekle vakit kaybetme! 2500 soruluk analizle hazırlanan Nokta Atışı Özet PDF'i hemen indir.</p>
-            </div>
-            <div style={s.heroBannerActions}>
-              <a href={SHOPIER_URL} target="_blank" rel="noopener noreferrer" style={s.heroBtn}>
-                <span>Özeti İncele (Shopier)</span>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-              </a>
-              <button style={s.heroClose} onClick={() => setShowHeroBanner(false)} aria-label="Kapat">&times;</button>
-            </div>
+          <div style={s.heroBanner} onClick={() => { setPrevScreen('home'); setScreen('product-detail'); }}>
+            <span style={s.heroText}>💡 2500 Soruluk Nokta Atışı Özet PDF'ini İncele ›</span>
+            <button style={s.heroClose} onClick={(e) => { e.stopPropagation(); setShowHeroBanner(false); }} aria-label="Kapat">&times;</button>
           </div>
         )}
 
@@ -758,17 +750,10 @@ export default function App() {
 
         {/* Modül 3: Mobil Sticky Bottom Bar */}
         {showStickyBottom && (
-          <div style={s.stickyBottom}>
+          <div style={{ ...s.stickyBottom, cursor: 'pointer' }} onClick={() => { setPrevScreen('quiz'); setScreen('product-detail'); }}>
             <button style={s.stickyClose} onClick={(e) => { e.stopPropagation(); setShowStickyBottom(false); }} aria-label="Kapat">&times;</button>
             <div style={s.stickyContainer}>
-              <div style={s.stickyContent}>
-                <span style={s.stickyBadge}>🔥 ALTIN NOTLAR</span>
-                <p style={s.stickyText}>Sınav Sabahı Hayat Kurtaracak 25 Altın Bilgi!</p>
-              </div>
-              <a href={SHOPIER_URL} target="_blank" rel="noopener noreferrer" style={s.stickyBtn}>
-                <span>PDF'i Al</span>
-                <svg style={s.stickyArrow} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-              </a>
+              <p style={s.stickyText}>🔥 Sınav Sabahı Hayat Kurtaracak 25 Altın Bilgi ›</p>
             </div>
           </div>
         )}
@@ -828,48 +813,21 @@ export default function App() {
           {myRank && <div style={s.rankResult}>📍 Bugün {myRank}. sıradasın!</div>}
 
           {/* Modül 2: Test Arası / Sonuç Ekranı Kutusu */}
-          <div style={s.promoCard}>
+          <div style={{ ...s.promoCard, cursor: 'pointer' }} onClick={() => { setPrevScreen('result'); setScreen('product-detail'); }}>
             <div style={s.promoCardAccent}></div>
             <div style={s.promoCardBody}>
               <div style={s.promoCardIconBox}>
                 <svg style={s.promoCardIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
                   <polyline points="14 2 14 8 20 8"/>
-                  <line x1="16" y1="13" x2="8" y2="13"/>
-                  <line x1="16" y1="17" x2="8" y2="17"/>
-                  <line x1="10" y1="9" x2="8" y2="9"/>
                 </svg>
               </div>
               <div style={s.promoCardContent}>
-                <div style={s.promoCardMeta}>
-                  <span style={s.promoCardTag}>🔥 EN ÇOK TERCİH EDİLEN</span>
-                  <span style={s.promoCardDelivery}>⚡ Anında Teslimat</span>
-                </div>
                 <h3 style={s.promoCardTitle}>Sınavı Şansa Bırakma!</h3>
                 <p style={s.promoCardText}>
-                  Netlerini artırmak için sadece çıkmış sorular yetmez. Sınavda çıkması muhtemel konuları öğrenmek için <strong>15 Sayfalık Özel Algoritma Notlarına</strong> Göz At!
+                  Netlerini artırmak için sınavda çıkması muhtemel <strong>15 Sayfalık Özel Algoritma Notlarını</strong> İncele ›
                 </p>
-                <div style={s.promoCardFeatures}>
-                  <div style={s.promoCardFeatureItem}>
-                    <svg style={s.promoCardFeatureCheck} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                    <span>2500 Soru Analizi</span>
-                  </div>
-                  <div style={s.promoCardFeatureItem}>
-                    <svg style={s.promoCardFeatureCheck} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                    <span>Nokta Atışı Bilgiler</span>
-                  </div>
-                  <div style={s.promoCardFeatureItem}>
-                    <svg style={s.promoCardFeatureCheck} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                    <span>AÖF Müfredat Uyumlu</span>
-                  </div>
-                </div>
               </div>
-            </div>
-            <div style={s.promoCardAction}>
-              <a href={SHOPIER_URL} target="_blank" rel="noopener noreferrer" style={{ ...s.promoCardBtn, textDecoration: 'none' }}>
-                <span>Hemen İndir ve Puanını Artır</span>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-              </a>
             </div>
           </div>
 
@@ -991,6 +949,67 @@ export default function App() {
       setCourseRequestSent(false);
     }, 2000);
   };
+
+  if (screen === 'product-detail') {
+    return (
+      <div style={s.bg}>
+        <div style={s.container}>
+          <div style={s.header}>
+            <button style={s.backBtn} onClick={() => setScreen(prevScreen || 'home')}>← Geri Dön</button>
+            <div style={s.greeting}>Özel Özet PDF</div>
+            <div style={{ width: 60 }}></div>
+          </div>
+
+          <div style={s.card}>
+            <div style={{ textAlign: 'center', marginBottom: 16 }}>
+              <img 
+                src="/Gemini_Generated_Image_.png" 
+                alt="AÖF Nokta Atışı Özet Notları" 
+                style={{ width: '100%', maxHeight: 240, objectFit: 'contain', borderRadius: 12, boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} 
+              />
+            </div>
+            
+            <div style={s.cardTitle}>AÖF Sınavı Şansa Bırakılmaz!</div>
+            <div style={{ fontSize: 13, color: '#4b5563', lineHeight: 1.6, marginBottom: 20 }}>
+              Saatlerce binlerce sayfalık ders kitapları ve çıkmış sorular arasında kaybolmayın. Sınavda en çok sorulan ve çıkma olasılığı yüksek olan konuları kapsayan özel notlarımız hazır!
+            </div>
+
+            <div style={{ marginBottom: 20 }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 12 }}>
+                <span style={{ fontSize: 16 }}>🎯</span>
+                <div style={{ fontSize: 13, color: '#374151', textAlign: 'left' }}>
+                  <strong>2500+ Soru Analizi:</strong> Son 10 yılın çıkmış tüm AÖF sorularının frekans analiziyle en çok sorulan konular belirlendi.
+                </div>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 12 }}>
+                <span style={{ fontSize: 16 }}>🚀</span>
+                <div style={{ fontSize: 13, color: '#374151', textAlign: 'left' }}>
+                  <strong>15 Sayfalık Nokta Atışı Özet:</strong> Sınav öncesi son tekrarda en verimli şekilde çalışabilmeniz için en kritik bilgiler damıtıldı.
+                </div>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 12 }}>
+                <span style={{ fontSize: 16 }}>⚡</span>
+                <div style={{ fontSize: 13, color: '#374151', textAlign: 'left' }}>
+                  <strong>Shopier Güvencesiyle Anında E-posta:</strong> Ödemenizden hemen sonra PDF dosyanız otomatik olarak mail adresinize gönderilir.
+                </div>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+                <span style={{ fontSize: 16 }}>📱</span>
+                <div style={{ fontSize: 13, color: '#374151', textAlign: 'left' }}>
+                  <strong>Mobil Uyumlu Format:</strong> Telefon, tablet veya bilgisayarınızdan her yerde kolayca çalışabilirsiniz.
+                </div>
+              </div>
+            </div>
+
+            <a href={SHOPIER_URL} target="_blank" rel="noopener noreferrer" style={{ ...s.btn, background: '#f59e0b', color: '#fff', textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, fontWeight: 800, padding: '14px', borderRadius: 14, boxShadow: '0 4px 14px rgba(245, 158, 11, 0.3)' }}>
+              <span>Shopier ile Hemen Al & İndir</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (screen === 'pdf-download') {
     return (
@@ -1213,36 +1232,21 @@ const s = {
   examDesc: { fontSize: 13, color: 'rgba(255,255,255,0.85)', marginBottom: 20, textAlign: 'center', fontStyle: 'italic', lineHeight: 1.4 },
   
   // Shopier Promo Modülleri
-  heroBanner: { fontFamily: "'Inter', sans-serif", background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 50%, #1e3a8a 100%)', color: '#ffffff', padding: '12px 16px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 12, borderRadius: 14, boxShadow: '0 4px 12px rgba(29, 78, 216, 0.15)', marginBottom: 16, boxSizing: 'border-box', position: 'relative', width: '100%' },
-  heroBannerContent: { display: 'flex', alignItems: 'center', gap: 10, flexGrow: 1 },
-  heroBadge: { background: 'rgba(255, 255, 255, 0.2)', padding: '4px 8px', borderRadius: 99, fontSize: 10, fontWeight: 700, letterSpacing: '0.5px', whiteSpace: 'nowrap' },
-  heroText: { margin: 0, fontSize: 13, fontWeight: 500, lineHeight: 1.4, color: '#fff', textAlign: 'left' },
-  heroBannerActions: { display: 'flex', alignItems: 'center', gap: 10 },
-  heroBtn: { background: '#ffffff', color: '#1d4ed8', padding: '6px 14px', borderRadius: 8, fontSize: 12, fontWeight: 600, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6, whiteSpace: 'nowrap', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)', cursor: 'pointer' },
-  heroClose: { background: 'none', border: 'none', color: 'rgba(255,255,255,0.7)', fontSize: 20, cursor: 'pointer', lineHeight: 1, padding: 0 },
+  heroBanner: { fontFamily: "'Inter', sans-serif", background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 50%, #1e3a8a 100%)', color: '#ffffff', padding: '8px 12px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 8, borderRadius: 10, boxShadow: '0 4px 10px rgba(29, 78, 216, 0.12)', marginBottom: 10, boxSizing: 'border-box', position: 'relative', width: '100%', cursor: 'pointer' },
+  heroText: { margin: 0, fontSize: 11, fontWeight: 700, lineHeight: 1.4, color: '#fff', textAlign: 'left', flexGrow: 1 },
+  heroClose: { background: 'none', border: 'none', color: 'rgba(255,255,255,0.7)', fontSize: 18, cursor: 'pointer', lineHeight: 1, padding: '2px 4px', zIndex: 10 },
   
-  promoCard: { background: '#ffffff', borderRadius: 16, border: '1.5px solid rgba(79, 70, 229, 0.15)', boxShadow: '0 8px 24px rgba(79, 70, 229, 0.08)', position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column', boxSizing: 'border-box', marginBottom: 16, width: '100%' },
-  promoCardAccent: { height: 4, background: 'linear-gradient(90deg, #3b82f6, #6366f1, #8b5cf6)', width: '100%' },
-  promoCardBody: { padding: 16, display: 'flex', gap: 12, alignItems: 'flex-start', textAlign: 'left' },
-  promoCardIconBox: { background: 'rgba(79, 70, 229, 0.08)', borderRadius: 10, padding: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 },
-  promoCardIcon: { width: 24, height: 24, color: '#4f46e5' },
+  promoCard: { background: '#ffffff', borderRadius: 12, border: '1.5px solid rgba(79, 70, 229, 0.12)', boxShadow: '0 4px 12px rgba(79, 70, 229, 0.05)', position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column', boxSizing: 'border-box', marginBottom: 12, width: '100%' },
+  promoCardAccent: { height: 3, background: 'linear-gradient(90deg, #3b82f6, #6366f1, #8b5cf6)', width: '100%' },
+  promoCardBody: { padding: 12, display: 'flex', gap: 10, alignItems: 'center', textAlign: 'left' },
+  promoCardIconBox: { background: 'rgba(79, 70, 229, 0.06)', borderRadius: 8, padding: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 },
+  promoCardIcon: { width: 20, height: 20, color: '#4f46e5' },
   promoCardContent: { flexGrow: 1 },
-  promoCardMeta: { display: 'flex', gap: 6, marginBottom: 8 },
-  promoCardTag: { background: 'rgba(239, 68, 68, 0.1)', color: '#dc2626', fontSize: 10, fontWeight: 700, padding: '2px 6px', borderRadius: 4 },
-  promoCardDelivery: { background: 'rgba(16, 185, 129, 0.1)', color: '#059669', fontSize: 10, fontWeight: 700, padding: '2px 6px', borderRadius: 4 },
-  promoCardTitle: { margin: '0 0 6px 0', fontSize: 16, fontWeight: 800, color: '#1f2937' },
-  promoCardText: { margin: '0 0 12px 0', fontSize: 13, color: '#4b5563', lineHeight: 1.5 },
-  promoCardFeatures: { display: 'flex', flexWrap: 'wrap', gap: '6px 10px', marginTop: 8 },
-  promoCardFeatureItem: { display: 'flex', alignItems: 'center', gap: 4, fontSize: 11, color: '#6b7280', fontWeight: 500 },
-  promoCardFeatureCheck: { width: 12, height: 12, color: '#10b981' },
-  promoCardAction: { padding: '0 16px 16px 16px' },
-  promoCardBtn: { background: 'linear-gradient(135deg, #4f46e5 0%, #6366f1 100%)', color: '#ffffff', textDecoration: 'none', fontWeight: 700, fontSize: 14, padding: 12, borderRadius: 10, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 8, boxShadow: '0 4px 10px rgba(79, 70, 229, 0.2)', border: 'none', width: '100%', cursor: 'pointer' },
+  promoCardTitle: { margin: '0 0 2px 0', fontSize: 14, fontWeight: 800, color: '#1f2937' },
+  promoCardText: { margin: 0, fontSize: 12, color: '#4b5563', lineHeight: 1.4 },
   
-  stickyBottom: { fontFamily: "'Inter', sans-serif", position: 'fixed', bottom: 0, left: 0, right: 0, background: 'rgba(15, 23, 42, 0.96)', backdropFilter: 'blur(10px)', borderTop: '1px solid rgba(255, 255, 255, 0.1)', boxShadow: '0 -4px 16px rgba(0, 0, 0, 0.2)', padding: '10px 16px', zIndex: 9999, display: 'flex', justifyContent: 'center', alignItems: 'center', boxSizing: 'border-box' },
-  stickyContainer: { display: 'flex', width: '100%', maxWidth: 600, justifyContent: 'space-between', alignItems: 'center', gap: 12 },
-  stickyContent: { display: 'flex', flexDirection: 'column', alignItems: 'flex-start', color: '#ffffff', textAlign: 'left', gap: 2 },
-  stickyBadge: { background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)', color: '#ffffff', fontSize: 8, fontWeight: 700, padding: '2px 6px', borderRadius: 4, letterSpacing: '0.5px' },
-  stickyText: { margin: 0, fontSize: 11, fontWeight: 500, lineHeight: 1.3, color: '#ffffff' },
-  stickyBtn: { background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)', color: '#ffffff', textDecoration: 'none', fontWeight: 700, fontSize: 12, padding: '8px 14px', borderRadius: 8, display: 'flex', alignItems: 'center', gap: 4, whiteSpace: 'nowrap', boxShadow: '0 2px 6px rgba(59, 130, 246, 0.3)', border: 'none', cursor: 'pointer' },
-  stickyClose: { position: 'absolute', top: '50%', right: 4, transform: 'translateY(-50%)', background: 'none', border: 'none', color: 'rgba(255, 255, 255, 0.5)', fontSize: 18, cursor: 'pointer', padding: 4 }
+  stickyBottom: { fontFamily: "'Inter', sans-serif", position: 'fixed', bottom: 0, left: 0, right: 0, background: 'rgba(15, 23, 42, 0.95)', backdropFilter: 'blur(10px)', borderTop: '1px solid rgba(255, 255, 255, 0.1)', boxShadow: '0 -4px 12px rgba(0, 0, 0, 0.15)', padding: '8px 12px', zIndex: 9999, display: 'flex', justifyContent: 'center', alignItems: 'center', boxSizing: 'border-box' },
+  stickyContainer: { display: 'flex', width: '100%', maxWidth: 480, justifyContent: 'space-between', alignItems: 'center', gap: 10 },
+  stickyText: { margin: 0, fontSize: 11, fontWeight: 700, lineHeight: 1.3, color: '#ffffff', textAlign: 'left', flexGrow: 1 },
+  stickyClose: { background: 'none', border: 'none', color: 'rgba(255, 255, 255, 0.5)', fontSize: 16, cursor: 'pointer', padding: '2px 4px', zIndex: 10 }
 };
