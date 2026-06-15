@@ -437,7 +437,7 @@ export default function App() {
       <div style={s.container}>
         {showHeroBanner && (
           <div style={s.heroBanner} onClick={() => { setPrevScreen('home'); setScreen('product-detail'); }}>
-            <span style={s.heroText}>💡 2500 Soruluk Nokta Atışı Özet PDF'ini İncele ›</span>
+            <span style={s.heroText}>💡 Sınav Algoritmasına Göre Hazırlanmış Özet PDF'ini İncele ›</span>
             <button style={s.heroClose} onClick={(e) => { e.stopPropagation(); setShowHeroBanner(false); }} aria-label="Kapat">&times;</button>
           </div>
         )}
@@ -753,7 +753,7 @@ export default function App() {
           <div style={{ ...s.stickyBottom, cursor: 'pointer' }} onClick={() => { setPrevScreen('quiz'); setScreen('product-detail'); }}>
             <button style={s.stickyClose} onClick={(e) => { e.stopPropagation(); setShowStickyBottom(false); }} aria-label="Kapat">&times;</button>
             <div style={s.stickyContainer}>
-              <p style={s.stickyText}>🔥 Sınav Sabahı Hayat Kurtaracak 25 Altın Bilgi ›</p>
+              <p style={s.stickyText}>🔥 Sınav Sabahı Bilmen Gereken 25 Terim ›</p>
             </div>
           </div>
         )}
@@ -825,7 +825,7 @@ export default function App() {
               <div style={s.promoCardContent}>
                 <h3 style={s.promoCardTitle}>Sınavı Şansa Bırakma!</h3>
                 <p style={s.promoCardText}>
-                  Netlerini artırmak için sınavda çıkması muhtemel <strong>15 Sayfalık Özel Algoritma Notlarını</strong> İncele ›
+                  Netlerini artırmak için Sınav Algoritmasına Göre Hazırlanmış Özet PDF'ini İncele ›
                 </p>
               </div>
             </div>
@@ -963,28 +963,28 @@ export default function App() {
           <div style={s.card}>
             <div style={{ textAlign: 'center', marginBottom: 16 }}>
               <img 
-                src="/Gemini_Generated_Image_.png" 
-                alt="AÖF Nokta Atışı Özet Notları" 
+                src="/ozet-pdf-gorsel.png" 
+                alt="AÖF Sınav Algoritması Özet Notları" 
                 style={{ width: '100%', maxHeight: 240, objectFit: 'contain', borderRadius: 12, boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} 
               />
             </div>
             
             <div style={s.cardTitle}>AÖF Sınavı Şansa Bırakılmaz!</div>
             <div style={{ fontSize: 13, color: '#4b5563', lineHeight: 1.6, marginBottom: 20 }}>
-              Saatlerce binlerce sayfalık ders kitapları ve çıkmış sorular arasında kaybolmayın. Sınavda en çok sorulan ve çıkma olasılığı yüksek olan konuları kapsayan özel notlarımız hazır!
+              Sınav algoritmasına göre hazırlanmış özet PDF notları ile derslerinizi kolayca geçin. Hangi konuların tekrar tekrar sorulduğu çıkmış sorulardan analiz edilerek bu evrak özenle hazırlandı.
             </div>
 
             <div style={{ marginBottom: 20 }}>
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 12 }}>
                 <span style={{ fontSize: 16 }}>🎯</span>
                 <div style={{ fontSize: 13, color: '#374151', textAlign: 'left' }}>
-                  <strong>2500+ Soru Analizi:</strong> Son 10 yılın çıkmış tüm AÖF sorularının frekans analiziyle en çok sorulan konular belirlendi.
+                  <strong>Sınav Sabahı Bilmen Gereken 25 Terim:</strong> Sınavdan hemen önce bilmeniz gereken en kritik 25 terim ve tanım elinizin altında.
                 </div>
               </div>
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 12 }}>
-                <span style={{ fontSize: 16 }}>🚀</span>
+                <span style={{ fontSize: 16 }}>📊</span>
                 <div style={{ fontSize: 13, color: '#374151', textAlign: 'left' }}>
-                  <strong>15 Sayfalık Nokta Atışı Özet:</strong> Sınav öncesi son tekrarda en verimli şekilde çalışabilmeniz için en kritik bilgiler damıtıldı.
+                  <strong>Çıkmış Soru Analizi:</strong> Geçmiş sınav soruları analiz edilerek, tekrar tekrar sorulan konular özel bir algoritmayla belirlendi ve damıtıldı.
                 </div>
               </div>
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 12 }}>

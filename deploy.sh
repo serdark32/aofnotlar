@@ -26,5 +26,5 @@ echo "✅ Deploy tamamlandı!"
 cp /var/www/aofnotlar/aofnotlar-admin.html /var/www/aofnotlar/frontend/build/admin.html
 cp /var/www/aofnotlar/shopier_promo_modules.html /var/www/aofnotlar/frontend/build/shopier_promo_modules.html
 cp /var/www/aofnotlar/shopier_promo_modules.html /var/www/aofnotlar/frontend/build/shopier.html
-cp /var/www/aofnotlar/Gemini_Generated_Image_.png /var/www/aofnotlar/frontend/build/Gemini_Generated_Image_.png
+cp "/var/www/aofnotlar/Untitled design.png" /var/www/aofnotlar/frontend/build/ozet-pdf-gorsel.png
 
