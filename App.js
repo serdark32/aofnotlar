@@ -704,7 +704,7 @@ export default function App() {
             </button>
             <a href="https://t.me/+whse8tbDgac0OTU0" target="_blank" rel="noopener noreferrer" style={{ ...s.feedbackIconBtn, textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }} title="Telegram Grubumuz">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.287 5.906c-.778.324-2.334.994-4.666 2.01-.378.15-.577.298-.595.442-.03.243.275.339.69.47l.175.055c.408.133.958.288(1.243.294.26.006.549-.1.868-.32 2.179-1.471 3.304-2.214 3.374-2.23.05-.012.12-.026.166.016.047.041.042.12.037.141-.03.129-1.227 1.241-1.846 1.817-.193.18-.33.307-.358.336a8.154 8.154 0 0 1-.188.186c-.38.366-.664.64.015 1.088.327.216.589.393.85.571.284.194.568.387.936.629.093.06.183.125.27.187.331.236.63.448.997.414.214-.02.435-.22.547-.82.265-1.417.786-4.486.906-5.751a1.426 1.426 0 0 0-.013-.315.337.337 0 0 0-.114-.217.526.526 0 0 0-.31-.093c-.3.005-.763.166-2.984 1.09z"/>
+                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.287 5.906c-.778.324-2.334.994-4.666 2.01-.378.15-.577.298-.595.442-.03.243.275.339.69.47l.175.055c.408.133.958.288 1.243.294.26.006.549-.1.868-.32 2.179-1.471 3.304-2.214 3.374-2.23.05-.012.12-.026.166.016.047.041.042.12.037.141-.03.129-1.227 1.241-1.846 1.817-.193.18-.33.307-.358.336a8.154 8.154 0 0 1-.188.186c-.38.366-.664.64.015 1.088.327.216.589.393.85.571.284.194.568.387.936.629.093.06.183.125.27.187.331.236.63.448.997.414.214-.02.435-.22.547-.82.265-1.417.786-4.486.906-5.751a1.426 1.426 0 0 0-.013-.315.337.337 0 0 0-.114-.217.526.526 0 0 0-.31-.093c-.3.005-.763.166-2.984 1.09z"/>
               </svg>
             </a>
             <button style={s.feedbackIconBtn} onClick={() => { setShowFeedback(true); loadMyFeedbacks(); }} title="Geri Bildirim / Ders İste">
@@ -882,7 +882,7 @@ export default function App() {
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <IconBookOpen size={18} />
-            <span>Özet Ders Kitabı & Örnek PDF İncele</span>
+            <span>AÖF'ü Geçiren Pratik Özetler</span>
           </div>
           <IconChevronRight size={18} style={{ color: 'rgba(255,255,255,0.8)' }} />
         </button>
@@ -1361,32 +1361,18 @@ export default function App() {
 
           <div style={s.card}>
             <div style={{ textAlign: 'center', marginBottom: 16 }}>
-              {/* SVG Book Cover Illustration */}
-              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 16 }}>
-                <div style={{
-                  width: 120,
-                  height: 160,
-                  background: 'linear-gradient(135deg, #059669 0%, #10b981 100%)',
-                  borderRadius: 12,
-                  boxShadow: '0 8px 24px rgba(16, 185, 129, 0.3)',
-                  border: '2px solid rgba(255, 255, 255, 0.15)',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-between',
-                  padding: 16,
-                  color: '#fff',
-                  textAlign: 'left',
-                  position: 'relative',
-                  overflow: 'hidden'
-                }}>
-                  <div style={{ fontSize: 9, fontWeight: 800, opacity: 0.8, letterSpacing: 1 }}>AÖF SESLİ NOTLAR</div>
-                  <div style={{ fontWeight: 900, fontSize: 15, lineHeight: 1.2, fontFamily: "'Outfit', sans-serif" }}>ÖZET DERS KİTABI</div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <IconBookOpen size={18} style={{ color: '#fff' }} />
-                    <span style={{ fontSize: 9, fontWeight: 700, background: 'rgba(255,255,255,0.2)', padding: '2px 6px', borderRadius: 6 }}>PDF</span>
-                  </div>
-                </div>
-              </div>
+              <img 
+                src="/ozet-pdf-gorsel.png" 
+                alt="Özet PDF Görseli" 
+                style={{ 
+                  width: '100%', 
+                  maxWidth: 360, 
+                  borderRadius: 12, 
+                  boxShadow: theme === 'dark' ? '0 8px 24px rgba(0, 0, 0, 0.4)' : '0 8px 24px rgba(0, 0, 0, 0.1)',
+                  border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(0, 0, 0, 0.05)',
+                  marginBottom: 8
+                }} 
+              />
             </div>
             
             <div style={s.cardTitle}>AÖF Sınavı Şansa Bırakılmaz!</div>
