@@ -73,7 +73,7 @@ export default function App() {
   const [selectedYear, setSelectedYear] = useState(null);
 
   // Vize / Final seçimi
-  const [examType, setExamType] = useState('final');
+  const [examType, setExamType] = useState('yazokulu');
 
   // Feedback
   const [showFeedback, setShowFeedback] = useState(false);
@@ -1020,6 +1020,39 @@ export default function App() {
             <a href={SHOPIER_URL} target="_blank" rel="noopener noreferrer" style={{ ...s.btn, background: '#f59e0b', color: '#fff', textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, fontWeight: 800, padding: '14px', borderRadius: 14, boxShadow: '0 4px 14px rgba(245, 158, 11, 0.3)' }}>
               <span>Shopier ile Hemen Al & İndir</span>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+
+            <a 
+              href="/ornek-dokuman.pdf" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              style={{ 
+                ...s.btn, 
+                background: 'rgba(245, 158, 11, 0.08)', 
+                color: '#d97706', 
+                border: '1.5px solid #f59e0b', 
+                textDecoration: 'none', 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center', 
+                gap: 8, 
+                fontWeight: 800, 
+                padding: '13px', 
+                borderRadius: 14, 
+                marginTop: 12, 
+                boxShadow: '0 2px 8px rgba(245, 158, 11, 0.05)', 
+                transition: 'all 0.2s' 
+              }}
+              onMouseEnter={(e) => { 
+                e.currentTarget.style.background = 'rgba(245, 158, 11, 0.15)'; 
+                e.currentTarget.style.transform = 'translateY(-1px)';
+              }}
+              onMouseLeave={(e) => { 
+                e.currentTarget.style.background = 'rgba(245, 158, 11, 0.08)'; 
+                e.currentTarget.style.transform = 'none';
+              }}
+            >
+              <span>📄 Örnek PDF İndir & İncele</span>
             </a>
           </div>
         </div>
