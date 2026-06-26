@@ -207,6 +207,22 @@ export default function App() {
   const [courseRequestText, setCourseRequestText] = useState('');
   const [courseRequestSent, setCourseRequestSent] = useState(false);
 
+  const sendCourseRequest = async () => {
+    if (!courseRequestText.trim()) return;
+    try {
+      await fetch(API + '/api/course-request', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ course_name: courseRequestText.trim() })
+      });
+    } catch (e) {}
+    setCourseRequestSent(true);
+    setTimeout(() => {
+      setCourseRequestText('');
+      setCourseRequestSent(false);
+    }, 2000);
+  };
+
   useEffect(() => {
     localStorage.setItem('demo_theme', theme);
 
