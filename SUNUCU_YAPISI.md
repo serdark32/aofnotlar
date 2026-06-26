@@ -259,7 +259,7 @@ pm2 delete aofnotlar && pm2 start server.js --name aofnotlar
 5. **Docker ağı:** Caddy container'ı host'a `172.17.0.1` üzerinden bağlanır
 6. **Git repo:** `https://github.com/serdark32/aofnotlar.git`
 7. **Sunucu IP:** `65.109.231.71` (Hetzner)
-8. **SSH:** `ssh root@65.109.231.71`
+8. **SSH:** `ssh root@65.109.231.71` (Şifre: `LxPncfRgdT9g`)
 
 ---
 
