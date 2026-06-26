@@ -4,6 +4,106 @@ import { useState, useEffect, useRef } from 'react';
 const API = 'https://aofnotlar.com';
 const SHOPIER_URL = 'https://www.shopier.com/aofseslinotlar';
 
+// ── VEKTÖREL SİMGE BİLEŞENLERİ (UI/UX Pro Max)
+const IconChevronRight = ({ size = 18, style = {} }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={style}><polyline points="9 18 15 12 9 6"/></svg>
+);
+
+const IconChevronLeft = ({ size = 18, style = {} }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={style}><polyline points="15 18 9 12 15 6"/></svg>
+);
+
+const IconHome = ({ size = 18, style = {} }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+);
+
+const IconBookOpen = ({ size = 18, style = {} }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+);
+
+const IconFileText = ({ size = 18, style = {} }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+);
+
+const IconTarget = ({ size = 18, style = {} }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+);
+
+const IconBarChart = ({ size = 18, style = {} }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+);
+
+const IconZap = ({ size = 18, style = {} }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+);
+
+const IconPhone = ({ size = 18, style = {} }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+);
+
+const IconPlay = ({ size = 18, style = {} }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><polygon points="5 3 19 12 5 21 5 3"/></svg>
+);
+
+const IconCalculator = ({ size = 18, style = {} }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><rect x="4" y="2" width="16" height="20" rx="2" ry="2"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg>
+);
+
+const IconEdit = ({ size = 18, style = {} }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+);
+
+const IconMoon = ({ size = 18, style = {} }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+);
+
+const IconSun = ({ size = 18, style = {} }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+);
+
+const IconMessageSquare = ({ size = 18, style = {} }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+);
+
+const IconKey = ({ size = 18, style = {} }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+);
+
+const IconUser = ({ size = 18, style = {} }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+);
+
+const IconRefresh = ({ size = 18, style = {} }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+);
+
+const IconGraduationCap = ({ size = 18, style = {} }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/></svg>
+);
+
+const IconAward = ({ size = 18, style = {} }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
+);
+
+const IconCheckCircle = ({ size = 18, style = {} }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+);
+
+const IconXCircle = ({ size = 18, style = {} }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+);
+
+const IconFlag = ({ size = 18, style = {} }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+);
+
+const IconHelpCircle = ({ size = 18, style = {} }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+);
+
+const IconBell = ({ size = 18, style = {} }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+);
 
 // ── ESPRİ LİSTESİ
 const aofJokes = [
@@ -30,6 +130,10 @@ const getDailyJoke = (name) => {
 };
 
 export default function App() {
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('demo_theme') || 'dark';
+  });
+
   const [screen, setScreen] = useState('home');
   const [showHeroBanner, setShowHeroBanner] = useState(true);
   const [showStickyBottom, setShowStickyBottom] = useState(true);
@@ -85,7 +189,7 @@ export default function App() {
   const [showReportModal, setShowReportModal] = useState(false);
   const [reportSent, setReportSent] = useState(false);
 
-  // Geçtim mi? modalı
+  // ── NOT HESAPLA MODALI
   const [showPassCheck, setShowPassCheck] = useState(false);
   const [vizeInput, setVizeInput] = useState('');
   const [passResult, setPassResult] = useState(null);
@@ -102,6 +206,105 @@ export default function App() {
   // Ders isteği
   const [courseRequestText, setCourseRequestText] = useState('');
   const [courseRequestSent, setCourseRequestSent] = useState(false);
+
+  useEffect(() => {
+    localStorage.setItem('demo_theme', theme);
+
+    // Google Fonts Dinamik Yükleme
+    const fontId = 'google-fonts-design-system';
+    if (!document.getElementById(fontId)) {
+      const link = document.createElement('link');
+      link.id = fontId;
+      link.rel = 'stylesheet';
+      link.href = 'https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap';
+      document.head.appendChild(link);
+    }
+
+    // Küresel CSS Sınıflarını Dinamik Enjekte Etme
+    const styleId = 'global-styles-design-system';
+    let styleTag = document.getElementById(styleId);
+    if (!styleTag) {
+      styleTag = document.createElement('style');
+      styleTag.id = styleId;
+      document.head.appendChild(styleTag);
+    }
+    
+    const isDark = theme === 'dark';
+    const primary = isDark ? '#10b981' : '#059669';
+    const optHoverBg = isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(5, 150, 105, 0.08)';
+    const optHoverBorder = isDark ? 'rgba(255, 255, 255, 0.15)' : 'rgba(5, 150, 105, 0.25)';
+    const scrollThumb = isDark ? 'rgba(255, 255, 255, 0.15)' : 'rgba(5, 150, 105, 0.15)';
+    const catHoverBg = isDark ? 'rgba(255, 255, 255, 0.08)' : '#ffffff';
+    const catHoverBorder = isDark ? 'rgba(255, 255, 255, 0.15)' : 'rgba(5, 150, 105, 0.25)';
+    const feedbackHoverBg = isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 255, 255, 0.95)';
+
+    styleTag.innerHTML = `
+      :root {
+        --primary-color: ${primary};
+        --opt-hover-bg: ${optHoverBg};
+        --opt-hover-border: ${optHoverBorder};
+        --scroll-thumb: ${scrollThumb};
+      }
+      
+      .btn-hover {
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+      }
+      .btn-hover:hover {
+        filter: brightness(1.08);
+        transform: translateY(-1px);
+      }
+      .btn-hover:active {
+        transform: translateY(0);
+      }
+      
+      .cat-btn-hover {
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+      }
+      .cat-btn-hover:hover {
+        background: ${catHoverBg} !important;
+        border-color: ${catHoverBorder} !important;
+        transform: translateX(2px);
+      }
+      
+      .opt-btn-hover {
+        transition: all 0.15s ease !important;
+      }
+      .opt-btn-hover:hover {
+        background: var(--opt-hover-bg) !important;
+        border-color: var(--opt-hover-border) !important;
+      }
+      
+      .feedback-btn-hover {
+        transition: all 0.2s ease !important;
+      }
+      .feedback-btn-hover:hover {
+        background: ${feedbackHoverBg} !important;
+        transform: scale(1.05);
+      }
+      
+      /* Özel kaydırma çubuğu */
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--scroll-thumb);
+        border-radius: 10px;
+      }
+      
+      /* Erişilebilirlik odak çerçevesi */
+      button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible {
+        outline: 2.5px solid var(--primary-color) !important;
+        outline-offset: 2px !important;
+      }
+    `;
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+  };
 
   const loadMyFeedbacks = async () => {
     try {
@@ -428,12 +631,43 @@ export default function App() {
     return 0;
   });
 
+  // Stylesheet dynamic generator
+  const s = getStyles(theme);
+
   // ════════════════════════════════════════════════════════════
   // EKRANLAR
   // ════════════════════════════════════════════════════════════
 
   if (screen === 'home') return (
     <div style={s.bg}>
+      {/* Background Ambient Glows */}
+      <div style={{
+        position: 'absolute',
+        width: 350,
+        height: 350,
+        background: theme === 'dark' ? '#10b981' : '#059669',
+        filter: 'blur(160px)',
+        opacity: theme === 'dark' ? 0.22 : 0.08,
+        top: -50,
+        left: -50,
+        pointerEvents: 'none',
+        zIndex: 0,
+        transition: 'opacity 0.5s ease'
+      }} />
+      <div style={{
+        position: 'absolute',
+        width: 300,
+        height: 300,
+        background: theme === 'dark' ? '#f59e0b' : '#d97706',
+        filter: 'blur(140px)',
+        opacity: theme === 'dark' ? 0.16 : 0.06,
+        bottom: '10%',
+        right: -50,
+        pointerEvents: 'none',
+        zIndex: 0,
+        transition: 'opacity 0.5s ease'
+      }} />
+
       <div style={s.container}>
         {showHeroBanner && (
           <div style={s.heroBanner} onClick={() => { setPrevScreen('home'); setScreen('product-detail'); }}>
@@ -449,12 +683,17 @@ export default function App() {
             </div>
           </div>
           <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+            <button style={s.feedbackIconBtn} onClick={toggleTheme} title="Temayı Değiştir">
+              {theme === 'dark' ? <IconMoon size={18} /> : <IconSun size={18} />}
+            </button>
             <a href="https://t.me/+whse8tbDgac0OTU0" target="_blank" rel="noopener noreferrer" style={{ ...s.feedbackIconBtn, textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }} title="Telegram Grubumuz">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.287 5.906c-.778.324-2.334.994-4.666 2.01-.378.15-.577.298-.595.442-.03.243.275.339.69.47l.175.055c.408.133.958.288 1.243.294.26.006.549-.1.868-.32 2.179-1.471 3.304-2.214 3.374-2.23.05-.012.12-.026.166.016.047.041.042.12.037.141-.03.129-1.227 1.241-1.846 1.817-.193.18-.33.307-.358.336a8.154 8.154 0 0 1-.188.186c-.38.366-.664.64.015 1.088.327.216.589.393.85.571.284.194.568.387.936.629.093.06.183.125.27.187.331.236.63.448.997.414.214-.02.435-.22.547-.82.265-1.417.786-4.486.906-5.751a1.426 1.426 0 0 0-.013-.315.337.337 0 0 0-.114-.217.526.526 0 0 0-.31-.093c-.3.005-.763.166-2.984 1.09z"/>
+                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.287 5.906c-.778.324-2.334.994-4.666 2.01-.378.15-.577.298-.595.442-.03.243.275.339.69.47l.175.055c.408.133.958.288(1.243.294.26.006.549-.1.868-.32 2.179-1.471 3.304-2.214 3.374-2.23.05-.012.12-.026.166.016.047.041.042.12.037.141-.03.129-1.227 1.241-1.846 1.817-.193.18-.33.307-.358.336a8.154 8.154 0 0 1-.188.186c-.38.366-.664.64.015 1.088.327.216.589.393.85.571.284.194.568.387.936.629.093.06.183.125.27.187.331.236.63.448.997.414.214-.02.435-.22.547-.82.265-1.417.786-4.486.906-5.751a1.426 1.426 0 0 0-.013-.315.337.337 0 0 0-.114-.217.526.526 0 0 0-.31-.093c-.3.005-.763.166-2.984 1.09z"/>
               </svg>
             </a>
-            <button style={s.feedbackIconBtn} onClick={() => { setShowFeedback(true); loadMyFeedbacks(); }}>💬</button>
+            <button style={s.feedbackIconBtn} onClick={() => { setShowFeedback(true); loadMyFeedbacks(); }} title="Geri Bildirim / Ders İste">
+              <IconMessageSquare size={18} />
+            </button>
             {user && <button style={s.logoutBtn} onClick={logout}>Çıkış</button>}
           </div>
         </div>
@@ -462,16 +701,19 @@ export default function App() {
         {showNicknameModal && (
           <div style={s.modalOverlay} onClick={() => setShowNicknameModal(false)}>
             <div style={{ ...s.modalBox, maxWidth: 380, textAlign: 'center' }} onClick={e => e.stopPropagation()}>
-              <div style={{ fontSize: 50, marginBottom: 8 }}>👤</div>
-              <div style={{ fontWeight: 800, fontSize: 18, color: '#1f2937', marginBottom: 6 }}>Kullanıcı Adı Seç</div>
-              <div style={{ fontSize: 13, color: '#6b7280', marginBottom: 20 }}>Liderlik tablosunda bu isimle görüneceksin</div>
-              <input style={{ width: '100%', padding: '13px 16px', borderRadius: 12, border: '1.5px solid #d1d5db', fontSize: 15, marginBottom: 10, outline: 'none', fontFamily: 'inherit', boxSizing: 'border-box' }}
+              <IconUser size={48} style={{ color: theme === 'dark' ? '#10b981' : '#059669', marginBottom: 8, display: 'block', margin: '0 auto 8px auto' }} />
+              <div style={s.modalTitle}>Kullanıcı Adı Seç</div>
+              <div style={{ fontSize: 13, color: theme === 'dark' ? '#aeb5c1' : '#6b7280', marginBottom: 20 }}>Liderlik tablosunda bu isimle görüneceksin</div>
+              <input style={s.input}
                 placeholder="Kullanıcı adın (örn: AhmetAOF)"
                 value={anonName} onChange={e => setAnonName(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && handleAnonymous()} maxLength={20} />
-              {authError && <div style={{ background: 'rgba(239,68,68,0.1)', color: '#dc2626', borderRadius: 8, padding: '10px 14px', fontSize: 13, marginBottom: 10, textAlign: 'left' }}>⚠️ {authError}</div>}
-              <button style={{ width: '100%', padding: 14, borderRadius: 14, border: 'none', background: GREEN, color: '#fff', fontWeight: 700, fontSize: 14, cursor: 'pointer', marginTop: 4 }} onClick={handleAnonymous}>Başla 🚀</button>
-              <button style={{ width: '100%', padding: 14, borderRadius: 14, border: '1.5px solid #e5e7eb', background: '#f3f4f6', color: '#374151', fontWeight: 700, fontSize: 14, cursor: 'pointer', marginTop: 8 }} onClick={() => setShowNicknameModal(false)}>İptal</button>
+              {authError && <div style={s.errMsg}>⚠️ {authError}</div>}
+              <button style={s.btn} className="btn-hover" onClick={handleAnonymous}>
+                <IconPlay size={16} style={{ marginRight: 6 }} />
+                <span>Başla</span>
+              </button>
+              <button style={s.btnOutline} className="btn-hover" onClick={() => setShowNicknameModal(false)}>İptal</button>
             </div>
           </div>
         )}
@@ -479,34 +721,48 @@ export default function App() {
         {showFeedback && (
           <div style={s.modalOverlay} onClick={() => setShowFeedback(false)}>
             <div style={s.modalBox} onClick={e => e.stopPropagation()}>
-              <div style={s.modalTitle}>💬 Geri Bildirim / Ders İsteği</div>
-              <div style={{ fontSize: 13, color: '#6b7280', marginBottom: 12 }}>Görüşlerini yaz, ders isteğinde bulun!</div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, ...s.modalTitle }}>
+                <IconMessageSquare size={20} style={{ color: theme === 'dark' ? '#10b981' : '#059669' }} />
+                <span>Geri Bildirim / Ders İsteği</span>
+              </div>
+              <div style={{ fontSize: 13, color: theme === 'dark' ? '#aeb5c1' : '#6b7280', marginBottom: 12 }}>Görüşlerini yaz, ders isteğinde bulun!</div>
               {feedbackSent ? (
-                <div style={{ textAlign: 'center', fontSize: 40, padding: 20 }}>✅</div>
+                <IconCheckCircle size={48} style={{ color: '#10b981', display: 'block', margin: '16px auto' }} />
               ) : (
                 <>
                   <textarea style={s.feedbackInput} placeholder="Mesajını buraya yaz..."
                     value={feedbackText} onChange={e => setFeedbackText(e.target.value)} rows={3} />
-                  <button style={{ ...s.btn, color: '#fff', background: GREEN, marginTop: 8 }} onClick={sendFeedback}>Gönder</button>
-                  <button style={{ ...s.btn, background: '#f3f4f6', color: '#374151', marginTop: 8 }} onClick={() => setShowFeedback(false)}>İptal</button>
+                  <button style={{ ...s.btn, color: '#fff', marginTop: 8 }} className="btn-hover" onClick={sendFeedback}>Gönder</button>
+                  <button style={{ ...s.btnOutline, marginTop: 8 }} className="btn-hover" onClick={() => setShowFeedback(false)}>İptal</button>
                 </>
               )}
 
               {myFeedbacks.length > 0 && (
-                <div style={{ marginTop: 16, borderTop: '1px solid #e5e7eb', paddingTop: 14 }}>
-                  <div style={{ fontSize: 12, fontWeight: 700, color: '#6b7280', marginBottom: 10 }}>GEÇMİŞ GERİ BİLDİRİMLERİN</div>
+                <div style={{ marginTop: 16, borderTop: `1px solid ${theme === 'dark' ? 'rgba(255, 255, 255, 0.08)' : '#e5e7eb'}`, paddingTop: 14 }}>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: theme === 'dark' ? '#aeb5c1' : '#6b7280', marginBottom: 10 }}>GEÇMİŞ GERİ BİLDİRİMLERİN</div>
                   {myFeedbacks.map((f, i) => (
-                    <div key={i} style={{ marginBottom: 10, padding: '10px 12px', background: '#f9fafb', borderRadius: 10, borderLeft: `3px solid ${f.is_read ? '#10b981' : '#f59e0b'}` }}>
+                    <div key={i} style={{ marginBottom: 10, padding: '10px 12px', background: theme === 'dark' ? 'rgba(255,255,255,0.03)' : '#f9fafb', borderRadius: 10, borderLeft: `3px solid ${f.is_read ? '#10b981' : '#f59e0b'}`, borderTop: `1px solid ${theme === 'dark' ? 'rgba(255,255,255,0.04)' : '#e5e7eb'}`, borderRight: `1px solid ${theme === 'dark' ? 'rgba(255,255,255,0.04)' : '#e5e7eb'}`, borderBottom: `1px solid ${theme === 'dark' ? 'rgba(255,255,255,0.04)' : '#e5e7eb'}` }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
-                        <span style={{ fontSize: 11, fontWeight: 700, color: f.is_read ? '#10b981' : '#d97706' }}>
-                          {f.is_read ? '✓ Dikkate Alındı' : '⏳ İnceleniyor'}
+                        <span style={{ fontSize: 11, fontWeight: 700, color: f.is_read ? '#10b981' : '#d97706', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                          {f.is_read ? (
+                            <>
+                              <IconCheckCircle size={12} />
+                              <span>Dikkate Alındı</span>
+                            </>
+                          ) : (
+                            <>
+                              <IconRefresh size={12} style={{ animation: 'spin 2s linear infinite' }} />
+                              <span>İnceleniyor</span>
+                            </>
+                          )}
                         </span>
                         <span style={{ fontSize: 11, color: '#9ca3af' }}>{new Date(f.created_at).toLocaleDateString('tr')}</span>
                       </div>
-                      <div style={{ fontSize: 13, color: '#374151', lineHeight: 1.4 }}>{f.message}</div>
+                      <div style={{ fontSize: 13, color: s.qText.color, lineHeight: 1.4 }}>{f.message}</div>
                       {f.admin_reply && (
-                        <div style={{ marginTop: 6, padding: '6px 10px', background: '#d1fae5', borderRadius: 8, fontSize: 12, color: '#065f46' }}>
-                          📣 {f.admin_reply}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 6, padding: '6px 10px', background: '#d1fae5', borderRadius: 8, fontSize: 12, color: '#065f46' }}>
+                          <IconBell size={12} />
+                          <span>{f.admin_reply}</span>
                         </div>
                       )}
                     </div>
@@ -518,11 +774,14 @@ export default function App() {
         )}
 
         <div style={s.card}>
-          <div style={s.cardTitle}>🏆 Bugünün Liderleri</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, ...s.cardTitle }}>
+            <IconAward size={20} style={{ color: '#f59e0b' }} />
+            <span>Bugünün Liderleri</span>
+          </div>
 
           {/* GÜNÜN ŞAKASI BURAYA EKLENDİ */}
           {top3.length > 0 && (
-            <div style={{ fontWeight: '600', color: '#d97706', marginBottom: 12, textAlign: 'center', background: '#fef3c7', padding: '10px', borderRadius: 10, fontSize: 13, lineHeight: 1.4 }}>
+            <div style={{ fontWeight: '600', color: theme === 'dark' ? '#fde68a' : '#d97706', marginBottom: 12, textAlign: 'center', background: theme === 'dark' ? 'rgba(245, 158, 11, 0.12)' : '#fef3c7', padding: '10px', borderRadius: 10, fontSize: 13, lineHeight: 1.4, border: theme === 'dark' ? '1px dashed rgba(245, 158, 11, 0.3)' : 'none' }}>
               {getDailyJoke(top3[0]?.username)}
             </div>
           )}
@@ -536,14 +795,30 @@ export default function App() {
             </div>
           ))}
           {myRank
-            ? <div style={s.myRankBox}><span>📍 Sen bugün <strong>{myRank}. sıradasın</strong></span><span style={s.lbScore}>{myLeaderboardScore} XP</span></div>
-            : <div style={s.myRankBoxGray}>Soru çöz, sıralamada görün! 🎯</div>
+            ? <div style={s.myRankBox}><span><IconTarget size={14} style={{ marginRight: 6, color: theme === 'dark' ? '#10b981' : '#059669', display: 'inline', verticalAlign: 'middle' }} />Sen bugün <strong>{myRank}. sıradasın</strong></span><span style={s.lbScore}>{myLeaderboardScore} XP</span></div>
+            : <div style={s.myRankBoxGray}>Soru çöz, sıralamada görün! <IconTarget size={14} style={{ marginLeft: 4, display: 'inline', verticalAlign: 'middle' }} /></div>
           }
         </div>
 
         {/* PDF Not İndir Butonu */}
         <button
-          style={{ width: '100%', background: 'rgba(255,255,255,0.12)', border: '1.5px solid rgba(255,255,255,0.3)', borderRadius: 14, padding: '14px 18px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', color: '#fff', fontWeight: 700, fontSize: 15, marginBottom: 16 }}
+          className="btn-hover"
+          style={{
+            width: '100%',
+            background: theme === 'dark' ? 'rgba(255,255,255,0.06)' : 'rgba(5, 150, 105, 0.05)',
+            border: theme === 'dark' ? '1.5px solid rgba(255,255,255,0.1)' : '1.5px solid rgba(5, 150, 105, 0.15)',
+            borderRadius: 14,
+            padding: '14px 18px',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            cursor: 'pointer',
+            color: s.greeting.color,
+            fontWeight: 700,
+            fontSize: 15,
+            marginBottom: 12,
+            transition: 'all 0.2s'
+          }}
           onClick={async () => {
             try {
               const res = await fetch(API + '/api/pdf-courses');
@@ -557,21 +832,59 @@ export default function App() {
             } catch (e) { alert('Dersler yüklenemedi'); }
           }}
         >
-          <span>📄 Ders Kitabı İndir</span>
-          <span style={{ color: 'rgba(255,255,255,0.6)', fontSize: 18 }}>›</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <IconFileText size={18} style={{ color: theme === 'dark' ? '#10b981' : '#059669' }} />
+            <span>Ücretsiz Ders Kitabı İndir</span>
+          </div>
+          <IconChevronRight size={18} style={{ color: theme === 'dark' ? 'rgba(255,255,255,0.5)' : 'rgba(5, 150, 105, 0.5)' }} />
         </button>
-
+ 
+        {/* PDF Satış Yönlendirme Butonu */}
+        <button
+          className="btn-hover"
+          style={{
+            width: '100%',
+            background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+            border: 'none',
+            borderRadius: 14,
+            padding: '14px 18px',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            cursor: 'pointer',
+            color: '#fff',
+            fontWeight: 800,
+            fontSize: 15,
+            marginBottom: 16,
+            boxShadow: '0 4px 14px rgba(245, 158, 11, 0.25)',
+            transition: 'all 0.2s'
+          }}
+          onClick={() => {
+            setPrevScreen('home');
+            setScreen('product-detail');
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <IconBookOpen size={18} />
+            <span>Özet Ders Kitabı & Örnek PDF İncele</span>
+          </div>
+          <IconChevronRight size={18} style={{ color: 'rgba(255,255,255,0.8)' }} />
+        </button>
+ 
         <div style={s.cardTitle2} id="pratik-yap">Pratik Yap</div>
-
+ 
         <div style={s.examTabRow}>
-          <button type="button" style={examType === 'vize' ? s.examTabActiveVize : s.examTab} onClick={(e) => { e.preventDefault(); setExamType('vize'); }}>
-            📗 Vize
+          <button type="button" className="btn-hover" style={examType === 'vize' ? s.examTabActiveVize : s.examTab} onClick={(e) => { e.preventDefault(); setExamType('vize'); }}>
+            <IconFileText size={16} />
+            <span>Vize</span>
           </button>
-          <button type="button" style={examType === 'final' ? s.examTabActiveFinal : s.examTab} onClick={(e) => { e.preventDefault(); setExamType('final'); }}>
-            📘 Final
+          <button type="button" className="btn-hover" style={examType === 'final' ? s.examTabActiveFinal : s.examTab} onClick={(e) => { e.preventDefault(); setExamType('final'); }}>
+            <IconGraduationCap size={16} />
+            <span>Final</span>
           </button>
-          <button type="button" style={examType === 'yazokulu' ? s.examTabActiveYazOkulu : s.examTab} onClick={(e) => { e.preventDefault(); setExamType('yazokulu'); }}>
-            ☀️ Yaz Okulu
+          <button type="button" className="btn-hover" style={examType === 'yazokulu' ? s.examTabActiveYazOkulu : s.examTab} onClick={(e) => { e.preventDefault(); setExamType('yazokulu'); }}>
+            <IconSun size={16} />
+            <span>Yaz Okulu</span>
           </button>
         </div>
 
@@ -609,7 +922,9 @@ export default function App() {
                     </div>
                     <span style={{ fontWeight: '600' }}>{cleanName}</span>
                   </div>
-                  <span style={s.catArrow}>→</span>
+                  <span style={s.catArrow}>
+                    <IconChevronRight size={18} />
+                  </span>
                 </button>
               )
             })}
@@ -638,9 +953,15 @@ export default function App() {
         )}
 
         <div style={s.quizHeader}>
-          <button style={s.backBtn} onClick={() => setScreen('home')}>← Geri</button>
+          <button style={s.backBtn} className="btn-hover" onClick={() => setScreen('home')}>
+            <IconChevronLeft size={16} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 4 }} />
+            Geri
+          </button>
           <div style={s.progress}>{currentQ + 1} / {questions.length}</div>
-          <div style={s.rankBadge}>🏅 {score} XP{myRank ? ` · #${myRank}` : ''}</div>
+          <div style={s.rankBadge}>
+            <IconAward size={14} style={{ marginRight: 4, display: 'inline', verticalAlign: 'middle' }} />
+            <span>{score} XP{myRank ? ` · #${myRank}` : ''}</span>
+          </div>
         </div>
 
         <div style={s.quizScroll} onClick={() => { if (selected) handleNext(); }}>
@@ -648,21 +969,40 @@ export default function App() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10, gap: 10 }}>
               <div style={{ ...s.catLabel, flex: 1, wordBreak: 'break-word', lineHeight: 1.3 }}>{activeCategory?.name}</div>
               <div style={{ display: 'flex', gap: 6, flexShrink: 0, flexWrap: 'nowrap' }}>
-                {q.year && <div style={{ ...s.yearBadge, whiteSpace: 'nowrap' }}>{q.year}</div>}
-                {q.frequency > 1 && <div style={{ ...s.freqBadge, whiteSpace: 'nowrap' }}>🔥 {q.frequency}x</div>}
+                {q.year && <div style={s.yearBadge}>{q.year}</div>}
+                {q.frequency > 1 && <div style={s.freqBadge}>🔥 {q.frequency}x</div>}
               </div>
             </div>
             <div style={s.qText}>{formatQuestion(q.question_text)}</div>
             <div style={s.divider} />
             {opts.map((opt, i) => {
               if (!vals[i]) return null;
-              let bg = '#f9fafb', border = '1.5px solid #e5e7eb', color = '#1f2937', letterBg = '#e5e7eb', letterColor = '#374151';
+
+              // Dynamic themed defaults
+              let bg = theme === 'dark' ? 'rgba(255, 255, 255, 0.03)' : 'rgba(5, 150, 105, 0.03)';
+              let border = theme === 'dark' ? '1.5px solid rgba(255, 255, 255, 0.06)' : '1.5px solid rgba(5, 150, 105, 0.12)';
+              let color = theme === 'dark' ? '#f9fafb' : '#0c2619';
+              let letterBg = theme === 'dark' ? 'rgba(255, 255, 255, 0.08)' : 'rgba(5, 150, 105, 0.08)';
+              let letterColor = theme === 'dark' ? '#aeb5c1' : '#4b5563';
+              
               if (selected) {
-                if (opt.toLowerCase() === q.correct_option.toLowerCase()) { bg = '#d1fae5'; border = '1.5px solid #10b981'; color = '#065f46'; letterBg = '#10b981'; letterColor = '#fff'; }
-                else if (opt === selected) { bg = '#fee2e2'; border = '1.5px solid #ef4444'; color = '#991b1b'; letterBg = '#ef4444'; letterColor = '#fff'; }
+                if (opt.toLowerCase() === q.correct_option.toLowerCase()) { 
+                  bg = theme === 'dark' ? 'rgba(16, 185, 129, 0.15)' : 'rgba(5, 150, 105, 0.08)'; 
+                  border = theme === 'dark' ? '1.5px solid #10b981' : '1.5px solid #059669'; 
+                  color = theme === 'dark' ? '#a7f3d0' : '#046a4e'; 
+                  letterBg = theme === 'dark' ? '#10b981' : '#059669'; 
+                  letterColor = '#fff'; 
+                }
+                else if (opt === selected) { 
+                  bg = theme === 'dark' ? 'rgba(239, 68, 68, 0.15)' : 'rgba(220, 38, 38, 0.08)'; 
+                  border = theme === 'dark' ? '1.5px solid #ef4444' : '1.5px solid #dc2626'; 
+                  color = theme === 'dark' ? '#fca5a5' : '#b91c1c'; 
+                  letterBg = theme === 'dark' ? '#ef4444' : '#dc2626'; 
+                  letterColor = '#fff'; 
+                }
               }
               return (
-                <button key={opt} style={{ ...s.optBtn, background: bg, border, color }}
+                <button key={opt} className="opt-btn-hover" style={{ ...s.optBtn, background: bg, border, color }}
                   onClick={e => { e.stopPropagation(); if (selected) handleNext(); else handleAnswer(opt); }}>
                   <span style={{ ...s.optLetter, background: letterBg, color: letterColor }}>{opt}</span>
                   <span style={s.optText}>{vals[i]}</span>
@@ -672,6 +1012,7 @@ export default function App() {
           </div>
           {selected && (
             <button
+              className="btn-hover"
               style={{
                 background: 'rgba(255,255,255,0.12)',
                 border: '1px solid rgba(255,255,255,0.25)',
@@ -683,14 +1024,20 @@ export default function App() {
                 cursor: 'pointer',
                 marginTop: 2,
                 marginBottom: 4,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 6
               }}
               onClick={e => { e.stopPropagation(); setShowReportModal(true); }}
             >
-              🚩 Hatalı soru bildir
+              <IconFlag size={14} />
+              <span>Hatalı soru bildir</span>
             </button>
           )}
           {!selected && (
             <button
+              className="btn-hover"
               style={{
                 background: 'transparent',
                 border: '1px solid rgba(255,255,255,0.2)',
@@ -703,49 +1050,55 @@ export default function App() {
                 marginTop: 6,
                 marginBottom: 4,
                 letterSpacing: 0.2,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 4
               }}
               onClick={e => { e.stopPropagation(); handleNext(); }}
             >
-              Bu soruyu geç →
+              <span>Bu soruyu geç</span>
+              <IconChevronRight size={14} />
             </button>
           )}
           {showReportModal && (
-            <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.55)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: 20 }}
+            <div style={s.modalOverlay}
               onClick={() => setShowReportModal(false)}>
-              <div style={{ background: '#fff', borderRadius: 20, padding: 24, width: '100%', maxWidth: 380 }}
+              <div style={s.modalBox}
                 onClick={e => e.stopPropagation()}>
                 {reportSent ? (
-                  <div style={{ textAlign: 'center', padding: 20 }}>
-                    <div style={{ fontSize: 44 }}>✅</div>
-                    <div style={{ fontWeight: 700, marginTop: 8, color: '#065f46' }}>Bildirim iletildi, teşekkürler!</div>
-                  </div>
+                  <IconCheckCircle size={48} style={{ color: '#10b981', display: 'block', margin: '16px auto' }} />
                 ) : (
                   <>
-                    <div style={{ fontWeight: 800, fontSize: 17, color: '#1f2937', marginBottom: 6 }}>🚩 Hatalı Soru Bildir</div>
-                    <div style={{ fontSize: 13, color: '#6b7280', marginBottom: 18 }}>Sorunun türünü seç, ekibimize iletilsin.</div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, ...s.modalTitle }}>
+                      <IconFlag size={20} style={{ color: theme === 'dark' ? '#ef4444' : '#dc2626' }} />
+                      <span>Hatalı Soru Bildir</span>
+                    </div>
+                    <div style={{ fontSize: 13, color: theme === 'dark' ? '#aeb5c1' : '#6b7280', marginBottom: 18 }}>Sorunun türünü seç, ekibimize iletilsin.</div>
                     {[
-                      { icon: '✏️', label: 'Yazım / imla hatası', desc: 'Soruda veya seçeneklerde yazım yanlışı var' },
-                      { icon: '❌', label: 'Doğru şık yanlış işaretli', desc: 'Cevap anahtarı yanlış görünüyor' },
-                      { icon: '🤔', label: 'Mantık / içerik hatası', desc: 'Soru mantıksal olarak hatalı veya eksik' },
+                      { icon: <IconEdit size={20} style={{ color: theme === 'dark' ? '#10b981' : '#059669' }} />, label: 'Yazım / imla hatası', desc: 'Soruda veya seçeneklerde yazım yanlışı var' },
+                      { icon: <IconXCircle size={20} style={{ color: theme === 'dark' ? '#ef4444' : '#dc2626' }} />, label: 'Doğru şık yanlış işaretli', desc: 'Cevap anahtarı yanlış görünüyor' },
+                      { icon: <IconHelpCircle size={20} style={{ color: '#f59e0b' }} />, label: 'Mantık / içerik hatası', desc: 'Soru mantıksal olarak hatalı veya eksik' },
                     ].map(opt => (
                       <button key={opt.label}
-                        style={{ width: '100%', padding: '12px 14px', borderRadius: 12, border: '1.5px solid #e5e7eb', background: '#f9fafb', cursor: 'pointer', textAlign: 'left', marginBottom: 8, display: 'flex', alignItems: 'flex-start', gap: 12 }}
+                        className="opt-btn-hover"
+                        style={{ width: '100%', padding: '12px 14px', borderRadius: 12, border: theme === 'dark' ? '1.5px solid rgba(255, 255, 255, 0.08)' : '1.5px solid #e5e7eb', background: theme === 'dark' ? 'rgba(255, 255, 255, 0.03)' : '#f9fafb', color: s.qText.color, cursor: 'pointer', textAlign: 'left', marginBottom: 8, display: 'flex', alignItems: 'flex-start', gap: 12 }}
                         onClick={() => sendReport(opt.label)}>
-                        <span style={{ fontSize: 22, lineHeight: 1 }}>{opt.icon}</span>
+                        <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 24, width: 24 }}>{opt.icon}</span>
                         <div>
-                          <div style={{ fontWeight: 700, fontSize: 14, color: '#111827' }}>{opt.label}</div>
+                          <div style={{ fontWeight: 700, fontSize: 14, color: s.qText.color }}>{opt.label}</div>
                           <div style={{ fontSize: 12, color: '#9ca3af', marginTop: 2 }}>{opt.desc}</div>
                         </div>
                       </button>
                     ))}
-                    <button style={{ width: '100%', padding: '11px', borderRadius: 12, border: 'none', background: '#f3f4f6', color: '#6b7280', fontWeight: 700, fontSize: 14, cursor: 'pointer', marginTop: 4 }}
+                    <button style={s.btnOutline} className="btn-hover"
                       onClick={() => setShowReportModal(false)}>İptal</button>
                   </>
                 )}
               </div>
             </div>
           )}
-          <div style={{ height: 24 }} />
+          <div style={{ height: showStickyBottom ? 84 : 24 }} />
         </div>
 
         {/* Modül 3: Mobil Sticky Bottom Bar */}
@@ -753,7 +1106,11 @@ export default function App() {
           <div style={{ ...s.stickyBottom, cursor: 'pointer' }} onClick={() => { setPrevScreen('quiz'); setScreen('product-detail'); }}>
             <button style={s.stickyClose} onClick={(e) => { e.stopPropagation(); setShowStickyBottom(false); }} aria-label="Kapat">&times;</button>
             <div style={s.stickyContainer}>
-              <p style={s.stickyText}>🔥 Sınav Sabahı Bilmen Gereken 25 Terim ›</p>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#fff', fontSize: 12, fontWeight: 700 }}>
+                <IconZap size={16} style={{ color: '#f59e0b' }} />
+                <span>Sınav Sabahı Bilmen Gereken 25 Terim</span>
+              </div>
+              <IconChevronRight size={18} style={{ color: '#f59e0b' }} />
             </div>
           </div>
         )}
@@ -774,53 +1131,82 @@ export default function App() {
     return (
       <div style={s.bg}>
         <div style={s.container}>
-          <div style={s.resultEmoji}>{r.puan >= 50 ? '🎉' : '📚'}</div>
-          <div style={s.resultTitle}>{r.puan >= 50 ? 'Harika!' : 'Çalışmaya devam!'}</div>
+          <div style={{ display: 'flex', justifyContent: 'center', margin: '10px 0 20px 0' }}>
+            {r.puan >= 50 ? (
+              <IconAward size={72} style={{ color: '#fbbf24', filter: 'drop-shadow(0 8px 16px rgba(251, 191, 36, 0.2))' }} />
+            ) : (
+              <IconBookOpen size={72} style={{ color: theme === 'dark' ? '#10b981' : '#059669', filter: 'drop-shadow(0 8px 16px rgba(16, 185, 129, 0.2))' }} />
+            )}
+          </div>
+          <div style={s.resultTitle}>{r.puan >= 50 ? 'Harika Sonuç!' : 'Çalışmaya Devam Etmelisin!'}</div>
 
           <div style={s.resultCard}>
             <div style={s.resultRow}>
-              <span>✅ Doğru</span><strong>{correct}</strong>
+              <span>
+                <IconCheckCircle size={16} style={{ color: '#10b981', marginRight: 8, display: 'inline', verticalAlign: 'middle' }} />
+                <span>Doğru</span>
+              </span>
+              <strong>{correct}</strong>
             </div>
             <div style={s.resultRow}>
-              <span>❌ Yanlış</span><strong>{wrong}</strong>
+              <span>
+                <IconXCircle size={16} style={{ color: '#ef4444', marginRight: 8, display: 'inline', verticalAlign: 'middle' }} />
+                <span>Yanlış</span>
+              </span>
+              <strong>{wrong}</strong>
             </div>
             <div style={s.resultRow}>
-              <span>📊 Puanın</span><strong>{r.puan} / 100</strong>
+              <span>
+                <IconBarChart size={16} style={{ color: theme === 'dark' ? '#10b981' : '#059669', marginRight: 8, display: 'inline', verticalAlign: 'middle' }} />
+                <span>Puanın</span>
+              </span>
+              <strong>{r.puan} / 100</strong>
             </div>
             <div style={s.divider} />
 
             {r.type === 'vize' ? (
               <>
                 <div style={s.resultRow}>
-                  <span>Vize Etkisi (%30)</span><strong>{r.katki} puan</strong>
+                  <span>
+                    <IconFileText size={16} style={{ color: theme === 'dark' ? '#10b981' : '#059669', marginRight: 8, display: 'inline', verticalAlign: 'middle' }} />
+                    <span>Vize Etkisi (%30)</span>
+                  </span>
+                  <strong>{r.katki} puan</strong>
                 </div>
                 <div style={s.kaldiBox}>
-                  Dersi geçebilmek için ortalaman 35 olması gerekiyor. Finalden <strong>{r.finalMin}</strong> almalısın.
+                  Dersi geçebilmek için ortalaman en az 35 olmalıdır. Final sınavından <strong>{r.finalMin}</strong> almalısın.
                 </div>
               </>
             ) : (
               <>
                 <div style={s.resultRow}>
-                  <span>Final Etkisi (%70)</span><strong>{r.katki} puan</strong>
+                  <span>
+                    <IconGraduationCap size={16} style={{ color: '#f59e0b', marginRight: 8, display: 'inline', verticalAlign: 'middle' }} />
+                    <span>Final Etkisi (%70)</span>
+                  </span>
+                  <strong>{r.katki} puan</strong>
                 </div>
                 <div style={s.gectiBox}>
-                  🎓 Puanın ne kadar yüksekse geçme şansın o kadar artar!
+                  <IconGraduationCap size={16} style={{ marginRight: 8, display: 'inline', verticalAlign: 'middle' }} />
+                  <span>Puanın ne kadar yüksekse geçme şansın o kadar artar!</span>
                 </div>
               </>
             )}
           </div>
 
-          {myRank && <div style={s.rankResult}>📍 Bugün {myRank}. sıradasın!</div>}
+          {myRank && (
+            <div style={s.rankResult}>
+              <IconTarget size={16} style={{ marginRight: 6, display: 'inline', verticalAlign: 'middle' }} />
+              <span>Bugün {myRank}. sıradasın!</span>
+            </div>
+          )}
 
           {/* Modül 2: Test Arası / Sonuç Ekranı Kutusu */}
-          <div style={{ ...s.promoCard, cursor: 'pointer' }} onClick={() => { setPrevScreen('result'); setScreen('product-detail'); }}>
+          <div style={{ ...s.promoCard, cursor: 'pointer' }} className="btn-hover" onClick={() => { setPrevScreen('result'); setScreen('product-detail'); }}>
             <div style={s.promoCardAccent}></div>
             <div style={s.promoCardBody}>
               <div style={s.promoCardIconBox}>
-                <svg style={s.promoCardIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
-                  <polyline points="14 2 14 8 20 8"/>
-                </svg>
+                <IconBookOpen size={24} style={s.promoCardIcon} />
               </div>
               <div style={s.promoCardContent}>
                 <h3 style={s.promoCardTitle}>Sınavı Şansa Bırakma!</h3>
@@ -834,25 +1220,32 @@ export default function App() {
           {/* Başarı Notu Hesapla - sadece final sınavında */}
           {r.type === 'final' && (
             <button
-              style={{ ...s.btn, background: GREEN, color: '#fff', marginBottom: 6, fontWeight: 800 }}
+              className="btn-hover"
+              style={{ ...s.btn, background: '#10b981', color: isThemeLight(theme) ? '#fff' : '#030806', marginBottom: 8, fontWeight: 800, justifyContent: 'center' }}
               onClick={() => { setShowPassCheck(true); setPassResult(null); setVizeInput(''); }}
             >
-              💯 Başarı Notu Hesapla
+              <IconCalculator size={18} style={{ marginRight: 8 }} />
+              <span>Başarı Notu Hesapla</span>
             </button>
           )}
 
           {/* Dinamik Buton Mantığı */}
           {prevYear ? (
-            <button style={s.btn} onClick={() => openCategory(activeCategory, prevYear)}>
-              ⬅️ Önceki Yıla Geç ({prevYear})
+            <button style={s.btn} className="btn-hover" onClick={() => openCategory(activeCategory, prevYear)}>
+              <IconChevronLeft size={16} style={{ marginRight: 6 }} />
+              <span>Önceki Yıla Geç ({prevYear})</span>
             </button>
           ) : (
-            <button style={s.btn} onClick={() => openCategory(activeCategory, selectedYear)}>
-              🔄 Tekrar Çöz
+            <button style={s.btn} className="btn-hover" onClick={() => openCategory(activeCategory, selectedYear)}>
+              <IconRefresh size={16} style={{ marginRight: 6 }} />
+              <span>Tekrar Çöz</span>
             </button>
           )}
 
-          <button style={{ ...s.btn, background: '#fff', color: GREEN, marginTop: 10 }} onClick={() => setScreen('home')}>🏠 Ana Sayfa</button>
+          <button style={s.btnOutline} className="btn-hover" onClick={() => setScreen('home')}>
+            <IconHome size={16} style={{ marginRight: 6 }} />
+            <span>Ana Sayfa</span>
+          </button>
 
           {/* YouTube Takip Bölümü */}
           <a
@@ -861,17 +1254,19 @@ export default function App() {
             rel="noreferrer"
             style={{
               display: 'flex', alignItems: 'center', gap: 12,
-              background: 'rgba(255,255,255,0.12)', borderRadius: 16,
+              background: theme === 'dark' ? 'rgba(255,255,255,0.04)' : 'rgba(5, 150, 105, 0.05)', borderRadius: 16,
               padding: '14px 16px', marginTop: 14, textDecoration: 'none',
-              border: '1.5px solid rgba(255,255,255,0.2)',
+              border: `1.5px solid ${theme === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(5, 150, 105, 0.12)'}`,
             }}
           >
-            <span style={{ fontSize: 28 }}>▶️</span>
-            <div>
-              <div style={{ color: '#fff', fontWeight: 800, fontSize: 14 }}>YouTube'da takip et!</div>
-              <div style={{ color: 'rgba(255,255,255,0.65)', fontSize: 12, marginTop: 2 }}>@aofseslinotlar — sesli anlatımlar, özetler</div>
+            <div style={{ background: '#ff0000', borderRadius: '50%', width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <IconPlay size={16} style={{ color: '#fff', marginLeft: 2 }} />
             </div>
-            <span style={{ marginLeft: 'auto', color: 'rgba(255,255,255,0.5)', fontSize: 18 }}>›</span>
+            <div>
+              <div style={{ color: s.greeting.color, fontWeight: 800, fontSize: 14 }}>YouTube'da takip et!</div>
+              <div style={{ color: theme === 'dark' ? 'rgba(255,255,255,0.55)' : '#4b5563', fontSize: 12, marginTop: 2 }}>@aofseslinotlar — sesli anlatımlar, özetler</div>
+            </div>
+            <IconChevronRight size={18} style={{ marginLeft: 'auto', color: theme === 'dark' ? 'rgba(255,255,255,0.4)' : '#059669' }} />
           </a>
         </div>
 
@@ -879,28 +1274,28 @@ export default function App() {
         {showPassCheck && (
           <div style={s.modalOverlay} onClick={() => setShowPassCheck(false)}>
             <div style={{ ...s.modalBox, maxWidth: 360 }} onClick={e => e.stopPropagation()}>
-              <div style={{ fontWeight: 900, fontSize: 18, color: '#1f2937', marginBottom: 4 }}>🎓 Başarı Notu Hesapla</div>
-              <div style={{ fontSize: 13, color: '#6b7280', marginBottom: 16 }}>
+              <div style={{ fontWeight: 900, fontSize: 18, color: s.qText.color, marginBottom: 4 }}>🎓 Başarı Notu Hesapla</div>
+              <div style={{ fontSize: 13, color: theme === 'dark' ? '#aeb5c1' : '#6b7280', marginBottom: 16 }}>
                 Vize notunu gir, final puanınla birlikte hesaplayalım.<br/>
                 <span style={{ fontSize: 12 }}>Vize %30 + Final %70 ≥ 35 → Geçtin!</span>
               </div>
 
-              <label style={{ fontSize: 13, fontWeight: 700, color: '#374151', display: 'block', marginBottom: 6 }}>Vize Notun (0–100)</label>
+              <label style={{ fontSize: 13, fontWeight: 700, color: s.qText.color, display: 'block', marginBottom: 6 }}>Vize Notun (0–100)</label>
               <input
                 type="number" min="0" max="100"
                 placeholder="örn: 60"
                 value={vizeInput}
                 onChange={e => { setVizeInput(e.target.value); setPassResult(null); }}
-                style={{ width: '100%', padding: '12px 14px', borderRadius: 12, border: '1.5px solid #d1d5db', fontSize: 16, outline: 'none', boxSizing: 'border-box', marginBottom: 12 }}
+                style={s.input}
               />
 
               {/* Final puanı bilgi satırı */}
-              <div style={{ fontSize: 13, color: '#6b7280', marginBottom: 14, background: '#f9fafb', borderRadius: 10, padding: '9px 12px' }}>
-                📊 Bu sınavdaki final puanın: <strong style={{ color: GREEN }}>{r.puan} / 100</strong>
+              <div style={{ fontSize: 13, color: theme === 'dark' ? '#aeb5c1' : '#6b7280', marginBottom: 14, background: theme === 'dark' ? 'rgba(255,255,255,0.03)' : '#f9fafb', borderRadius: 10, padding: '9px 12px', border: theme === 'dark' ? '1px solid rgba(255,255,255,0.04)' : '1px solid #e5e7eb' }}>
+                📊 Bu sınavdaki final puanın: <strong style={{ color: theme === 'dark' ? '#10b981' : '#059669' }}>{r.puan} / 100</strong>
               </div>
 
               <button
-                style={{ ...s.btn, background: GREEN, color: '#fff', marginBottom: 8 }}
+                style={{ ...s.btn, background: '#10b981', color: isThemeLight(theme) ? '#fff' : '#030806', marginBottom: 8 }}
                 onClick={() => {
                   const vize = parseFloat(vizeInput);
                   if (isNaN(vize) || vize < 0 || vize > 100) return;
@@ -914,8 +1309,9 @@ export default function App() {
               {passResult && (
                 <div style={{
                   borderRadius: 14, padding: '14px 16px', textAlign: 'center',
-                  background: passResult.gecti ? '#d1fae5' : '#fee2e2',
-                  color: passResult.gecti ? '#065f46' : '#991b1b',
+                  background: passResult.gecti ? 'rgba(16, 185, 129, 0.15)' : 'rgba(239, 68, 68, 0.15)',
+                  border: `1px solid ${passResult.gecti ? '#10b981' : '#ef4444'}`,
+                  color: passResult.gecti ? (theme === 'dark' ? '#a7f3d0' : '#046a4e') : (theme === 'dark' ? '#fca5a5' : '#b91c1c'),
                   fontWeight: 800, fontSize: 16, marginBottom: 8,
                 }}>
                   {passResult.gecti ? '🎉 Tebrikler, geçtin!' : '📚 Maalesef geçemedin.'}
@@ -926,7 +1322,7 @@ export default function App() {
                 </div>
               )}
 
-              <button style={{ ...s.btn, background: '#f3f4f6', color: '#374151', marginTop: 0 }} onClick={() => setShowPassCheck(false)}>Kapat</button>
+              <button style={s.btnOutline} onClick={() => setShowPassCheck(false)}>Kapat</button>
             </div>
           </div>
         )}
@@ -934,43 +1330,51 @@ export default function App() {
     );
   }
 
-  const sendCourseRequest = async () => {
-    if (!courseRequestText.trim()) return;
-    try {
-      await fetch(API + '/api/course-request', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ course_name: courseRequestText.trim() })
-      });
-    } catch (e) {}
-    setCourseRequestSent(true);
-    setTimeout(() => {
-      setCourseRequestText('');
-      setCourseRequestSent(false);
-    }, 2000);
-  };
-
   if (screen === 'product-detail') {
     return (
       <div style={s.bg}>
         <div style={s.container}>
           <div style={s.header}>
-            <button style={s.backBtn} onClick={() => setScreen(prevScreen || 'home')}>← Geri Dön</button>
+            <button style={s.backBtn} className="btn-hover" onClick={() => setScreen(prevScreen || 'home')}>
+              <IconChevronLeft size={16} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 4 }} />
+              Geri Dön
+            </button>
             <div style={s.greeting}>Özel Özet PDF</div>
             <div style={{ width: 60 }}></div>
           </div>
 
           <div style={s.card}>
             <div style={{ textAlign: 'center', marginBottom: 16 }}>
-              <img 
-                src="/ozet-pdf-gorsel.png" 
-                alt="AÖF Sınav Algoritması Özet Notları" 
-                style={{ width: '100%', maxHeight: 240, objectFit: 'contain', borderRadius: 12, boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} 
-              />
+              {/* SVG Book Cover Illustration */}
+              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 16 }}>
+                <div style={{
+                  width: 120,
+                  height: 160,
+                  background: 'linear-gradient(135deg, #059669 0%, #10b981 100%)',
+                  borderRadius: 12,
+                  boxShadow: '0 8px 24px rgba(16, 185, 129, 0.3)',
+                  border: '2px solid rgba(255, 255, 255, 0.15)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
+                  padding: 16,
+                  color: '#fff',
+                  textAlign: 'left',
+                  position: 'relative',
+                  overflow: 'hidden'
+                }}>
+                  <div style={{ fontSize: 9, fontWeight: 800, opacity: 0.8, letterSpacing: 1 }}>AÖF SESLİ NOTLAR</div>
+                  <div style={{ fontWeight: 900, fontSize: 15, lineHeight: 1.2, fontFamily: "'Outfit', sans-serif" }}>ÖZET DERS KİTABI</div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <IconBookOpen size={18} style={{ color: '#fff' }} />
+                    <span style={{ fontSize: 9, fontWeight: 700, background: 'rgba(255,255,255,0.2)', padding: '2px 6px', borderRadius: 6 }}>PDF</span>
+                  </div>
+                </div>
+              </div>
             </div>
             
             <div style={s.cardTitle}>AÖF Sınavı Şansa Bırakılmaz!</div>
-            <div style={{ fontSize: 13, color: '#4b5563', lineHeight: 1.6, marginBottom: 16 }}>
+            <div style={{ fontSize: 13, color: theme === 'dark' ? '#aeb5c1' : '#4b5563', lineHeight: 1.6, marginBottom: 16 }}>
               Sınav algoritmasına göre hazırlanmış özet PDF notları ile derslerinizi kolayca geçin. Hangi konuların tekrar tekrar sorulduğu çıkmış sorulardan analiz edilerek bu evrak özenle hazırlandı.
             </div>
 
@@ -978,58 +1382,60 @@ export default function App() {
               display: 'inline-flex',
               alignItems: 'center',
               gap: 6,
-              background: '#eff6ff',
-              color: '#1d4ed8',
+              background: theme === 'dark' ? 'rgba(16, 185, 129, 0.15)' : 'rgba(5, 150, 105, 0.08)',
+              color: theme === 'dark' ? '#a7f3d0' : '#046a4e',
               padding: '6px 12px',
               borderRadius: 20,
               fontSize: 12,
               fontWeight: 700,
               marginBottom: 18,
-              border: '1px solid rgba(29, 78, 216, 0.12)'
+              border: `1px solid ${theme === 'dark' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(5, 150, 105, 0.15)'}`
             }}>
-              <span>📚</span> 10+ Aktif Ders Seçeneği
+              <IconBookOpen size={14} style={{ marginRight: 2 }} />
+              10+ Aktif Ders Seçeneği
             </div>
 
             <div style={{ marginBottom: 20 }}>
-              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 12 }}>
-                <span style={{ fontSize: 16 }}>🎯</span>
-                <div style={{ fontSize: 13, color: '#374151', textAlign: 'left' }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 14 }}>
+                <IconTarget size={20} style={{ color: theme === 'dark' ? '#10b981' : '#059669', flexShrink: 0, marginTop: 2 }} />
+                <div style={{ fontSize: 13, color: s.qText.color, textAlign: 'left', lineHeight: 1.4 }}>
                   <strong>Sınav Sabahı Bilmen Gereken 25 Terim:</strong> Sınavdan hemen önce bilmeniz gereken en kritik 25 terim ve tanım elinizin altında.
                 </div>
               </div>
-              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 12 }}>
-                <span style={{ fontSize: 16 }}>📊</span>
-                <div style={{ fontSize: 13, color: '#374151', textAlign: 'left' }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 14 }}>
+                <IconBarChart size={20} style={{ color: theme === 'dark' ? '#10b981' : '#059669', flexShrink: 0, marginTop: 2 }} />
+                <div style={{ fontSize: 13, color: s.qText.color, textAlign: 'left', lineHeight: 1.4 }}>
                   <strong>Çıkmış Soru Analizi:</strong> Geçmiş sınav soruları analiz edilerek, tekrar tekrar sorulan konular özel bir algoritmayla belirlendi ve damıtıldı.
                 </div>
               </div>
-              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 12 }}>
-                <span style={{ fontSize: 16 }}>⚡</span>
-                <div style={{ fontSize: 13, color: '#374151', textAlign: 'left' }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 14 }}>
+                <IconZap size={20} style={{ color: theme === 'dark' ? '#10b981' : '#059669', flexShrink: 0, marginTop: 2 }} />
+                <div style={{ fontSize: 13, color: s.qText.color, textAlign: 'left', lineHeight: 1.4 }}>
                   <strong>Shopier Güvencesiyle Anında E-posta:</strong> Ödemenizden hemen sonra PDF dosyanız otomatik olarak mail adresinize gönderilir.
                 </div>
               </div>
-              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
-                <span style={{ fontSize: 16 }}>📱</span>
-                <div style={{ fontSize: 13, color: '#374151', textAlign: 'left' }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+                <IconPhone size={20} style={{ color: theme === 'dark' ? '#10b981' : '#059669', flexShrink: 0, marginTop: 2 }} />
+                <div style={{ fontSize: 13, color: s.qText.color, textAlign: 'left', lineHeight: 1.4 }}>
                   <strong>Mobil Uyumlu Format:</strong> Telefon, tablet veya bilgisayarınızdan her yerde kolayca çalışabilirsiniz.
                 </div>
               </div>
             </div>
 
-            <a href={SHOPIER_URL} target="_blank" rel="noopener noreferrer" style={{ ...s.btn, background: '#f59e0b', color: '#fff', textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, fontWeight: 800, padding: '14px', borderRadius: 14, boxShadow: '0 4px 14px rgba(245, 158, 11, 0.3)' }}>
+            <a href={SHOPIER_URL} target="_blank" rel="noopener noreferrer" className="btn-hover" style={{ ...s.btn, background: '#f59e0b', color: '#fff', textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, fontWeight: 800, padding: '14px', borderRadius: 14, boxShadow: '0 4px 14px rgba(245, 158, 11, 0.3)' }}>
               <span>Shopier ile Hemen Al & İndir</span>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              <IconChevronRight size={18} />
             </a>
 
             <a 
               href="/ornek-dokuman.pdf" 
               target="_blank" 
               rel="noopener noreferrer" 
+              className="btn-hover"
               style={{ 
                 ...s.btn, 
-                background: 'rgba(245, 158, 11, 0.08)', 
-                color: '#d97706', 
+                background: theme === 'dark' ? 'rgba(245, 158, 11, 0.12)' : 'rgba(245, 158, 11, 0.05)', 
+                color: theme === 'dark' ? '#fde68a' : '#d97706', 
                 border: '1.5px solid #f59e0b', 
                 textDecoration: 'none', 
                 display: 'flex', 
@@ -1048,11 +1454,12 @@ export default function App() {
                 e.currentTarget.style.transform = 'translateY(-1px)';
               }}
               onMouseLeave={(e) => { 
-                e.currentTarget.style.background = 'rgba(245, 158, 11, 0.08)'; 
+                e.currentTarget.style.background = theme === 'dark' ? 'rgba(245, 158, 11, 0.12)' : 'rgba(245, 158, 11, 0.05)'; 
                 e.currentTarget.style.transform = 'none';
               }}
             >
-              <span>📄 Örnek PDF İndir & İncele</span>
+              <IconFileText size={18} />
+              <span>Örnek PDF İndir & İncele</span>
             </a>
           </div>
         </div>
@@ -1065,15 +1472,18 @@ export default function App() {
       <div style={s.bg}>
         <div style={s.container}>
           <div style={s.header}>
-            <button style={s.backBtn} onClick={() => setScreen('home')}>← Geri</button>
+            <button style={s.backBtn} className="btn-hover" onClick={() => setScreen('home')}>
+              <IconChevronLeft size={16} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 4 }} />
+              Geri
+            </button>
             <div style={s.greeting}>Ders Kitapları</div>
             <div style={{ width: 60 }}></div>
           </div>
 
           <div style={s.card}>
-            <div style={{ fontSize: 40, textAlign: 'center', marginBottom: 10 }}>📚</div>
+            <IconBookOpen size={48} style={{ color: theme === 'dark' ? '#10b981' : '#059669', marginBottom: 8, display: 'block', margin: '0 auto 8px auto' }} />
             <div style={s.cardTitle}>Derslerini Seç</div>
-            <div style={{ fontSize: 13, color: '#6b7280', marginBottom: 16 }}>
+            <div style={{ fontSize: 13, color: theme === 'dark' ? '#aeb5c1' : '#6b7280', marginBottom: 16 }}>
               Seçtiğin dersleri size e-posta olarak göndereceğiz. En fazla 3 ders seçebilirsin.
             </div>
 
@@ -1082,7 +1492,7 @@ export default function App() {
             ) : (
               <div style={{ maxHeight: 300, overflowY: 'auto', marginBottom: 16 }}>
                 {pdfCourses.map(c => (
-                  <label key={c.id} style={{ display: 'flex', alignItems: 'center', padding: '12px 14px', border: '1.5px solid #e5e7eb', borderRadius: 12, marginBottom: 8, cursor: 'pointer', background: pdfSelected.some(p => p.id === c.id) ? '#f0faf4' : '#fff' }}>
+                  <label key={c.id} style={{ display: 'flex', alignItems: 'center', padding: '12px 14px', border: theme === 'dark' ? '1.5px solid rgba(255, 255, 255, 0.08)' : '1.5px solid #e5e7eb', borderRadius: 12, marginBottom: 8, cursor: 'pointer', background: pdfSelected.some(p => p.id === c.id) ? (theme === 'dark' ? 'rgba(16, 185, 129, 0.15)' : '#f0faf4') : 'transparent' }}>
                     <input
                       type="checkbox"
                       style={{ width: 18, height: 18, marginRight: 12, accentColor: GREEN }}
@@ -1097,43 +1507,50 @@ export default function App() {
                         setPdfResult(null);
                       }}
                     />
-                    <span style={{ fontSize: 14, fontWeight: 600, color: '#1f2937' }}>{c.name}</span>
+                    <span style={{ fontSize: 14, fontWeight: 600, color: s.qText.color }}>{c.name}</span>
                   </label>
                 ))}
               </div>
             )}
 
             <div style={{ marginBottom: 16 }}>
-              <label style={{ fontSize: 12, fontWeight: 700, color: '#6b7280', display: 'block', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>E-posta Adresin</label>
+              <label style={{ fontSize: 12, fontWeight: 700, color: theme === 'dark' ? '#aeb5c1' : '#6b7280', display: 'block', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>E-posta Adresin</label>
               <input
                 type="email"
                 placeholder=""
                 value={pdfEmail}
                 onChange={e => { setPdfEmail(e.target.value); setPdfResult(null); }}
-                style={{ width: '100%', padding: '14px 16px', borderRadius: 12, border: '1.5px solid #d1d5db', fontSize: 15, outline: 'none', boxSizing: 'border-box' }}
+                style={s.input}
               />
             </div>
 
             <label style={{ display: 'flex', alignItems: 'flex-start', marginBottom: 20, cursor: 'pointer' }}>
               <input type="checkbox" checked={pdfKvkk} onChange={e => { setPdfKvkk(e.target.checked); setPdfResult(null); }} style={{ width: 16, height: 16, marginRight: 10, marginTop: 2 }} />
-              <span style={{ fontSize: 12, color: '#6b7280', lineHeight: 1.4 }}>
+              <span style={{ fontSize: 12, color: theme === 'dark' ? '#aeb5c1' : '#6b7280', lineHeight: 1.4 }}>
                 E-posta adresimin kampanya ve duyurular (YouTube vs.) için kaydedilmesini ve bana e-posta gönderilmesini onaylıyorum.
               </span>
             </label>
 
             {pdfResult === 'success' && (
-              <div style={{ background: '#d1fae5', color: '#065f46', padding: '12px', borderRadius: 12, fontSize: 14, fontWeight: 700, textAlign: 'center', marginBottom: 12 }}>
-                ✅ Notların başarıyla e-postana gönderildi! Lütfen Spam (Gereksiz) kutunu da kontrol et.
+              <div style={{ background: 'rgba(16, 185, 129, 0.15)', color: theme === 'dark' ? '#a7f3d0' : '#065f46', border: '1px solid #10b981', padding: '12px', borderRadius: 12, fontSize: 14, fontWeight: 700, textAlign: 'center', marginBottom: 12 }}>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                  <IconCheckCircle size={16} />
+                  <span>Notların başarıyla e-postana gönderildi! Lütfen Spam (Gereksiz) kutunu da kontrol et.</span>
+                </span>
               </div>
             )}
             {pdfResult && pdfResult !== 'success' && (
-              <div style={{ background: '#fee2e2', color: '#991b1b', padding: '12px', borderRadius: 12, fontSize: 13, fontWeight: 600, textAlign: 'center', marginBottom: 12 }}>
-                ❌ {pdfResult}
+              <div style={{ background: 'rgba(239, 68, 68, 0.15)', color: theme === 'dark' ? '#fca5a5' : '#991b1b', border: '1px solid #ef4444', padding: '12px', borderRadius: 12, fontSize: 13, fontWeight: 600, textAlign: 'center', marginBottom: 12 }}>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                  <IconXCircle size={16} />
+                  <span>{pdfResult}</span>
+                </span>
               </div>
             )}
 
             <button
-              style={{ ...s.btn, background: (pdfSending || pdfSelected.length === 0 || !pdfEmail || !pdfKvkk) ? '#e5e7eb' : GREEN, color: (pdfSending || pdfSelected.length === 0 || !pdfEmail || !pdfKvkk) ? '#9ca3af' : '#fff', cursor: (pdfSending || pdfSelected.length === 0 || !pdfEmail || !pdfKvkk) ? 'not-allowed' : 'pointer', fontSize: 16, padding: '16px' }}
+              className="btn-hover"
+              style={{ ...s.btn, background: (pdfSending || pdfSelected.length === 0 || !pdfEmail || !pdfKvkk) ? '#e5e7eb' : (theme === 'dark' ? '#10b981' : '#059669'), color: (pdfSending || pdfSelected.length === 0 || !pdfEmail || !pdfKvkk) ? '#9ca3af' : (theme === 'dark' ? '#030806' : '#fff'), cursor: (pdfSending || pdfSelected.length === 0 || !pdfEmail || !pdfKvkk) ? 'not-allowed' : 'pointer', fontSize: 16, padding: '16px', justifyContent: 'center' }}
               disabled={pdfSending || pdfSelected.length === 0 || !pdfEmail || !pdfKvkk}
               onClick={async () => {
                 setPdfSending(true);
@@ -1162,22 +1579,22 @@ export default function App() {
                 setPdfSending(false);
               }}
             >
-              {pdfSending ? 'Gönderiliyor ⏳' : 'Notları Mailime Gönder 🚀'}
+              <span>{pdfSending ? 'Gönderiliyor...' : 'Notları Mailime Gönder'}</span>
             </button>
           </div>
 
           {/* Ders İsteği Diyalog Kutusu */}
           <div style={s.card}>
-            <div style={{ fontSize: 32, textAlign: 'center', marginBottom: 8 }}>📝</div>
+            <IconEdit size={32} style={{ display: 'block', margin: '0 auto 8px auto', color: theme === 'dark' ? '#10b981' : '#059669' }} />
             <div style={s.cardTitle}>Görmek İstediğiniz Dersi Bize Yazın</div>
-            <div style={{ fontSize: 13, color: '#6b7280', marginBottom: 16 }}>
+            <div style={{ fontSize: 13, color: theme === 'dark' ? '#aeb5c1' : '#6b7280', marginBottom: 16 }}>
               Listede olmayan bir ders mi var? Aşağıya yazın, en çok istenen dersleri ekleyelim!
             </div>
 
             {courseRequestSent ? (
               <div style={{ textAlign: 'center', padding: 16 }}>
-                <div style={{ fontSize: 40 }}>✅</div>
-                <div style={{ fontWeight: 700, color: '#065f46', marginTop: 8 }}>İsteğiniz alındı, teşekkürler!</div>
+                <IconCheckCircle size={40} style={{ color: '#10b981', display: 'block', margin: '0 auto 8px auto' }} />
+                <div style={{ fontWeight: 700, color: theme === 'dark' ? '#a7f3d0' : '#065f46', marginTop: 8 }}>İsteğiniz alındı, teşekkürler!</div>
               </div>
             ) : (
               <>
@@ -1185,15 +1602,16 @@ export default function App() {
                   placeholder="Ders adını yazın (örn: İşletme Yönetimi)"
                   value={courseRequestText}
                   onChange={e => setCourseRequestText(e.target.value)}
-                  style={{ width: '100%', padding: '12px 14px', borderRadius: 12, border: '1.5px solid #e5e7eb', fontSize: 15, fontFamily: 'inherit', resize: 'none', outline: 'none', boxSizing: 'border-box', marginBottom: 12 }}
+                  style={s.feedbackInput}
                   rows={2}
                 />
                 <button
-                  style={{ ...s.btn, background: courseRequestText.trim() ? GREEN : '#e5e7eb', color: courseRequestText.trim() ? '#fff' : '#9ca3af', cursor: courseRequestText.trim() ? 'pointer' : 'not-allowed' }}
+                  className="btn-hover"
+                  style={{ ...s.btn, background: courseRequestText.trim() ? (theme === 'dark' ? '#10b981' : '#059669') : '#e5e7eb', color: courseRequestText.trim() ? (theme === 'dark' ? '#030806' : '#fff') : '#9ca3af', cursor: courseRequestText.trim() ? 'pointer' : 'not-allowed', justifyContent: 'center', marginTop: 12 }}
                   disabled={!courseRequestText.trim()}
                   onClick={sendCourseRequest}
                 >
-                  Gönder 🚀
+                  <span>Gönder</span>
                 </button>
               </>
             )}
@@ -1207,95 +1625,856 @@ export default function App() {
   return null;
 }
 
-// ── PDF Not İndir ekranı ayrı component olarak eklendi (App içinde)
-// Yukarıda App fonksiyonu içine zaten eklendi (screen === 'pdf-download' bloğu)
+function isThemeLight(theme) {
+  return theme === 'light';
+}
 
 const GREEN = '#1a6b3c';
 const GREEN_DARK = '#0f3d22';
 const GREEN_LIGHT = '#22c55e';
 
-const s = {
-  bg: { minHeight: '100dvh', background: `linear-gradient(160deg, ${GREEN_DARK} 0%, ${GREEN} 100%)`, display: 'flex', justifyContent: 'center', alignItems: 'flex-start', padding: '20px 16px' },
-  splashBox: { background: 'rgba(255,255,255,0.08)', borderRadius: 24, padding: 32, width: '100%', maxWidth: 400, textAlign: 'center', marginTop: 60, backdropFilter: 'blur(10px)' },
-  logo: { width: 80, height: 80, objectFit: 'contain', marginBottom: 8 },
-  logoText: { fontSize: 24, fontWeight: 900, color: '#fff', marginBottom: 6 },
-  logoSub: { fontSize: 14, color: 'rgba(255,255,255,0.7)', marginBottom: 28 },
-  tabRow: { display: 'flex', marginBottom: 16, borderRadius: 10, overflow: 'hidden', border: '1.5px solid rgba(255,255,255,0.2)' },
-  tab: { flex: 1, padding: '10px 0', border: 'none', background: 'rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.6)', fontWeight: 700, fontSize: 14, cursor: 'pointer' },
-  tabActive: { flex: 1, padding: '10px 0', border: 'none', background: '#fff', color: GREEN, fontWeight: 700, fontSize: 14, cursor: 'pointer' },
-  input: { width: '100%', padding: '13px 16px', borderRadius: 12, border: '1.5px solid rgba(255,255,255,0.2)', background: 'rgba(255,255,255,0.12)', color: '#fff', fontSize: 15, marginBottom: 10, outline: 'none', fontFamily: 'inherit', boxSizing: 'border-box' },
-  btn: { width: '100%', padding: 14, borderRadius: 14, border: 'none', background: '#fff', color: GREEN, fontWeight: 700, fontSize: 14, cursor: 'pointer', marginTop: 4 },
-  btnOutline: { width: '100%', padding: 14, borderRadius: 14, border: '1.5px solid rgba(255,255,255,0.4)', background: 'rgba(255,255,255,0.15)', color: '#fff', fontWeight: 700, fontSize: 14, cursor: 'pointer', marginTop: 10 },
-  errMsg: { background: 'rgba(239,68,68,0.2)', color: '#fca5a5', borderRadius: 8, padding: '10px 14px', fontSize: 13, marginBottom: 10, textAlign: 'left' },
-  container: { width: '100%', maxWidth: 480, paddingBottom: 16 },
-  header: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, paddingTop: 8 },
-  greeting: { fontSize: 20, fontWeight: 800, color: '#fff' },
-  feedbackIconBtn: { background: 'rgba(255,255,255,0.15)', border: 'none', borderRadius: 10, padding: '7px 10px', color: '#fff', fontSize: 14, cursor: 'pointer' },
-  logoutBtn: { background: 'rgba(255,255,255,0.15)', border: 'none', borderRadius: 10, padding: '7px 12px', color: '#fff', fontWeight: 700, fontSize: 12, cursor: 'pointer' },
-  headerLogo: { width: 36, height: 36, objectFit: 'contain', borderRadius: 8 },
-  modalOverlay: { position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: 20 },
-  modalBox: { background: '#fff', borderRadius: 20, padding: 24, width: '100%', maxWidth: 400 },
-  modalTitle: { fontWeight: 800, fontSize: 18, color: '#1f2937', marginBottom: 6 },
-  feedbackInput: { width: '100%', padding: '12px 14px', borderRadius: 12, border: '1.5px solid #e5e7eb', fontSize: 15, fontFamily: 'inherit', resize: 'none', outline: 'none', boxSizing: 'border-box' },
-  card: { background: '#fff', borderRadius: 16, padding: 16, marginBottom: 16 },
-  cardTitle: { fontWeight: 800, fontSize: 16, marginBottom: 12, color: '#1f2937' },
-  cardTitle2: { fontWeight: 800, fontSize: 15, marginBottom: 10, color: '#fff' },
-  lbRow: { display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid #f3f4f6', fontSize: 14, color: '#1f2937' },
-  lbScore: { fontWeight: 700, color: GREEN },
-  myRankBox: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 12, background: `${GREEN}15`, borderRadius: 10, padding: '10px 12px', fontSize: 14, color: GREEN, fontWeight: 600 },
-  myRankBoxGray: { marginTop: 12, background: '#f9fafb', borderRadius: 10, padding: '10px 12px', fontSize: 13, color: '#9ca3af', textAlign: 'center' },
-  empty: { color: 'rgba(255,255,255,0.6)', textAlign: 'center', padding: 20, fontSize: 14 },
-  catBtn: { width: '100%', background: '#fff', borderRadius: 14, padding: '14px 18px', border: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontWeight: 700, fontSize: 15, cursor: 'pointer', marginBottom: 8, color: '#1f2937' },
-  catArrow: { color: GREEN, fontWeight: 900, fontSize: 18 },
-  yearBar: { background: 'rgba(0,0,0,0.2)', padding: '6px 12px', display: 'flex', gap: 6, overflowX: 'auto', flexShrink: 0, WebkitOverflowScrolling: 'touch' },
-  yearBtn: { padding: '3px 10px', borderRadius: 20, border: '1px solid rgba(255,255,255,0.25)', background: 'transparent', color: 'rgba(255,255,255,0.6)', fontSize: 11, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0 },
-  yearBtnActive: { background: '#fff', color: GREEN, border: '1px solid #fff' },
-  quizBg: { position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: `linear-gradient(160deg, ${GREEN_DARK} 0%, ${GREEN} 100%)`, display: 'flex', flexDirection: 'column', overflow: 'hidden' },
-  quizHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 16px', flexShrink: 0, maxWidth: 600, margin: '0 auto', width: '100%' },
-  backBtn: { background: 'rgba(255,255,255,0.15)', border: 'none', color: '#fff', borderRadius: 10, padding: '7px 12px', cursor: 'pointer', fontWeight: 700, fontSize: 13 },
-  progress: { color: '#fff', fontWeight: 700, fontSize: 14 },
-  rankBadge: { background: GREEN_LIGHT, borderRadius: 20, padding: '4px 12px', color: '#fff', fontWeight: 700, fontSize: 12 },
-  quizScroll: { flex: 1, overflowY: 'auto', padding: '0 16px', WebkitOverflowScrolling: 'touch', paddingBottom: 16, display: 'flex', flexDirection: 'column', alignItems: 'center' },
-  quizCard: { background: '#fff', borderRadius: 20, padding: '18px 16px', marginBottom: 10, width: '100%', maxWidth: 600, boxSizing: 'border-box' },
-  catLabel: { fontSize: 11, fontWeight: 700, color: GREEN, textTransform: 'uppercase', letterSpacing: 1 },
-  qText: { fontSize: 15, color: '#1f2937', lineHeight: 1.7 },
-  divider: { height: 1, background: '#f3f4f6', margin: '12px 0' },
-  optBtn: { width: '100%', padding: '9px 12px', borderRadius: 10, cursor: 'pointer', fontWeight: 400, fontSize: 14, textAlign: 'left', marginBottom: 6, display: 'flex', alignItems: 'center', gap: 10 },
-  optLetter: { borderRadius: '50%', width: 26, height: 26, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 11, flexShrink: 0 },
-  optText: { flex: 1, lineHeight: 1.4 },
-  tapHint: { textAlign: 'center', color: 'rgba(255,255,255,0.5)', fontSize: 12, marginTop: 4, marginBottom: 4 },
-  freqBadge: { background: '#fef3c7', borderRadius: 20, padding: '2px 8px', fontSize: 11, fontWeight: 700, color: '#92400e' },
-  yearBadge: { background: '#ede9fe', borderRadius: 20, padding: '2px 8px', fontSize: 11, fontWeight: 700, color: '#5b21b6' },
-  resultEmoji: { textAlign: 'center', fontSize: 50, paddingTop: 10 },
-  resultTitle: { textAlign: 'center', fontSize: 22, fontWeight: 900, color: '#fff', marginTop: 4, marginBottom: 4 },
-  resultCard: { background: '#fff', borderRadius: 16, padding: 14, marginBottom: 12, marginTop: 8 },
-  resultRow: { display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid #f3f4f6', fontSize: 14, color: '#1f2937' },
-  gectiBox: { background: '#d1fae5', borderRadius: 10, padding: '10px 12px', color: '#065f46', fontWeight: 700, fontSize: 13, marginTop: 8 },
-  kaldiBox: { background: '#fef3c7', borderRadius: 10, padding: '10px 12px', color: '#92400e', fontWeight: 600, fontSize: 13, marginTop: 8 },
-  rankResult: { textAlign: 'center', background: 'rgba(255,255,255,0.15)', borderRadius: 12, padding: 8, color: '#fff', fontWeight: 700, fontSize: 13, marginBottom: 12 },
-  examTabRow: { display: 'flex', gap: 8, margin: '16px 0', background: 'rgba(255,255,255,0.15)', padding: 8, borderRadius: 16 },
-  examTab: { flex: 1, padding: '14px 10px', borderRadius: 12, border: 'none', background: 'transparent', color: 'rgba(255,255,255,0.8)', fontWeight: 700, fontSize: 15, cursor: 'pointer', transition: 'all 0.3s' },
-  examTabActiveVize: { flex: 1, padding: '14px 10px', borderRadius: 12, border: 'none', background: '#fff', color: GREEN, fontWeight: 800, fontSize: 15, cursor: 'pointer', boxShadow: '0 4px 12px rgba(0,0,0,0.15)', transition: 'all 0.3s' },
-  examTabActiveFinal: { flex: 1, padding: '14px 10px', borderRadius: 12, border: 'none', background: '#f59e0b', color: '#fff', fontWeight: 800, fontSize: 15, cursor: 'pointer', boxShadow: '0 4px 12px rgba(0,0,0,0.15)', transition: 'all 0.3s' },
-  examTabActiveYazOkulu: { flex: 1, padding: '14px 10px', borderRadius: 12, border: 'none', background: '#eab308', color: '#fff', fontWeight: 800, fontSize: 15, cursor: 'pointer', boxShadow: '0 4px 12px rgba(0,0,0,0.15)', transition: 'all 0.3s' },
-  examDesc: { fontSize: 13, color: 'rgba(255,255,255,0.85)', marginBottom: 20, textAlign: 'center', fontStyle: 'italic', lineHeight: 1.4 },
+const getStyles = (theme) => {
+  const isDark = theme === 'dark';
   
-  // Shopier Promo Modülleri
-  heroBanner: { fontFamily: "'Inter', sans-serif", background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 50%, #1e3a8a 100%)', color: '#ffffff', padding: '8px 12px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 8, borderRadius: 10, boxShadow: '0 4px 10px rgba(29, 78, 216, 0.12)', marginBottom: 10, boxSizing: 'border-box', position: 'relative', width: '100%', cursor: 'pointer' },
-  heroText: { margin: 0, fontSize: 11, fontWeight: 700, lineHeight: 1.4, color: '#fff', textAlign: 'left', flexGrow: 1 },
-  heroClose: { background: 'none', border: 'none', color: 'rgba(255,255,255,0.7)', fontSize: 18, cursor: 'pointer', lineHeight: 1, padding: '2px 4px', zIndex: 10 },
-  
-  promoCard: { background: '#ffffff', borderRadius: 12, border: '1.5px solid rgba(79, 70, 229, 0.12)', boxShadow: '0 4px 12px rgba(79, 70, 229, 0.05)', position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column', boxSizing: 'border-box', marginBottom: 12, width: '100%' },
-  promoCardAccent: { height: 3, background: 'linear-gradient(90deg, #3b82f6, #6366f1, #8b5cf6)', width: '100%' },
-  promoCardBody: { padding: 12, display: 'flex', gap: 10, alignItems: 'center', textAlign: 'left' },
-  promoCardIconBox: { background: 'rgba(79, 70, 229, 0.06)', borderRadius: 8, padding: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 },
-  promoCardIcon: { width: 20, height: 20, color: '#4f46e5' },
-  promoCardContent: { flexGrow: 1 },
-  promoCardTitle: { margin: '0 0 2px 0', fontSize: 14, fontWeight: 800, color: '#1f2937' },
-  promoCardText: { margin: 0, fontSize: 12, color: '#4b5563', lineHeight: 1.4 },
-  
-  stickyBottom: { fontFamily: "'Inter', sans-serif", position: 'fixed', bottom: 0, left: 0, right: 0, background: 'rgba(15, 23, 42, 0.95)', backdropFilter: 'blur(10px)', borderTop: '1px solid rgba(255, 255, 255, 0.1)', boxShadow: '0 -4px 12px rgba(0, 0, 0, 0.15)', padding: '8px 12px', zIndex: 9999, display: 'flex', justifyContent: 'center', alignItems: 'center', boxSizing: 'border-box' },
-  stickyContainer: { display: 'flex', width: '100%', maxWidth: 480, justifyContent: 'space-between', alignItems: 'center', gap: 10 },
-  stickyText: { margin: 0, fontSize: 11, fontWeight: 700, lineHeight: 1.3, color: '#ffffff', textAlign: 'left', flexGrow: 1 },
-  stickyClose: { background: 'none', border: 'none', color: 'rgba(255, 255, 255, 0.5)', fontSize: 16, cursor: 'pointer', padding: '2px 4px', zIndex: 10 }
+  const colors = {
+    bgDark: isDark ? '#0a1712' : '#f2faf6',
+    bgGradient: isDark 
+      ? 'radial-gradient(circle at 50% 0%, #123322 0%, #091a12 60%, #050f0a 100%)'
+      : 'radial-gradient(circle at 50% 0%, #d1fae5 0%, #f2faf6 60%, #ffffff 100%)',
+    primary: isDark ? '#10b981' : '#059669',
+    primaryHover: isDark ? '#059669' : '#047857',
+    primaryGlow: isDark ? 'rgba(16, 185, 129, 0.35)' : 'rgba(5, 150, 105, 0.15)',
+    accent: isDark ? '#f59e0b' : '#d97706',
+    accentHover: isDark ? '#d97706' : '#b45309',
+    danger: isDark ? '#ef4444' : '#dc2626',
+    dangerBg: isDark ? 'rgba(239, 68, 68, 0.15)' : 'rgba(220, 38, 38, 0.08)',
+    successBg: isDark ? 'rgba(16, 185, 129, 0.15)' : 'rgba(5, 150, 105, 0.08)',
+    cardBg: isDark ? 'rgba(20, 39, 30, 0.55)' : 'rgba(255, 255, 255, 0.85)',
+    cardBorder: isDark ? 'rgba(255, 255, 255, 0.09)' : 'rgba(5, 150, 105, 0.12)',
+    textMain: isDark ? '#f9fafb' : '#0c2619',
+    textMuted: isDark ? '#aeb5c1' : '#4b5563',
+    
+    vizeActiveBg: isDark ? '#ffffff' : '#059669',
+    vizeActiveText: isDark ? '#0a1712' : '#ffffff',
+    correctText: isDark ? '#a7f3d0' : '#046a4e',
+    wrongText: isDark ? '#fca5a5' : '#b91c1c',
+    activeYearBg: isDark ? '#ffffff' : '#059669',
+    activeYearText: isDark ? '#0a1712' : '#ffffff',
+    badgeYearText: isDark ? '#c4b5fd' : '#5b21b6',
+    badgeYearBg: isDark ? 'rgba(139, 92, 246, 0.15)' : 'rgba(139, 92, 246, 0.08)',
+    badgeYearBorder: isDark ? 'rgba(139, 92, 246, 0.2)' : 'rgba(139, 92, 246, 0.25)',
+    badgeFreqText: isDark ? '#fde68a' : '#b45309',
+    badgeFreqBg: isDark ? 'rgba(245, 158, 11, 0.15)' : 'rgba(245, 158, 11, 0.08)',
+    badgeFreqBorder: isDark ? 'rgba(245, 158, 11, 0.2)' : 'rgba(245, 158, 11, 0.25)',
+    warningText: isDark ? '#fde68a' : '#b45309',
+    warningBorder: isDark ? 'rgba(245, 158, 11, 0.2)' : 'rgba(245, 158, 11, 0.3)',
+    warningBg: isDark ? 'rgba(245, 158, 11, 0.1)' : 'rgba(245, 158, 11, 0.08)',
+    successText: isDark ? '#a7f3d0' : '#046a4e',
+    successBorder: isDark ? 'rgba(16, 185, 129, 0.2)' : 'rgba(16, 185, 129, 0.3)',
+    successTextBg: isDark ? 'rgba(16, 185, 129, 0.1)' : 'rgba(16, 185, 129, 0.08)',
+  };
+
+  return {
+    bg: {
+      minHeight: '100dvh',
+      background: colors.bgDark,
+      backgroundImage: colors.bgGradient,
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'flex-start',
+      padding: '20px 16px',
+      fontFamily: "'Plus Jakarta Sans', sans-serif",
+      color: colors.textMain,
+      position: 'relative',
+      overflowX: 'hidden',
+    },
+    splashBox: {
+      background: colors.cardBg,
+      border: `1px solid ${colors.cardBorder}`,
+      borderRadius: 24,
+      padding: 32,
+      width: '100%',
+      maxWidth: 400,
+      textAlign: 'center',
+      marginTop: 60,
+      backdropFilter: 'blur(10px)',
+      WebkitBackdropFilter: 'blur(10px)',
+      boxShadow: '0 10px 30px rgba(0, 0, 0, 0.15)',
+    },
+    logo: {
+      width: 80,
+      height: 80,
+      objectFit: 'contain',
+      marginBottom: 8,
+    },
+    logoText: {
+      fontSize: 24,
+      fontWeight: 900,
+      color: colors.textMain,
+      fontFamily: "'Outfit', sans-serif",
+      marginBottom: 6,
+    },
+    logoSub: {
+      fontSize: 14,
+      color: colors.textMuted,
+      marginBottom: 28,
+    },
+    tabRow: {
+      display: 'flex',
+      marginBottom: 16,
+      borderRadius: 14,
+      overflow: 'hidden',
+      border: `1px solid ${colors.cardBorder}`,
+      background: isDark ? 'rgba(255, 255, 255, 0.04)' : 'rgba(5, 150, 105, 0.05)',
+      padding: 4,
+    },
+    tab: {
+      flex: 1,
+      padding: '10px 0',
+      border: 'none',
+      background: 'transparent',
+      color: colors.textMuted,
+      fontWeight: 700,
+      fontSize: 14,
+      cursor: 'pointer',
+      borderRadius: 10,
+      transition: 'all 0.3s',
+    },
+    tabActive: {
+      flex: 1,
+      padding: '10px 0',
+      border: 'none',
+      background: colors.primary,
+      color: isDark ? '#030806' : '#fff',
+      fontWeight: 700,
+      fontSize: 14,
+      cursor: 'pointer',
+      borderRadius: 10,
+      boxShadow: `0 4px 12px ${colors.primaryGlow}`,
+      transition: 'all 0.3s',
+    },
+    input: {
+      width: '100%',
+      padding: '13px 16px',
+      borderRadius: 12,
+      border: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(5, 150, 105, 0.15)',
+      background: isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 0.85)',
+      color: colors.textMain,
+      fontSize: 15,
+      marginBottom: 10,
+      outline: 'none',
+      fontFamily: 'inherit',
+      boxSizing: 'border-box',
+      transition: 'all 0.3s',
+    },
+    btn: {
+      width: '100%',
+      padding: '13px 20px',
+      borderRadius: 14,
+      border: 'none',
+      background: colors.primary,
+      color: isDark ? '#030806' : '#fff',
+      fontWeight: 700,
+      fontSize: 14,
+      cursor: 'pointer',
+      marginTop: 4,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontFamily: "'Outfit', sans-serif",
+      boxShadow: `0 4px 14px ${colors.primaryGlow}`,
+      transition: 'all 0.3s',
+      minHeight: 44,
+    },
+    btnOutline: {
+      width: '100%',
+      padding: '13px 20px',
+      borderRadius: 14,
+      border: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(5, 150, 105, 0.15)',
+      background: isDark ? 'rgba(255, 255, 255, 0.04)' : 'rgba(5, 150, 105, 0.05)',
+      color: colors.textMain,
+      fontWeight: 700,
+      fontSize: 14,
+      cursor: 'pointer',
+      marginTop: 10,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontFamily: "'Outfit', sans-serif",
+      transition: 'all 0.3s',
+      minHeight: 44,
+    },
+    errMsg: {
+      background: colors.dangerBg,
+      border: `1px solid ${isDark ? 'rgba(239, 68, 68, 0.25)' : 'rgba(220, 38, 38, 0.2)'}`,
+      color: colors.wrongText,
+      borderRadius: 14,
+      padding: '12px 16px',
+      fontSize: 13,
+      marginBottom: 10,
+      textAlign: 'left',
+      fontWeight: 500,
+    },
+    container: {
+      width: '100%',
+      maxWidth: 480,
+      paddingBottom: 16,
+      position: 'relative',
+      zIndex: 10,
+    },
+    header: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: 20,
+      paddingTop: 8,
+    },
+    greeting: {
+      fontSize: 20,
+      fontWeight: 800,
+      color: colors.textMain,
+      fontFamily: "'Outfit', sans-serif",
+    },
+    feedbackIconBtn: {
+      background: isDark ? 'rgba(255, 255, 255, 0.04)' : 'rgba(255, 255, 255, 0.8)',
+      border: isDark ? '1.5px solid rgba(255, 255, 255, 0.06)' : '1.5px solid rgba(5, 150, 105, 0.12)',
+      borderRadius: 12,
+      padding: '7px 10px',
+      color: colors.textMain,
+      fontSize: 14,
+      cursor: 'pointer',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: 44,
+      height: 44,
+      transition: 'all 0.3s',
+    },
+    logoutBtn: {
+      background: isDark ? 'rgba(255, 255, 255, 0.04)' : 'rgba(255, 255, 255, 0.8)',
+      border: isDark ? '1.5px solid rgba(255, 255, 255, 0.06)' : '1.5px solid rgba(5, 150, 105, 0.12)',
+      borderRadius: 12,
+      padding: '7px 12px',
+      color: colors.textMain,
+      fontWeight: 700,
+      fontSize: 12,
+      cursor: 'pointer',
+      height: 44,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontFamily: "'Outfit', sans-serif",
+      transition: 'all 0.3s',
+    },
+    headerLogo: {
+      width: 36,
+      height: 36,
+      objectFit: 'contain',
+      borderRadius: 8,
+    },
+    modalOverlay: {
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      background: 'rgba(0,0,0,0.65)',
+      backdropFilter: 'blur(8px)',
+      WebkitBackdropFilter: 'blur(8px)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      zIndex: 1000,
+      padding: 20,
+    },
+    modalBox: {
+      background: colors.bgDark,
+      border: `1px solid ${colors.cardBorder}`,
+      borderRadius: 20,
+      padding: 24,
+      width: '100%',
+      maxWidth: 400,
+      boxShadow: '0 20px 50px rgba(0,0,0,0.4)',
+    },
+    modalTitle: {
+      fontWeight: 800,
+      fontSize: 18,
+      color: colors.textMain,
+      marginBottom: 6,
+      fontFamily: "'Outfit', sans-serif",
+    },
+    feedbackInput: {
+      width: '100%',
+      padding: '12px 14px',
+      borderRadius: 12,
+      border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(5, 150, 105, 0.15)',
+      background: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.85)',
+      color: colors.textMain,
+      fontSize: 15,
+      fontFamily: 'inherit',
+      resize: 'none',
+      outline: 'none',
+      boxSizing: 'border-box',
+    },
+    card: {
+      background: colors.cardBg,
+      border: `1px solid ${colors.cardBorder}`,
+      borderRadius: 16,
+      padding: 16,
+      marginBottom: 16,
+      backdropFilter: 'blur(20px)',
+      WebkitBackdropFilter: 'blur(20px)',
+      boxShadow: '0 10px 30px rgba(0, 0, 0, 0.15)',
+    },
+    cardTitle: {
+      fontWeight: 800,
+      fontSize: 16,
+      marginBottom: 12,
+      color: colors.textMain,
+      fontFamily: "'Outfit', sans-serif",
+    },
+    cardTitle2: {
+      fontWeight: 800,
+      fontSize: 15,
+      marginBottom: 10,
+      color: colors.textMain,
+      fontFamily: "'Outfit', sans-serif",
+    },
+    lbRow: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      padding: '10px 14px',
+      background: 'rgba(255, 255, 255, 0.03)',
+      borderRadius: 14,
+      marginBottom: 8,
+      fontSize: 14,
+      color: colors.textMain,
+    },
+    lbScore: {
+      fontWeight: 700,
+      color: colors.primary,
+      fontFamily: "'Outfit', sans-serif",
+    },
+    myRankBox: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginTop: 14,
+      background: isDark ? 'rgba(16, 185, 129, 0.1)' : 'rgba(5, 150, 105, 0.08)',
+      border: `1px solid ${isDark ? 'rgba(16, 185, 129, 0.2)' : 'rgba(5, 150, 105, 0.2)'}`,
+      borderRadius: 16,
+      padding: '12px 16px',
+      fontSize: 13.5,
+      color: colors.primary,
+      fontWeight: 600,
+    },
+    myRankBoxGray: {
+      marginTop: 14,
+      background: isDark ? 'rgba(255, 255, 255, 0.02)' : 'rgba(5, 150, 105, 0.02)',
+      border: `1px dashed ${colors.cardBorder}`,
+      borderRadius: 16,
+      padding: '12px 16px',
+      fontSize: 13,
+      color: colors.textMuted,
+      textAlign: 'center',
+    },
+    empty: {
+      color: colors.textMuted,
+      textAlign: 'center',
+      padding: 20,
+      fontSize: 14,
+    },
+    catBtn: {
+      width: '100%',
+      background: isDark ? 'rgba(255, 255, 255, 0.04)' : 'rgba(255, 255, 255, 0.85)',
+      border: `1px solid ${colors.cardBorder}`,
+      borderRadius: 12,
+      padding: '13px 16px',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      fontWeight: 700,
+      fontSize: 15,
+      cursor: 'pointer',
+      marginBottom: 10,
+      color: colors.textMain,
+      transition: 'all 0.3s',
+      minHeight: 48,
+    },
+    catArrow: {
+      color: colors.primary,
+      fontWeight: 900,
+      fontSize: 18,
+      display: 'flex',
+      alignItems: 'center',
+    },
+    yearBar: {
+      background: isDark ? 'rgba(0,0,0,0.2)' : 'rgba(5, 150, 105, 0.05)',
+      padding: '8px 12px',
+      display: 'flex',
+      gap: 8,
+      overflowX: 'auto',
+      flexShrink: 0,
+      WebkitOverflowScrolling: 'touch',
+    },
+    yearBtn: {
+      padding: '10px 18px',
+      borderRadius: 16,
+      border: isDark ? '1px solid rgba(255, 255, 255, 0.06)' : '1px solid rgba(5, 150, 105, 0.1)',
+      background: isDark ? 'rgba(255, 255, 255, 0.04)' : 'rgba(5, 150, 105, 0.05)',
+      color: colors.textMuted,
+      fontSize: 12,
+      fontWeight: 600,
+      cursor: 'pointer',
+      whiteSpace: 'nowrap',
+      flexShrink: 0,
+      transition: 'all 0.3s',
+      minHeight: 44,
+    },
+    yearBtnActive: {
+      background: colors.activeYearBg,
+      color: colors.activeYearText,
+      border: `1px solid ${colors.activeYearBg}`,
+    },
+    quizBg: {
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      background: colors.bgDark,
+      backgroundImage: colors.bgGradient,
+      display: 'flex',
+      flexDirection: 'column',
+      overflow: 'hidden',
+    },
+    quizHeader: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      padding: '10px 16px',
+      flexShrink: 0,
+      maxWidth: 600,
+      margin: '0 auto',
+      width: '100%',
+    },
+    backBtn: {
+      background: isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 0.85)',
+      border: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(5, 150, 105, 0.15)'}`,
+      color: colors.textMain,
+      borderRadius: 12,
+      padding: '10px 16px',
+      cursor: 'pointer',
+      fontWeight: 700,
+      fontSize: 13,
+      fontFamily: "'Outfit', sans-serif",
+      transition: 'all 0.3s',
+      display: 'inline-flex',
+      alignItems: 'center',
+      minHeight: 44,
+    },
+    progress: {
+      color: colors.textMuted,
+      fontWeight: 700,
+      fontSize: 14,
+      fontFamily: "'Outfit', sans-serif",
+    },
+    rankBadge: {
+      background: `linear-gradient(135deg, ${colors.primary} 0%, ${isDark ? '#059669' : '#047857'} 100%)`,
+      borderRadius: 20,
+      padding: '6px 14px',
+      color: isDark ? '#030806' : '#fff',
+      fontWeight: 800,
+      fontSize: 12,
+      fontFamily: "'Outfit', sans-serif",
+      boxShadow: `0 4px 10px ${colors.primaryGlow}`,
+    },
+    quizScroll: {
+      flex: 1,
+      overflowY: 'auto',
+      padding: '0 16px',
+      WebkitOverflowScrolling: 'touch',
+      paddingBottom: 16,
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+    },
+    quizCard: {
+      background: colors.cardBg,
+      border: `1px solid ${colors.cardBorder}`,
+      borderRadius: 20,
+      padding: '18px 16px',
+      marginBottom: 10,
+      width: '100%',
+      maxWidth: 600,
+      boxSizing: 'border-box',
+      backdropFilter: 'blur(20px)',
+      WebkitBackdropFilter: 'blur(20px)',
+      boxShadow: '0 10px 30px rgba(0, 0, 0, 0.15)',
+    },
+    catLabel: {
+      fontSize: 10,
+      fontWeight: 700,
+      color: colors.primary,
+      textTransform: 'uppercase',
+      letterSpacing: 1,
+    },
+    qText: {
+      fontSize: 15,
+      color: colors.textMain,
+      lineHeight: 1.6,
+      fontWeight: 500,
+    },
+    divider: {
+      height: 1,
+      background: isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(5, 150, 105, 0.08)',
+      margin: '16px 0',
+    },
+    optBtn: {
+      width: '100%',
+      padding: '12px 14px',
+      borderRadius: 10,
+      cursor: 'pointer',
+      fontWeight: 400,
+      fontSize: 14,
+      textAlign: 'left',
+      marginBottom: 6,
+      display: 'flex',
+      alignItems: 'center',
+      gap: 10,
+      transition: 'all 0.3s',
+      minHeight: 44,
+    },
+    optLetter: {
+      borderRadius: '50%',
+      width: 26,
+      height: 26,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontWeight: 800,
+      fontSize: 12,
+      flexShrink: 0,
+      transition: 'all 0.3s',
+    },
+    optText: {
+      flex: 1,
+      lineHeight: 1.4,
+    },
+    tapHint: {
+      textAlign: 'center',
+      color: colors.textMuted,
+      fontSize: 12,
+      marginTop: 4,
+      marginBottom: 4,
+    },
+    freqBadge: {
+      background: colors.badgeFreqBg,
+      border: `1px solid ${colors.badgeFreqBorder}`,
+      borderRadius: 8,
+      padding: '3px 8px',
+      fontSize: 10,
+      fontWeight: 700,
+      color: colors.badgeFreqText,
+    },
+    yearBadge: {
+      background: colors.badgeYearBg,
+      border: `1px solid ${colors.badgeYearBorder}`,
+      borderRadius: 8,
+      padding: '3px 8px',
+      fontSize: 10,
+      fontWeight: 700,
+      color: colors.badgeYearText,
+    },
+    resultEmoji: {
+      textAlign: 'center',
+      fontSize: 72,
+      paddingTop: 10,
+      filter: 'drop-shadow(0 8px 16px rgba(0,0,0,0.2))',
+    },
+    resultTitle: {
+      textAlign: 'center',
+      fontSize: 22,
+      fontWeight: 900,
+      color: colors.textMain,
+      marginTop: 4,
+      marginBottom: 20,
+      fontFamily: "'Outfit', sans-serif",
+    },
+    resultCard: {
+      background: colors.cardBg,
+      border: `1px solid ${colors.cardBorder}`,
+      borderRadius: 16,
+      padding: 14,
+      marginBottom: 12,
+      marginTop: 8,
+      backdropFilter: 'blur(20px)',
+      WebkitBackdropFilter: 'blur(20px)',
+      boxShadow: '0 10px 30px rgba(0, 0, 0, 0.15)',
+    },
+    resultRow: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      padding: '6px 0',
+      borderBottom: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(5, 150, 105, 0.05)'}`,
+      fontSize: 14,
+      color: colors.textMain,
+    },
+    gectiBox: {
+      background: colors.successTextBg,
+      border: `1px solid ${colors.successBorder}`,
+      borderRadius: 16,
+      padding: '14px 16px',
+      color: colors.successText,
+      fontWeight: 500,
+      fontSize: 13.5,
+      lineHeight: 1.5,
+      marginTop: 14,
+    },
+    kaldiBox: {
+      background: colors.warningBg,
+      border: `1px solid ${colors.warningBorder}`,
+      borderRadius: 16,
+      padding: '14px 16px',
+      color: colors.warningText,
+      fontWeight: 500,
+      fontSize: 13.5,
+      lineHeight: 1.5,
+      marginTop: 14,
+    },
+    rankResult: {
+      background: isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 0.85)',
+      border: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(5, 150, 105, 0.12)'}`,
+      borderRadius: 16,
+      padding: 12,
+      textAlign: 'center',
+      color: colors.primary,
+      fontWeight: 600,
+      fontSize: 14,
+      marginBottom: 20,
+    },
+    examTabRow: {
+      display: 'flex',
+      gap: 4,
+      margin: '16px 0',
+      background: isDark ? 'rgba(255, 255, 255, 0.03)' : 'rgba(5, 150, 105, 0.05)',
+      border: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(5, 150, 105, 0.1)'}`,
+      padding: 4,
+      borderRadius: 14,
+    },
+    examTab: {
+      flex: 1,
+      padding: '11px 10px',
+      borderRadius: 10,
+      border: 'none',
+      background: 'transparent',
+      color: colors.textMuted,
+      fontWeight: 700,
+      fontSize: 14,
+      cursor: 'pointer',
+      transition: 'all 0.3s',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 6,
+    },
+    examTabActiveVize: {
+      flex: 1,
+      padding: '11px 10px',
+      borderRadius: 10,
+      border: 'none',
+      background: colors.vizeActiveBg,
+      color: colors.vizeActiveText,
+      fontWeight: 800,
+      fontSize: 14,
+      cursor: 'pointer',
+      boxShadow: `0 4px 12px ${colors.primaryGlow}`,
+      transition: 'all 0.3s',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 6,
+    },
+    examTabActiveFinal: {
+      flex: 1,
+      padding: '11px 10px',
+      borderRadius: 10,
+      border: 'none',
+      background: colors.accent,
+      color: isDark ? '#0a1712' : '#fff',
+      fontWeight: 800,
+      fontSize: 14,
+      cursor: 'pointer',
+      boxShadow: `0 4px 12px ${isDark ? 'rgba(245, 158, 11, 0.3)' : 'rgba(217, 119, 6, 0.25)'}`,
+      transition: 'all 0.3s',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 6,
+    },
+    examTabActiveYazOkulu: {
+      flex: 1,
+      padding: '11px 10px',
+      borderRadius: 10,
+      border: 'none',
+      background: '#eab308',
+      color: '#fff',
+      fontWeight: 800,
+      fontSize: 14,
+      cursor: 'pointer',
+      boxShadow: `0 4px 12px rgba(234, 179, 8, 0.25)`,
+      transition: 'all 0.3s',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 6,
+    },
+    examDesc: {
+      fontSize: 13,
+      color: colors.textMuted,
+      marginBottom: 20,
+      textAlign: 'center',
+      fontStyle: 'italic',
+      lineHeight: 1.4,
+    },
+    
+    // Shopier Promo Modülleri
+    heroBanner: {
+      fontFamily: "'Outfit', sans-serif",
+      background: 'linear-gradient(135deg, #1d4ed8 0%, #1e3a8a 100%)',
+      color: '#ffffff',
+      padding: '8px 12px',
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      gap: 8,
+      borderRadius: 10,
+      boxShadow: '0 4px 10px rgba(29, 78, 216, 0.12)',
+      marginBottom: 10,
+      boxSizing: 'border-box',
+      position: 'relative',
+      width: '100%',
+      cursor: 'pointer',
+    },
+    heroText: {
+      margin: 0,
+      fontSize: 11,
+      fontWeight: 700,
+      lineHeight: 1.4,
+      color: '#fff',
+      textAlign: 'left',
+      flexGrow: 1,
+    },
+    heroClose: {
+      background: 'none',
+      border: 'none',
+      color: 'rgba(255,255,255,0.7)',
+      fontSize: 18,
+      cursor: 'pointer',
+      lineHeight: 1,
+      padding: '2px 4px',
+      zIndex: 10,
+    },
+    
+    promoCard: {
+      background: colors.cardBg,
+      border: `1px solid ${colors.cardBorder}`,
+      borderRadius: 16,
+      position: 'relative',
+      overflow: 'hidden',
+      display: 'flex',
+      flexDirection: 'column',
+      boxSizing: 'border-box',
+      marginBottom: 12,
+      width: '100%',
+      boxShadow: '0 10px 30px rgba(0, 0, 0, 0.15)',
+    },
+    promoCardAccent: {
+      height: 3,
+      background: 'linear-gradient(90deg, #10b981, #f59e0b, #3b82f6)',
+      width: '100%',
+    },
+    promoCardBody: {
+      padding: 14,
+      display: 'flex',
+      gap: 14,
+      alignItems: 'center',
+      textAlign: 'left',
+    },
+    promoCardIconBox: {
+      background: isDark ? 'rgba(245, 158, 11, 0.15)' : 'rgba(245, 158, 11, 0.08)',
+      borderRadius: 12,
+      width: 48,
+      height: 48,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      flexShrink: 0,
+    },
+    promoCardIcon: {
+      width: 24,
+      height: 24,
+      color: colors.accent,
+    },
+    promoCardContent: {
+      flexGrow: 1,
+    },
+    promoCardTitle: {
+      margin: '0 0 3px 0',
+      fontSize: 14,
+      fontWeight: 700,
+      color: colors.accent,
+    },
+    promoCardText: {
+      margin: 0,
+      fontSize: 12,
+      color: colors.textMuted,
+      lineHeight: 1.4,
+    },
+    
+    stickyBottom: {
+      fontFamily: "'Plus Jakarta Sans', sans-serif",
+      position: 'fixed',
+      bottom: 0,
+      left: 0,
+      right: 0,
+      background: 'rgba(10, 23, 18, 0.95)',
+      backdropFilter: 'blur(10px)',
+      borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+      boxShadow: '0 -4px 12px rgba(0, 0, 0, 0.25)',
+      padding: '8px 12px',
+      zIndex: 9999,
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      boxSizing: 'border-box',
+    },
+    stickyContainer: {
+      display: 'flex',
+      width: '100%',
+      maxWidth: 480,
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      gap: 10,
+    },
+    stickyText: {
+      margin: 0,
+      fontSize: 11,
+      fontWeight: 700,
+      lineHeight: 1.3,
+      color: '#ffffff',
+      textAlign: 'left',
+      flexGrow: 1,
+    },
+    stickyClose: {
+      background: 'none',
+      border: 'none',
+      color: 'rgba(255, 255, 255, 0.5)',
+      fontSize: 16,
+      cursor: 'pointer',
+      padding: '2px 4px',
+      zIndex: 10,
+    },
+  };
 };
