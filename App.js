@@ -610,7 +610,16 @@ export default function App() {
 
   const formatQuestion = (text) => {
     if (!text) return null;
-    return text.split('\n').map((line, i, arr) => {
+
+    // Eğer metin \n içermiyorsa ve Roman rakamı ile başlıyorsa
+    // inline öncülleri satırlara böl: "I. AAA II. BBB ..." → ayrı satırlar
+    let processedText = text;
+    if (!text.includes('\n') && /^\s*(I{1,3}|IV|VI{0,3}|VIII|IX|X{0,3})\.\s/.test(text.trim())) {
+      // II. III. IV. V. gibi roman rakamlarından önce \n ekle
+      processedText = text.replace(/\s+(II{0,2}|IV|VI{0,3}|VIII|IX|X{1,3})\.\s+/g, '\n$1. ');
+    }
+
+    return processedText.split('\n').map((line, i, arr) => {
       const isMadde = /^(I{1,3}V?|IV|VI{0,3}|IX|[IVX]{1,4})[\s\-\–\.]/i.test(line.trim()) || /^[-–•]\s/.test(line.trim());
       const isLast = i === arr.length - 1;
       const isOnly = arr.length === 1;
