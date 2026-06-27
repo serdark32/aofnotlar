@@ -467,18 +467,48 @@ app.post('/api/admin/questions/bulk', adminAuth, async (req, res) => {
   if (!questions || !questions.length) return res.status(400).json({ error: 'Soru listesi boş' });
   const client = await pool.connect();
   let inserted = 0;
+  let updated = 0;
   try {
     await client.query('BEGIN');
     for (const q of questions) {
       if (!q.question_text || !q.option_a || !q.option_b || !q.option_c || !q.option_d || !q.correct_option) continue;
-      await client.query(
-        `INSERT INTO questions (category_id, question_text, option_a, option_b, option_c, option_d, option_e, correct_option, hint, year, frequency) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)`,
-        [q.category_id, q.question_text, q.option_a, q.option_b, q.option_c, q.option_d, q.option_e || null, q.correct_option, q.hint || null, q.year || null, q.frequency || 1]
+      
+      // Aynı kategori, soru metni ve yıldaki soruyu ara (case-insensitive ve trim ederek)
+      const qText = String(q.question_text).trim();
+      const qYear = q.year || null;
+
+      const { rows } = await client.query(
+        `SELECT id FROM questions 
+         WHERE category_id = $1 
+           AND LOWER(TRIM(question_text)) = LOWER($2) 
+           AND (year = $3 OR (year IS NULL AND $3 IS NULL))`,
+        [q.category_id, qText, qYear]
       );
-      inserted++;
+
+      if (rows.length > 0) {
+        // Zaten varsa: Şıkları, doğru cevabı ve frekansı güncelle
+        await client.query(
+          `UPDATE questions SET 
+             option_a = $1, option_b = $2, option_c = $3, option_d = $4, option_e = $5,
+             correct_option = $6, frequency = $7
+           WHERE id = $8`,
+          [
+            q.option_a, q.option_b, q.option_c, q.option_d, q.option_e || null,
+            q.correct_option, q.frequency || 1, rows[0].id
+          ]
+        );
+        updated++;
+      } else {
+        // Yoksa: Yeni soru olarak ekle
+        await client.query(
+          `INSERT INTO questions (category_id, question_text, option_a, option_b, option_c, option_d, option_e, correct_option, hint, year, frequency) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)`,
+          [q.category_id, qText, q.option_a, q.option_b, q.option_c, q.option_d, q.option_e || null, q.correct_option, q.hint || null, qYear, q.frequency || 1]
+        );
+        inserted++;
+      }
     }
     await client.query('COMMIT');
-    res.json({ inserted });
+    res.json({ inserted, updated });
   } catch (e) {
     await client.query('ROLLBACK');
     res.status(500).json({ error: e.message });
