@@ -1247,6 +1247,7 @@
                     <th>Doğru</th>
                     <th>Frekans</th>
                     <th>Yıl</th>
+                    <th>Sınav Türü</th>
                   </tr>
                 </thead>
                 <tbody id="preview-tbody"></tbody>
@@ -1697,7 +1698,14 @@
         const unreadCount = data.filter(f => !f.is_read).length;
         document.querySelector('#page-feedback .page-subtitle').textContent =
           `Kullanıcıların gönderdiği mesajlar ve ders istekleri${unreadCount > 0 ? ` · ${unreadCount} okunmamış` : ''}`;
-        container.innerHTML = data.map(f => `
+        container.innerHTML = data.map(f => {
+          const reportMatch = f.message.match(/\[HATA BİLDİRİMİ\] Soru ID:\s*(\d+)/i);
+          const questionId = reportMatch ? reportMatch[1] : null;
+          const editBtnHtml = questionId ? `
+            <button class="btn btn-accent btn-sm" onclick="editQuestionFromFeedback(${questionId})">✏️ Soruyu Düzenle</button>
+          ` : '';
+
+          return `
       <div class="card" style="margin-bottom:12px; padding:16px; border-left: 4px solid ${f.is_read ? 'var(--border)' : '#f59e0b'};">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
           <div style="display:flex; align-items:center; gap:8px;">
@@ -1709,6 +1717,7 @@
           </div>
           <div style="display:flex; align-items:center; gap:8px;">
             <span style="font-size:12px; color:var(--muted);">${new Date(f.created_at).toLocaleString('tr')}</span>
+            ${editBtnHtml}
             <button class="btn btn-ghost btn-sm" onclick="replyFeedback(${f.id}, \`${(f.admin_reply || '').replace(/`/g, "'")}\`)">✉️ ${f.is_read ? 'Düzenle' : 'Yanıtla'}</button>
           </div>
         </div>
@@ -1720,9 +1729,36 @@
           </div>
         ` : ''}
       </div>
-    `).join('');
+    `;
+        }).join('');
       } catch (e) {
         container.innerHTML = `<div class="empty-state"><div class="empty-icon">❌</div>${e.message}</div>`;
+      }
+    }
+
+    async function editQuestionFromFeedback(id) {
+      try {
+        const q = await apiFetch(`/api/admin/questions/${id}`);
+        if (!q) {
+          alert('Soru veritabanında bulunamadı!');
+          return;
+        }
+        document.getElementById('qm-id').value = q.id;
+        document.getElementById('qm-question').value = q.question_text;
+        document.getElementById('qm-a').value = q.option_a || '';
+        document.getElementById('qm-b').value = q.option_b || '';
+        document.getElementById('qm-c').value = q.option_c || '';
+        document.getElementById('qm-d').value = q.option_d || '';
+        document.getElementById('qm-e').value = q.option_e || '';
+        document.getElementById('qm-correct').value = q.correct_option || 'a';
+        document.getElementById('qm-hint').value = q.hint || '';
+        document.getElementById('qm-year').value = q.year || '';
+        document.getElementById('qm-category-id').value = q.category_id || '';
+        document.getElementById('qm-frequency').value = q.frequency || 1;
+        document.getElementById('q-modal-msg').innerHTML = '';
+        document.getElementById('q-modal').classList.add('open');
+      } catch (err) {
+        alert('Soru yüklenirken hata oluştu: ' + err.message);
       }
     }
 
@@ -1942,6 +1978,14 @@
       if (file) parseExcel(file);
     }
 
+    function normalizeExamType(type) {
+      const t = String(type || '').trim().toLowerCase();
+      if (t.includes('vize') || t.includes('ara')) return 'Vize';
+      if (t.includes('final') || t.includes('donem') || t.includes('dönem') || t.includes('sonu')) return 'Final';
+      if (t.includes('yaz')) return 'Yaz okulu';
+      return 'Vize';
+    }
+
     function parseExcel(file) {
       const reader = new FileReader();
       reader.onload = function (e) {
@@ -1950,25 +1994,82 @@
           const ws = wb.Sheets[wb.SheetNames[0]];
           const rows = XLSX.utils.sheet_to_json(ws, { header: 1 });
 
-          // Detect if first row is header (satir_no kolonu string ya da 'satir' içeriyorsa)
-          const firstRow = rows[0] || [];
-          const firstCell = String(firstRow[0] || '').toLowerCase().trim();
-          const isHeader = isNaN(firstRow[0]) && (firstCell.includes('satir') || firstCell.includes('soru') || firstCell.includes('no'));
+          // Soru ve A sütunlarının bulunduğu satırı başlık satırı olarak tespit et (ilk 10 satırı tara)
+          let headerRowIndex = -1;
+          let idxSoru = -1;
 
-          const dataRows = isHeader ? rows.slice(1) : rows;
-          // Yeni format: satir_no(0) | yil(1) | soruNo(2) | soru(3) | a(4) | b(5) | c(6) | d(7) | e(8) | dogru(9) | frekans(10)
-          // satir_no ve soruNo yoksayılır
-          parsedRows = dataRows.filter(r => r && r[3]).map((r, i) => ({
-            question_text: String(r[3] || "").trim(),
-            option_a: String(r[4] || "").trim(),
-            option_b: String(r[5] || "").trim(),
-            option_c: String(r[6] || "").trim(),
-            option_d: String(r[7] || "").trim(),
-            option_e: String(r[8] || "").trim() || null,
-            correct_option: String(r[9] || "a").trim().toLowerCase(),
-            frequency: parseInt(r[10]) || 1,
-            year: String(r[1] || "").trim() || null,
-          }));
+          for (let i = 0; i < Math.min(rows.length, 10); i++) {
+            const row = rows[i] || [];
+            const rowLower = row.map(h => String(h || '').toLowerCase().trim());
+            const sIdx = rowLower.findIndex(h => h.includes('soru') && !h.includes('no') && !h.includes('sayisi') && !h.includes('sayısı'));
+            const aIdx = rowLower.findIndex(h => h === 'a' || h.includes('şık a') || h.includes('option a'));
+            if (sIdx >= 0 && aIdx >= 0) {
+              headerRowIndex = i;
+              idxSoru = sIdx;
+              break;
+            }
+          }
+
+          const hasHeaders = headerRowIndex >= 0;
+          const dataRows = hasHeaders ? rows.slice(headerRowIndex + 1) : rows;
+
+          let colYil = -1;
+          let colSoru = -1;
+          let colA = -1;
+          let colB = -1;
+          let colC = -1;
+          let colD = -1;
+          let colE = -1;
+          let colDogru = -1;
+          let colFrekans = -1;
+          let colSinavTuru = -1;
+
+          if (hasHeaders) {
+            const headerRow = rows[headerRowIndex];
+            const headerLower = headerRow.map(h => String(h || '').toLowerCase().trim());
+
+            colSoru = idxSoru;
+            colYil = headerLower.findIndex(h => h === 'yil' || h === 'yıl' || h.includes('yil') || h.includes('yıl'));
+            colA = headerLower.findIndex(h => h === 'a' || h.includes('şık a') || h.includes('option a'));
+            colB = headerLower.findIndex(h => h === 'b' || h.includes('şık b') || h.includes('option b'));
+            colC = headerLower.findIndex(h => h === 'c' || h.includes('şık c') || h.includes('option c'));
+            colD = headerLower.findIndex(h => h === 'd' || h.includes('şık d') || h.includes('option d'));
+            colE = headerLower.findIndex(h => h === 'e' || h.includes('şık e') || h.includes('option e'));
+            colDogru = headerLower.findIndex(h => h === 'dogru' || h === 'doğru' || h.includes('dogru') || h.includes('doğru') || h.includes('cevap'));
+            colFrekans = headerLower.findIndex(h => h.includes('frekans') || h.includes('sıklık') || h.includes('siklik'));
+            colSinavTuru = headerLower.findIndex(h => h.includes('sinav') || h.includes('sınav') || h.includes('turu') || h.includes('türü'));
+          } else {
+            // Soru sütunu bulunamadıysa eski sabit sıralı formata göre eşleştir (satir_no kolonu olan)
+            colYil = 1;
+            colSoru = 3;
+            colA = 4;
+            colB = 5;
+            colC = 6;
+            colD = 7;
+            colE = 8;
+            colDogru = 9;
+            colFrekans = 10;
+            colSinavTuru = 11;
+          }
+
+          parsedRows = dataRows.filter(r => r && r[colSoru]).map((r, i) => {
+            const freqVal = (colFrekans >= 0 && r[colFrekans] !== undefined && r[colFrekans] !== null) ? parseInt(r[colFrekans]) : 1;
+            const sinavVal = (colSinavTuru >= 0 && r[colSinavTuru] !== undefined && r[colSinavTuru] !== null) ? String(r[colSinavTuru]).trim() : 'Vize';
+            const yearVal = (colYil >= 0 && r[colYil] !== undefined && r[colYil] !== null) ? String(r[colYil]).trim() : null;
+
+            return {
+              question_text: String(r[colSoru] || "").trim(),
+              option_a: String(r[colA] || "").trim(),
+              option_b: String(r[colB] || "").trim(),
+              option_c: String(r[colC] || "").trim(),
+              option_d: String(r[colD] || "").trim(),
+              option_e: (colE >= 0 && r[colE] !== undefined && r[colE] !== null) ? (String(r[colE]).trim() || null) : null,
+              correct_option: String(colDogru >= 0 && r[colDogru] !== undefined && r[colDogru] !== null ? r[colDogru] : "a").trim().toLowerCase(),
+              frequency: freqVal || 1,
+              year: yearVal || null,
+              sinav_turu: sinavVal,
+            };
+          });
 
           // Extract category name from file name
           const fileName = file.name.split(".").slice(0, -1).join(".");
@@ -1999,6 +2100,7 @@
       <td><span class="badge badge-green">${r.correct_option.toUpperCase()}</span></td>
       <td style="color:var(--muted); font-size:12px; text-align:center;">${r.frequency || 1}</td>
       <td style="color:var(--muted); font-size:12px;">${r.year || '—'}</td>
+      <td style="color:var(--muted); font-size:12px;"><span class="badge badge-blue">${r.sinav_turu || 'Vize'}</span></td>
     </tr>
   `).join('');
       document.getElementById('preview-area').style.display = 'block';
@@ -2009,31 +2111,69 @@
       const newCatName = document.getElementById('new-cat-name').value.trim();
       const msgEl = document.getElementById('upload-msg');
       
-      // Kategori seçilmemişse, yeni kategori adından otomatik oluştur
-      if (!catId && newCatName) {
-        msgEl.textContent = '⏳ Kategori oluşturuluyor...';
-        try {
-          const catData = await apiFetch('/api/admin/categories', {
-            method: 'POST',
-            body: JSON.stringify({ name: newCatName, description: null })
-          });
-          catId = catData.id;
-          // Kategori listesini yenile
-          await loadCategories();
-          document.getElementById('excel-cat-select').value = catId;
-        } catch (e) {
-          msgEl.innerHTML = `<span style="color:var(--danger)">❌ Kategori oluşturulamadı: ${e.message}</span>`;
-          return;
-        }
-      }
-      
-      if (!catId) { alert('Lütfen kategori seçin veya Excel dosyası yükleyin!'); return; }
       if (!parsedRows.length) { alert('Yüklenecek soru yok!'); return; }
 
-      msgEl.textContent = '⏳ Yükleniyor...';
+      msgEl.textContent = '⏳ İşleniyor...';
 
       try {
-        const payload = parsedRows.map(r => ({ ...r, category_id: parseInt(catId) }));
+        const payload = [];
+        const resolvedCats = {};
+
+        for (const r of parsedRows) {
+          let resolvedCatId = null;
+
+          if (catId) {
+            // Manuel kategori seçilmişse hepsini oraya at
+            resolvedCatId = parseInt(catId);
+          } else {
+            // Otomatik kategori oluşturma/eşleştirme
+            if (!newCatName) {
+              alert('Lütfen kategori seçin veya yeni kategori adı girin!');
+              msgEl.textContent = '';
+              return;
+            }
+
+            const examType = normalizeExamType(r.sinav_turu); // 'Vize', 'Final', 'Yaz okulu'
+            const targetCatName = `${newCatName} (${examType})`;
+
+            if (resolvedCats[targetCatName]) {
+              resolvedCatId = resolvedCats[targetCatName];
+            } else {
+              const existing = allCategories.find(c => c.name.trim().toLowerCase() === targetCatName.toLowerCase());
+              if (existing) {
+                resolvedCatId = existing.id;
+                resolvedCats[targetCatName] = resolvedCatId;
+              } else {
+                msgEl.textContent = `⏳ Kategori oluşturuluyor: ${targetCatName}...`;
+                const catData = await apiFetch('/api/admin/categories', {
+                  method: 'POST',
+                  body: JSON.stringify({ name: targetCatName, description: null })
+                });
+                resolvedCatId = catData.id;
+                resolvedCats[targetCatName] = resolvedCatId;
+                allCategories.push(catData); // yerel önbelleğe ekle
+              }
+            }
+          }
+
+          payload.push({
+            category_id: resolvedCatId,
+            question_text: r.question_text,
+            option_a: r.option_a,
+            option_b: r.option_b,
+            option_c: r.option_c,
+            option_d: r.option_d,
+            option_e: r.option_e,
+            correct_option: r.correct_option,
+            frequency: r.frequency,
+            year: r.year
+          });
+        }
+
+        // Kategori listesini yenile
+        await loadCategories();
+
+        msgEl.textContent = '⏳ Sorular veritabanına yükleniyor...';
         const data = await apiFetch('/api/admin/questions/bulk', {
           method: 'POST',
           body: JSON.stringify({ questions: payload })
