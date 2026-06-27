@@ -611,13 +611,24 @@ export default function App() {
   const formatQuestion = (text) => {
     if (!text) return null;
 
-    // Eğer metin \n içermiyorsa ve Roman rakamı ile başlıyorsa
-    // inline öncülleri satırlara böl: "I. AAA II. BBB ..." → ayrı satırlar
     let processedText = text;
+    
+    // 1. Eğer metin \n içermiyorsa veya yan yana yazılmış roman rakamları varsa önce onları satırlara böl
     if (!text.includes('\n') && /^\s*(I{1,3}|IV|VI{0,3}|VIII|IX|X{0,3})\.\s/.test(text.trim())) {
-      // II. III. IV. V. gibi roman rakamlarından önce \n ekle
+      // II. III. IV. V. vb. roman rakamlarının önüne \n ekle
       processedText = text.replace(/\s+(II{0,2}|IV|VI{0,3}|VIII|IX|X{1,3})\.\s+/g, '\n$1. ');
     }
+
+    // 2. Öncüllerden sonra gelen soru kökünü ("Yukarıdakilerden...", "Buna göre...", "Verilenlerden..." vb.) yeni satıra böl
+    // Bu işlem hem \n ile bölünmüş hem de tek satır gelen tüm sorularda çalışır.
+    const questionKeywords = [
+      'Yukarıdakilerden', 'Yukarıdaki', 'Yukarıda', 'Verilenlerden', 'Verilen', 'Verilenlerin',
+      'Buna göre', 'Buna', 'Aşağıdakilerden', 'Aşağıdaki', 'Bu', 'Hangisi', 'Hangileri', 'Hangi'
+    ];
+    
+    // Regex dinamik olarak bu kelimelerin önüne \n koyar (eğer zaten satır başı değillerse)
+    const regexPattern = new RegExp(`\\s+(${questionKeywords.join('|')})\\s+`, 'g');
+    processedText = processedText.replace(regexPattern, '\n$1 ');
 
     return processedText.split('\n').map((line, i, arr) => {
       const isMadde = /^(I{1,3}V?|IV|VI{0,3}|IX|[IVX]{1,4})[\s\-\–\.]/i.test(line.trim()) || /^[-–•]\s/.test(line.trim());
