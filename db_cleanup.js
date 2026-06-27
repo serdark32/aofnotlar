@@ -11,7 +11,7 @@ const pool = new Pool({
 
 function normalizeName(name) {
   if (!name) return '';
-  return name.trim().toLowerCase().replace(/\s+/g, ' ');
+  return name.normalize('NFC').trim().toLowerCase().replace(/\s+/g, ' ');
 }
 
 async function run() {

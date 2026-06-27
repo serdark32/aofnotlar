@@ -2140,10 +2140,10 @@
             if (resolvedCats[targetCatName]) {
               resolvedCatId = resolvedCats[targetCatName];
             } else {
-              // Mevcut kategoriler arasında boşlukları ve büyük/küçük harfleri normalize ederek ara
-              const normTarget = targetCatName.toLowerCase();
+              // Mevcut kategoriler arasında boşlukları, unicode'u ve büyük/küçük harfleri normalize ederek ara
+              const normTarget = targetCatName.normalize('NFC').toLowerCase();
               const existing = allCategories.find(c => {
-                const normExisting = c.name.trim().replace(/\s+/g, ' ').toLowerCase();
+                const normExisting = c.name.normalize('NFC').trim().replace(/\s+/g, ' ').toLowerCase();
                 return normExisting === normTarget;
               });
 
