@@ -84,35 +84,55 @@ async function run() {
 
     // 2. Soruları Kendi İçinde Tekilleştir (Deduplicate)
     console.log('\n🔄 Sorulardaki mükerrer kayıtlar temizleniyor...');
-    // Her kategorideki soruları al, soru_text (normalized), a, b, c, d, e şıklarına göre grupla
     const { rows: allCats } = await client.query('SELECT id, name FROM categories');
     
     for (const cat of allCats) {
       const { rows: qs } = await client.query(
-        'SELECT id, question_text, year, correct_option FROM questions WHERE category_id = $1',
+        'SELECT id, question_text, year FROM questions WHERE category_id = $1 ORDER BY id ASC',
         [cat.id]
       );
 
       const seen = {};
-      const toDelete = [];
+      const toMerge = []; // { dupId, keepId } listesi
 
       for (const q of qs) {
-        // Soruyu normalize et (karşılaştırma için)
-        const normText = normalizeName(q.question_text).substring(0, 150); // İlk 150 karakter karşılaştırma için genelde yeterlidir
+        const normText = normalizeName(q.question_text).substring(0, 150);
         const key = `${normText}_${q.year || 'none'}`;
 
         if (seen[key]) {
-          // Zaten var, bu soruyu sileceğiz
-          toDelete.push(q.id);
+          // Zaten var, bu soruyu (q.id) sileceğiz ve seen[key] olan ana soruda birleştireceğiz
+          toMerge.push({ dupId: q.id, keepId: seen[key] });
         } else {
           seen[key] = q.id;
         }
       }
 
-      if (toDelete.length > 0) {
-        console.log(`   Ders: "${cat.name}" -> ${toDelete.length} mükerrer soru siliniyor...`);
-        await client.query('DELETE FROM questions WHERE id = ANY($1)', [toDelete]);
-        deletedQuestionsCount += toDelete.length;
+      if (toMerge.length > 0) {
+        console.log(`   Ders: "${cat.name}" -> ${toMerge.length} mükerrer soru temizleniyor...`);
+        
+        for (const item of toMerge) {
+          // A) Çakışan user_answers kayıtlarını sil (aynı kullanıcının hem keepId hem dupId için cevabı varsa)
+          await client.query(
+            `DELETE FROM user_answers ua1
+             WHERE ua1.question_id = $1
+               AND EXISTS (
+                 SELECT 1 FROM user_answers ua2
+                 WHERE ua2.question_id = $2
+                   AND ua2.user_id = ua1.user_id
+               )`,
+            [item.dupId, item.keepId]
+          );
+
+          // B) Geriye kalan tüm user_answers kayıtlarını ana soru ID'sine güncelle
+          await client.query(
+            'UPDATE user_answers SET question_id = $1 WHERE question_id = $2',
+            [item.keepId, item.dupId]
+          );
+
+          // C) Mükerrer soruyu artık güvenle sil
+          await client.query('DELETE FROM questions WHERE id = $1', [item.dupId]);
+          deletedQuestionsCount++;
+        }
       }
     }
 
