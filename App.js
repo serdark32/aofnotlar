@@ -672,6 +672,42 @@ export default function App() {
   // Stylesheet dynamic generator — memoized (sadece theme değişince yeniden üretilir)
   const s = useMemo(() => getStyles(theme), [theme]);
 
+  // Filtrelenmiş + temizlenmiş kategori listesi — memoized
+  const examTypeRegex = /\s*\(\s*(Vize|Final|Yaz okulu|[Vv]ize|[Ff]inal|[Yy]az [Oo]kulu)\s*\)\s*/g;
+  const filteredCategoryNodes = useMemo(() => {
+    return sortedCategories
+      .filter(cat => {
+        const nameLower = cat.name.toLowerCase();
+        const hasVize = nameLower.includes('vize');
+        const hasFinal = nameLower.includes('final');
+        if (examType === 'vize') return hasVize || (!hasVize && !hasFinal && !nameLower.includes('yaz okulu'));
+        if (examType === 'final') return hasFinal || (!hasVize && !hasFinal && !nameLower.includes('yaz okulu'));
+        if (examType === 'yazokulu') return nameLower.includes('yaz okulu');
+        return true;
+      })
+      .map(cat => {
+        const cleanName = cat.name.replace(examTypeRegex, '').trim();
+        const isFav = favorites.includes(cat.id);
+        return (
+          <button key={cat.id} style={s.catBtn} onClick={() => handleCategoryClick(cat)}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <div
+                onClick={(e) => { e.stopPropagation(); toggleFavorite(e, cat.id); }}
+                style={{ fontSize: 20, cursor: 'pointer', color: isFav ? '#fbbf24' : '#d1d5db', transition: '0.2s', paddingRight: 4, transform: isFav ? 'scale(1.1)' : 'scale(1)' }}
+              >
+                {isFav ? '★' : '☆'}
+              </div>
+              <span style={{ fontWeight: '600' }}>{cleanName}</span>
+            </div>
+            <span style={s.catArrow}>
+              <IconChevronRight size={18} />
+            </span>
+          </button>
+        );
+      });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sortedCategories, examType, favorites, s]);
+
   // ════════════════════════════════════════════════════════════
   // EKRANLAR
   // ════════════════════════════════════════════════════════════
@@ -928,46 +964,9 @@ export default function App() {
 
         {categories.length === 0 && <div style={s.empty}>Yakında dersler eklenecek...</div>}
 
-        {/* KATEGORİLER (Filtrelenmiş ve Temizlenmiş) — memoized */}
+        {/* KATEGORİLER (Filtrelenmiş ve Temizlenmiş) */}
         <div style={{ minHeight: '65vh', paddingBottom: 40 }}>
-          {useMemo(() => {
-            // Regex bir kez derlenir, her render'da yeniden oluşmaz
-            const examTypeRegex = /\s*\(\s*(Vize|Final|Yaz okulu|[Vv]ize|[Ff]inal|[Yy]az [Oo]kulu)\s*\)\s*/g;
-
-            return sortedCategories
-              .filter(cat => {
-                const nameLower = cat.name.toLowerCase();
-                const hasVize = nameLower.includes('vize');
-                const hasFinal = nameLower.includes('final');
-
-                if (examType === 'vize') return hasVize || (!hasVize && !hasFinal && !nameLower.includes('yaz okulu'));
-                if (examType === 'final') return hasFinal || (!hasVize && !hasFinal && !nameLower.includes('yaz okulu'));
-                if (examType === 'yazokulu') return nameLower.includes('yaz okulu');
-                return true;
-              })
-              .map(cat => {
-                const cleanName = cat.name.replace(examTypeRegex, '').trim();
-                const isFav = favorites.includes(cat.id);
-
-                return (
-                  <button key={cat.id} style={s.catBtn} onClick={() => handleCategoryClick(cat)}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                      <div
-                        onClick={(e) => { e.stopPropagation(); toggleFavorite(e, cat.id); }}
-                        style={{ fontSize: 20, cursor: 'pointer', color: isFav ? '#fbbf24' : '#d1d5db', transition: '0.2s', paddingRight: 4, transform: isFav ? 'scale(1.1)' : 'scale(1)' }}
-                      >
-                        {isFav ? '★' : '☆'}
-                      </div>
-                      <span style={{ fontWeight: '600' }}>{cleanName}</span>
-                    </div>
-                    <span style={s.catArrow}>
-                      <IconChevronRight size={18} />
-                    </span>
-                  </button>
-                );
-              });
-          // eslint-disable-next-line react-hooks/exhaustive-deps
-          }, [sortedCategories, examType, favorites, s])}
+          {filteredCategoryNodes}
         </div>
 
       </div>
