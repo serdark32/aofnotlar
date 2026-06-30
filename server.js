@@ -71,6 +71,7 @@ scheduleReset();
 app.post('/api/auth/anonymous', async (req, res) => {
   const { username } = req.body;
   if (!username || !username.trim()) return res.status(400).json({ error: 'Kullanıcı adı zorunlu' });
+  if (username.trim().length > 15) return res.status(400).json({ error: 'Kullanıcı adı en fazla 15 karakter olabilir' });
   try {
     const today = new Date().toISOString().split('T')[0];
     // Aynı kullanıcı adı varsa o kişiyi döndür (cihaz bazlı değil isim bazlı)
@@ -104,6 +105,7 @@ app.post('/api/auth/anonymous', async (req, res) => {
 app.post('/api/auth/register', async (req, res) => {
   const { email, password, username } = req.body;
   if (!email || !password || !username) return res.status(400).json({ error: 'Email, şifre ve kullanıcı adı zorunlu' });
+  if (username.trim().length > 15) return res.status(400).json({ error: 'Kullanıcı adı en fazla 15 karakter olabilir' });
   if (password.length < 6) return res.status(400).json({ error: 'Şifre en az 6 karakter olmalı' });
   try {
     const existing = await pool.query('SELECT id FROM users WHERE email = $1', [email.toLowerCase()]);

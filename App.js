@@ -780,8 +780,8 @@ export default function App() {
               <div style={{ fontSize: 13, color: theme === 'dark' ? '#aeb5c1' : '#6b7280', marginBottom: 20 }}>Liderlik tablosunda bu isimle görüneceksin</div>
               <input style={s.input}
                 placeholder="Kullanıcı adın (örn: AhmetAOF)"
-                value={anonName} onChange={e => setAnonName(e.target.value)}
-                onKeyDown={e => e.key === 'Enter' && handleAnonymous()} maxLength={20} />
+                value={anonName} onChange={e => setAnonName(e.target.value.slice(0, 15))}
+                onKeyDown={e => e.key === 'Enter' && handleAnonymous()} maxLength={15} />
               {authError && <div style={s.errMsg}>⚠️ {authError}</div>}
               <button style={s.btn} className="btn-hover" onClick={handleAnonymous}>
                 <IconPlay size={16} style={{ marginRight: 6 }} />
