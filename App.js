@@ -1051,16 +1051,16 @@ export default function App() {
           </div>
           {/* Alt butonlar: her zaman ikisi de görünür */}
           <div style={{ display: 'flex', gap: 8, marginTop: 6, marginBottom: 4 }}>
-            {/* Hatalı soru bildir — cevaplamadan önce soluk, sonra belirgin */}
+             {/* Hatalı soru bildir — her zaman tam görünür, sadece cevap sonrası arkaplanı dolup belirginleşir */}
             <button
               className="btn-hover"
               style={{
                 flex: 1,
                 background: selected ? 'rgba(255,255,255,0.12)' : 'transparent',
-                border: selected ? '1px solid rgba(255,255,255,0.25)' : '1px solid rgba(255,255,255,0.12)',
+                border: '1px solid rgba(255,255,255,0.22)',
                 borderRadius: 12,
                 padding: '9px 14px',
-                color: selected ? 'rgba(255,255,255,0.75)' : 'rgba(255,255,255,0.28)',
+                color: 'rgba(255,255,255,0.65)',
                 fontSize: 12,
                 fontWeight: 600,
                 cursor: 'pointer',
@@ -2039,16 +2039,16 @@ const getStyles = (theme) => {
     },
     yearBar: {
       background: isDark ? 'rgba(0,0,0,0.2)' : 'rgba(5, 150, 105, 0.05)',
-      padding: '5px 10px',
+      padding: '3px 10px',
       display: 'flex',
-      gap: 6,
+      gap: 5,
       overflowX: 'auto',
       flexShrink: 0,
       WebkitOverflowScrolling: 'touch',
     },
     yearBtn: {
-      padding: '6px 14px',
-      borderRadius: 14,
+      padding: '4px 12px',
+      borderRadius: 12,
       border: isDark ? '1px solid rgba(255, 255, 255, 0.06)' : '1px solid rgba(5, 150, 105, 0.1)',
       background: isDark ? 'rgba(255, 255, 255, 0.04)' : 'rgba(5, 150, 105, 0.05)',
       color: colors.textMuted,
@@ -2058,7 +2058,7 @@ const getStyles = (theme) => {
       whiteSpace: 'nowrap',
       flexShrink: 0,
       transition: 'all 0.3s',
-      minHeight: 32,
+      minHeight: 28,
     },
     yearBtnActive: {
       background: colors.activeYearBg,
@@ -2081,7 +2081,7 @@ const getStyles = (theme) => {
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
-      padding: '7px 16px',
+      padding: '5px 16px',
       flexShrink: 0,
       maxWidth: 600,
       margin: '0 auto',
