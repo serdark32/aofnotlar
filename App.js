@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 
 // Varsa kendi API sunucunu buraya yaz, şu an boş bırakıldığı için bağlantı hatası veriyordu:
 const API = 'https://aofnotlar.com';
@@ -26,7 +26,7 @@ const IconFileText = ({ size = 18, style = {} }) => (
 );
 
 const IconTarget = ({ size = 18, style = {} }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
 );
 
 const IconBarChart = ({ size = 18, style = {} }) => (
@@ -658,17 +658,19 @@ export default function App() {
     localStorage.setItem('favs', JSON.stringify(newFavs));
   };
 
-  // Kategorileri favorilere göre sırala (Favoriler en üstte)
-  const sortedCategories = [...categories].sort((a, b) => {
-    const aFav = favorites.includes(a.id);
-    const bFav = favorites.includes(b.id);
-    if (aFav && !bFav) return -1;
-    if (!aFav && bFav) return 1;
-    return 0;
-  });
+  // Kategorileri favorilere göre sırala (Favoriler en üstte) — memoized
+  const sortedCategories = useMemo(() => {
+    return [...categories].sort((a, b) => {
+      const aFav = favorites.includes(a.id);
+      const bFav = favorites.includes(b.id);
+      if (aFav && !bFav) return -1;
+      if (!aFav && bFav) return 1;
+      return 0;
+    });
+  }, [categories, favorites]);
 
-  // Stylesheet dynamic generator
-  const s = getStyles(theme);
+  // Stylesheet dynamic generator — memoized (sadece theme değişince yeniden üretilir)
+  const s = useMemo(() => getStyles(theme), [theme]);
 
   // ════════════════════════════════════════════════════════════
   // EKRANLAR
@@ -926,44 +928,46 @@ export default function App() {
 
         {categories.length === 0 && <div style={s.empty}>Yakında dersler eklenecek...</div>}
 
-        {/* KATEGORİLER (Filtrelenmiş ve Temizlenmiş) */}
+        {/* KATEGORİLER (Filtrelenmiş ve Temizlenmiş) — memoized */}
         <div style={{ minHeight: '65vh', paddingBottom: 40 }}>
-          {sortedCategories
-            .filter(cat => {
-              const nameLower = cat.name.toLowerCase();
-              const hasVize = nameLower.includes('vize');
-              const hasFinal = nameLower.includes('final');
+          {useMemo(() => {
+            // Regex bir kez derlenir, her render'da yeniden oluşmaz
+            const examTypeRegex = /\s*\(\s*(Vize|Final|Yaz okulu|[Vv]ize|[Ff]inal|[Yy]az [Oo]kulu)\s*\)\s*/g;
 
-              // Eğer "Vize" sekmesindeysek, içinde 'vize' geçenleri veya ikisi de geçmeyenleri göster
-              if (examType === 'vize') return nameLower.includes('vize') || (!hasVize && !hasFinal && !nameLower.includes('yaz okulu'));
-              // Eğer "Final" sekmesindeysek, içinde 'final' geçenleri göster
-              if (examType === 'final') return nameLower.includes('final') || (!hasVize && !hasFinal && !nameLower.includes('yaz okulu'));
-              // Eğer "Yaz Okulu" sekmesindeysek, içinde 'yaz okulu' geçenleri göster
-              if (examType === 'yazokulu') return nameLower.includes('yaz okulu');
-              return true;
-            })
-            .map(cat => {
-              // (Vize), (Final) veya (Yaz okulu) kelimelerini temizle
-              const cleanName = cat.name.replace(/\s*\(\s*(Vize|Final|Yaz okulu|[Vv]ize|[Ff]inal|[Yy]az [Oo]kulu)\s*\)\s*/g, '').trim();
-              const isFav = favorites.includes(cat.id);
+            return sortedCategories
+              .filter(cat => {
+                const nameLower = cat.name.toLowerCase();
+                const hasVize = nameLower.includes('vize');
+                const hasFinal = nameLower.includes('final');
 
-              return (
-                <button key={cat.id} style={s.catBtn} onClick={() => handleCategoryClick(cat)}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                    <div
-                      onClick={(e) => { e.stopPropagation(); toggleFavorite(e, cat.id); }}
-                      style={{ fontSize: 20, cursor: 'pointer', color: isFav ? '#fbbf24' : '#d1d5db', transition: '0.2s', paddingRight: 4, transform: isFav ? 'scale(1.1)' : 'scale(1)' }}
-                    >
-                      {isFav ? '★' : '☆'}
+                if (examType === 'vize') return hasVize || (!hasVize && !hasFinal && !nameLower.includes('yaz okulu'));
+                if (examType === 'final') return hasFinal || (!hasVize && !hasFinal && !nameLower.includes('yaz okulu'));
+                if (examType === 'yazokulu') return nameLower.includes('yaz okulu');
+                return true;
+              })
+              .map(cat => {
+                const cleanName = cat.name.replace(examTypeRegex, '').trim();
+                const isFav = favorites.includes(cat.id);
+
+                return (
+                  <button key={cat.id} style={s.catBtn} onClick={() => handleCategoryClick(cat)}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                      <div
+                        onClick={(e) => { e.stopPropagation(); toggleFavorite(e, cat.id); }}
+                        style={{ fontSize: 20, cursor: 'pointer', color: isFav ? '#fbbf24' : '#d1d5db', transition: '0.2s', paddingRight: 4, transform: isFav ? 'scale(1.1)' : 'scale(1)' }}
+                      >
+                        {isFav ? '★' : '☆'}
+                      </div>
+                      <span style={{ fontWeight: '600' }}>{cleanName}</span>
                     </div>
-                    <span style={{ fontWeight: '600' }}>{cleanName}</span>
-                  </div>
-                  <span style={s.catArrow}>
-                    <IconChevronRight size={18} />
-                  </span>
-                </button>
-              )
-            })}
+                    <span style={s.catArrow}>
+                      <IconChevronRight size={18} />
+                    </span>
+                  </button>
+                );
+              });
+          // eslint-disable-next-line react-hooks/exhaustive-deps
+          }, [sortedCategories, examType, favorites, s])}
         </div>
 
       </div>
@@ -1046,57 +1050,61 @@ export default function App() {
               );
             })}
           </div>
-          {selected && (
+          {/* Alt butonlar: her zaman ikisi de görünür */}
+          <div style={{ display: 'flex', gap: 8, marginTop: 6, marginBottom: 4 }}>
+            {/* Hatalı soru bildir — cevaplamadan önce soluk, sonra belirgin */}
             <button
               className="btn-hover"
               style={{
-                background: 'rgba(255,255,255,0.12)',
-                border: '1px solid rgba(255,255,255,0.25)',
+                flex: 1,
+                background: selected ? 'rgba(255,255,255,0.12)' : 'transparent',
+                border: selected ? '1px solid rgba(255,255,255,0.25)' : '1px solid rgba(255,255,255,0.12)',
                 borderRadius: 12,
-                padding: '10px 20px',
-                color: 'rgba(255,255,255,0.75)',
-                fontSize: 13,
+                padding: '9px 14px',
+                color: selected ? 'rgba(255,255,255,0.75)' : 'rgba(255,255,255,0.28)',
+                fontSize: 12,
                 fontWeight: 600,
                 cursor: 'pointer',
-                marginTop: 2,
-                marginBottom: 4,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: 6
+                gap: 5,
+                transition: 'all 0.25s',
               }}
               onClick={e => { e.stopPropagation(); setShowReportModal(true); }}
             >
-              <IconFlag size={14} />
-              <span>Hatalı soru bildir</span>
+              <IconFlag size={13} />
+              <span>Hatalı bildir</span>
             </button>
-          )}
-          {!selected && (
-            <button
-              className="btn-hover"
-              style={{
-                background: 'transparent',
-                border: '1px solid rgba(255,255,255,0.2)',
-                borderRadius: 12,
-                padding: '9px 20px',
-                color: 'rgba(255,255,255,0.45)',
-                fontSize: 13,
-                fontWeight: 500,
-                cursor: 'pointer',
-                marginTop: 6,
-                marginBottom: 4,
-                letterSpacing: 0.2,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: 4
-              }}
-              onClick={e => { e.stopPropagation(); handleNext(); }}
-            >
-              <span>Bu soruyu geç</span>
-              <IconChevronRight size={14} />
-            </button>
-          )}
+
+            {/* Bu soruyu geç — sadece cevap verilmemişken aktif */}
+            {!selected && (
+              <button
+                className="btn-hover"
+                style={{
+                  flex: 1,
+                  background: 'transparent',
+                  border: '1px solid rgba(255,255,255,0.2)',
+                  borderRadius: 12,
+                  padding: '9px 14px',
+                  color: 'rgba(255,255,255,0.45)',
+                  fontSize: 12,
+                  fontWeight: 500,
+                  cursor: 'pointer',
+                  letterSpacing: 0.2,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 4,
+                  transition: 'all 0.25s',
+                }}
+                onClick={e => { e.stopPropagation(); handleNext(); }}
+              >
+                <span>Bu soruyu geç</span>
+                <IconChevronRight size={13} />
+              </button>
+            )}
+          </div>
           {showReportModal && (
             <div style={s.modalOverlay}
               onClick={() => setShowReportModal(false)}>
@@ -2032,26 +2040,26 @@ const getStyles = (theme) => {
     },
     yearBar: {
       background: isDark ? 'rgba(0,0,0,0.2)' : 'rgba(5, 150, 105, 0.05)',
-      padding: '8px 12px',
+      padding: '5px 10px',
       display: 'flex',
-      gap: 8,
+      gap: 6,
       overflowX: 'auto',
       flexShrink: 0,
       WebkitOverflowScrolling: 'touch',
     },
     yearBtn: {
-      padding: '10px 18px',
-      borderRadius: 16,
+      padding: '6px 14px',
+      borderRadius: 14,
       border: isDark ? '1px solid rgba(255, 255, 255, 0.06)' : '1px solid rgba(5, 150, 105, 0.1)',
       background: isDark ? 'rgba(255, 255, 255, 0.04)' : 'rgba(5, 150, 105, 0.05)',
       color: colors.textMuted,
-      fontSize: 12,
+      fontSize: 11,
       fontWeight: 600,
       cursor: 'pointer',
       whiteSpace: 'nowrap',
       flexShrink: 0,
       transition: 'all 0.3s',
-      minHeight: 44,
+      minHeight: 32,
     },
     yearBtnActive: {
       background: colors.activeYearBg,
@@ -2074,7 +2082,7 @@ const getStyles = (theme) => {
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
-      padding: '10px 16px',
+      padding: '7px 16px',
       flexShrink: 0,
       maxWidth: 600,
       margin: '0 auto',
@@ -2084,8 +2092,8 @@ const getStyles = (theme) => {
       background: isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 0.85)',
       border: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(5, 150, 105, 0.15)'}`,
       color: colors.textMain,
-      borderRadius: 12,
-      padding: '10px 16px',
+      borderRadius: 10,
+      padding: '7px 12px',
       cursor: 'pointer',
       fontWeight: 700,
       fontSize: 13,
@@ -2093,7 +2101,7 @@ const getStyles = (theme) => {
       transition: 'all 0.3s',
       display: 'inline-flex',
       alignItems: 'center',
-      minHeight: 44,
+      minHeight: 36,
     },
     progress: {
       color: colors.textMuted,
@@ -2104,10 +2112,10 @@ const getStyles = (theme) => {
     rankBadge: {
       background: `linear-gradient(135deg, ${colors.primary} 0%, ${isDark ? '#059669' : '#047857'} 100%)`,
       borderRadius: 20,
-      padding: '6px 14px',
+      padding: '5px 11px',
       color: isDark ? '#030806' : '#fff',
       fontWeight: 800,
-      fontSize: 12,
+      fontSize: 11,
       fontFamily: "'Outfit', sans-serif",
       boxShadow: `0 4px 10px ${colors.primaryGlow}`,
     },

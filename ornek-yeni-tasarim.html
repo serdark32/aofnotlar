@@ -1,0 +1,2294 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AÖF Sesli Notlar — Yeni Nesil Hazırlık Platformu</title>
+  
+  <!-- Google Fonts: Outfit for display/headings, Plus Jakarta Sans for body text -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      /* Dark Theme (Default) */
+      --bg-dark: #0a1712;
+      --bg-gradient: radial-gradient(circle at 50% 0%, #123322 0%, #091a12 60%, #050f0a 100%);
+      --primary: #10b981;
+      --primary-hover: #059669;
+      --primary-glow: rgba(16, 185, 129, 0.35);
+      --accent: #f59e0b;
+      --accent-hover: #d97706;
+      --accent-glow: rgba(245, 158, 11, 0.3);
+      --danger: #ef4444;
+      --danger-bg: rgba(239, 68, 68, 0.15);
+      --success-bg: rgba(16, 185, 129, 0.15);
+      --card-bg: rgba(20, 39, 30, 0.55);
+      --card-border: rgba(255, 255, 255, 0.09);
+      --text-main: #f9fafb;
+      --text-muted: #aeb5c1;
+      --font-display: 'Outfit', sans-serif;
+      --font-body: 'Plus Jakarta Sans', sans-serif;
+      --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --glow-opacity-1: 0.22;
+      --glow-opacity-2: 0.16;
+      --vize-active-bg: #ffffff;
+      --vize-active-text: #0a1712;
+      --correct-text: #a7f3d0;
+      --wrong-text: #fca5a5;
+      --active-year-bg: #ffffff;
+      --active-year-text: #0a1712;
+      --badge-year-text: #c4b5fd;
+      --badge-year-bg: rgba(139, 92, 246, 0.15);
+      --badge-year-border: rgba(139, 92, 246, 0.2);
+      --badge-freq-text: #fde68a;
+      --badge-freq-bg: rgba(245, 158, 11, 0.15);
+      --badge-freq-border: rgba(245, 158, 11, 0.2);
+      --result-title-color: linear-gradient(135deg, #ffffff 0%, #ede9fe 100%);
+      --warning-text: #fde68a;
+      --warning-border: rgba(245, 158, 11, 0.2);
+      --warning-bg: rgba(245, 158, 11, 0.1);
+      --success-text: #a7f3d0;
+      --success-border: rgba(16, 185, 129, 0.2);
+      --success-bg: rgba(16, 185, 129, 0.1);
+    }
+
+    body[data-theme="light"] {
+      /* Light Theme Overrides */
+      --bg-dark: #f2faf6;
+      --bg-gradient: radial-gradient(circle at 50% 0%, #d1fae5 0%, #f2faf6 60%, #ffffff 100%);
+      --primary: #059669;
+      --primary-hover: #047857;
+      --primary-glow: rgba(5, 150, 105, 0.15);
+      --accent: #d97706;
+      --accent-hover: #b45309;
+      --accent-glow: rgba(217, 119, 6, 0.15);
+      --danger: #dc2626;
+      --danger-bg: rgba(220, 38, 38, 0.08);
+      --success-bg: rgba(5, 150, 105, 0.08);
+      --card-bg: rgba(255, 255, 255, 0.85);
+      --card-border: rgba(5, 150, 105, 0.12);
+      --text-main: #0c2619;
+      --text-muted: #4b5563;
+      --glow-opacity-1: 0.08;
+      --glow-opacity-2: 0.06;
+      --vize-active-bg: #059669;
+      --vize-active-text: #ffffff;
+      --correct-text: #046a4e;
+      --wrong-text: #b91c1c;
+      --active-year-bg: #059669;
+      --active-year-text: #ffffff;
+      --badge-year-text: #5b21b6;
+      --badge-year-bg: rgba(139, 92, 246, 0.08);
+      --badge-year-border: rgba(139, 92, 246, 0.25);
+      --badge-freq-text: #b45309;
+      --badge-freq-bg: rgba(245, 158, 11, 0.08);
+      --badge-freq-border: rgba(245, 158, 11, 0.25);
+      --result-title-color: linear-gradient(135deg, #0c2619 0%, #06180f 100%);
+      --warning-text: #b45309;
+      --warning-border: rgba(245, 158, 11, 0.3);
+      --warning-bg: rgba(245, 158, 11, 0.08);
+      --success-text: #046a4e;
+      --success-border: rgba(16, 185, 129, 0.3);
+      --success-bg: rgba(16, 185, 129, 0.08);
+    }
+
+    /* Resets & Base Styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-dark);
+      background-image: var(--bg-gradient);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Ambient Background Lights */
+    body::before {
+      content: '';
+      position: absolute;
+      width: 350px;
+      height: 350px;
+      background: var(--primary);
+      filter: blur(160px);
+      opacity: var(--glow-opacity-1);
+      top: -50px;
+      left: -50px;
+      pointer-events: none;
+      z-index: 0;
+      animation: ambientGlow1 22s ease-in-out infinite alternate;
+      transform-origin: center;
+      transition: opacity 0.5s ease;
+    }
+
+    body::after {
+      content: '';
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      background: var(--accent);
+      filter: blur(140px);
+      opacity: var(--glow-opacity-2);
+      bottom: 10%;
+      right: -50px;
+      pointer-events: none;
+      z-index: 0;
+      animation: ambientGlow2 28s ease-in-out infinite alternate;
+      transform-origin: center;
+      transition: opacity 0.5s ease;
+    }
+
+    /* Container for the app screens */
+    .app-viewport {
+      width: 100%;
+      max-width: 480px;
+      min-height: 100vh;
+      padding: 24px 16px;
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Screen Layouts */
+    .screen {
+      display: none;
+      width: 100%;
+      animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .screen.active {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    /* Typography Utilities */
+    h1, h2, h3, h4 {
+      font-family: var(--font-display);
+      font-weight: 700;
+    }
+
+    /* Glassmorphism Card Style */
+    .glass-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 16px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      margin-bottom: 16px;
+      position: relative;
+      overflow: hidden;
+      transition: var(--transition-smooth);
+    }
+
+    .glass-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.1), rgba(255,255,255,0));
+      pointer-events: none;
+    }
+
+    /* Buttons */
+    .btn-primary {
+      font-family: var(--font-display);
+      font-weight: 700;
+      background: var(--primary);
+      color: #030806;
+      border: none;
+      padding: 13px 20px;
+      border-radius: 12px;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 4px 20px var(--primary-glow);
+      transition: var(--transition-smooth);
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px rgba(16, 185, 129, 0.4);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    .btn-secondary {
+      font-family: var(--font-display);
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-main);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 13px 20px;
+      border-radius: 12px;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: var(--transition-smooth);
+      width: 100%;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary:active {
+      transform: translateY(0);
+    }
+
+    /* Input Fields */
+    .input-field {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 12px 16px;
+      color: var(--text-main);
+      font-size: 14px;
+      font-family: var(--font-body);
+      outline: none;
+      transition: var(--transition-smooth);
+      box-sizing: border-box;
+    }
+
+    .input-field:focus {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px var(--primary-glow);
+    }
+
+    /* Form spacing group */
+    .input-group {
+      margin-bottom: 14px;
+      position: relative;
+    }
+
+    /* Error Banner */
+    .error-msg {
+      background: var(--danger-bg);
+      border: 1px solid rgba(239, 68, 68, 0.25);
+      color: #fca5a5;
+      padding: 12px 16px;
+      border-radius: 14px;
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      animation: shake 0.3s ease;
+    }
+
+    /* ------------------------------------------------------------- */
+    /* SPLASH SCREEN & AUTH SCREEN */
+    /* ------------------------------------------------------------- */
+    .splash-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      padding-top: 40px;
+    }
+
+    .logo-container {
+      margin-bottom: 30px;
+      position: relative;
+      animation: float 4s ease-in-out infinite;
+    }
+
+    .logo-glow {
+      position: absolute;
+      width: 90px;
+      height: 90px;
+      background: var(--primary);
+      border-radius: 50%;
+      filter: blur(25px);
+      opacity: 0.6;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: -1;
+    }
+
+    .logo-circle {
+      width: 100px;
+      height: 100px;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 32px rgba(16, 185, 129, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .logo-circle span {
+      font-size: 44px;
+      filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.2));
+    }
+
+    .app-title {
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #ffffff 0%, #a7f3d0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .app-subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+      text-align: center;
+      margin-bottom: 24px;
+      max-width: 280px;
+      line-height: 1.5;
+    }
+
+    .auth-tab-row {
+      display: flex;
+      background: rgba(255, 255, 255, 0.04);
+      padding: 6px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      margin-bottom: 20px;
+    }
+
+    .auth-tab {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .auth-tab.active {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-main);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    /* ------------------------------------------------------------- */
+    /* HOME/DASHBOARD SCREEN */
+    /* ------------------------------------------------------------- */
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .user-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1.5px solid rgba(255, 255, 255, 0.15);
+      font-size: 20px;
+    }
+
+    .greeting-text {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .username-text {
+      font-family: var(--font-display);
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      border: 1.5px solid rgba(255, 255, 255, 0.06);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-main);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      transition: var(--transition-smooth);
+    }
+
+    .btn-icon:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.12);
+      transform: scale(1.05);
+    }
+
+    .theme-toggle-btn {
+      position: absolute;
+      top: 24px;
+      right: 16px;
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      border: 1px solid var(--card-border);
+      background: var(--card-bg);
+      color: var(--text-main);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      z-index: 100;
+      transition: var(--transition-smooth);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .theme-toggle-btn:hover {
+      transform: scale(1.05);
+      border-color: var(--primary);
+    }
+
+    .btn-text-sm {
+      padding: 8px 14px;
+      font-size: 12px;
+      font-family: var(--font-display);
+      font-weight: 700;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .btn-text-sm:hover {
+      background: rgba(239, 68, 68, 0.1);
+      border-color: rgba(239, 68, 68, 0.2);
+      color: #fca5a5;
+    }
+
+    /* Leaderboard Podium & Widget */
+    .section-title {
+      font-size: 16px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-main);
+    }
+
+    .joke-banner {
+      background: rgba(245, 158, 11, 0.08);
+      border: 1px dashed rgba(245, 158, 11, 0.3);
+      border-radius: 16px;
+      padding: 12px 16px;
+      font-size: 13px;
+      color: var(--accent);
+      line-height: 1.5;
+      font-weight: 500;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .leaderboard-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .leaderboard-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 14px;
+      font-size: 14px;
+      transition: var(--transition-smooth);
+    }
+
+    .leaderboard-row:hover {
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .leader-name {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 500;
+    }
+
+    .leader-rank {
+      font-size: 16px;
+      width: 24px;
+      text-align: center;
+    }
+
+    .leader-score {
+      font-family: var(--font-display);
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .my-stats-banner {
+      margin-top: 14px;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.02) 100%);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      border-radius: 16px;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13.5px;
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .tabs-container {
+      display: flex;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 14px;
+      padding: 4px;
+      margin-bottom: 16px;
+    }
+
+    .exam-tab-btn {
+      flex: 1;
+      padding: 11px 10px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: var(--transition-smooth);
+    }
+
+    .exam-tab-btn.active-vize {
+      background: var(--vize-active-bg);
+      color: var(--vize-active-text);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+    }
+
+    .exam-tab-btn.active-final {
+      background: var(--accent);
+      color: #0a1712;
+      box-shadow: 0 4px 12px var(--accent-glow);
+    }
+
+    /* Categories List style */
+    .category-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 40px;
+    }
+
+    .category-card {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 13px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      text-align: left;
+    }
+
+    .category-card:hover {
+      background: rgba(16, 185, 129, 0.06);
+      border-color: rgba(16, 185, 129, 0.2);
+      transform: translateX(4px);
+    }
+
+    .category-info {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex: 1;
+    }
+
+    .star-btn {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: rgba(255,255,255,0.15);
+      transition: var(--transition-smooth);
+      padding: 4px;
+    }
+
+    .star-btn.fav {
+      color: var(--accent);
+      transform: scale(1.15);
+      text-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+    }
+
+    .star-btn:hover {
+      transform: scale(1.2);
+    }
+
+    .category-title {
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .category-arrow {
+      color: var(--primary);
+      font-size: 18px;
+      font-weight: 700;
+      transition: var(--transition-smooth);
+    }
+
+    .category-card:hover .category-arrow {
+      transform: translateX(4px);
+    }
+
+    /* ------------------------------------------------------------- */
+    /* QUIZ SCREEN */
+    /* ------------------------------------------------------------- */
+    .quiz-bar-fixed {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .quiz-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .year-scroller {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      scrollbar-width: none; /* Firefox */
+    }
+
+    .year-scroller::-webkit-scrollbar {
+      display: none; /* Safari & Chrome */
+    }
+
+    .year-tab-btn {
+      padding: 5px 12px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 16px;
+      color: var(--text-muted);
+      font-size: 11.5px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: var(--transition-smooth);
+    }
+
+    .year-tab-btn.active {
+      background: var(--active-year-bg);
+      color: var(--active-year-text);
+      border-color: var(--active-year-bg);
+    }
+
+    .btn-back {
+      padding: 8px 14px;
+      font-family: var(--font-display);
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text-main);
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: var(--transition-smooth);
+    }
+
+    .btn-back:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .quiz-progress {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .xp-badge {
+      background: linear-gradient(135deg, var(--primary) 0%, #059669 100%);
+      color: #030806;
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 12px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
+    }
+
+    .quiz-meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .category-label {
+      font-size: 10px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .badge-row {
+      display: flex;
+      gap: 6px;
+    }
+
+    .quiz-badge-item {
+      padding: 3px 8px;
+      font-size: 10px;
+      font-weight: 700;
+      border-radius: 8px;
+    }
+
+    .badge-year {
+      background: var(--badge-year-bg);
+      color: var(--badge-year-text);
+      border: 1px solid var(--badge-year-border);
+    }
+
+    .badge-frequency {
+      background: var(--badge-freq-bg);
+      color: var(--badge-freq-text);
+      border: 1px solid var(--badge-freq-border);
+    }
+
+    .q-text {
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--text-main);
+      margin-bottom: 16px;
+      font-weight: 500;
+    }
+
+    .q-line {
+      margin-bottom: 5px;
+    }
+
+    .q-line-bold {
+      font-weight: 700;
+      margin-top: 8px;
+      color: var(--text-main);
+    }
+
+    .divider {
+      height: 1px;
+      background: rgba(255, 255, 255, 0.08);
+      margin: 16px 0;
+    }
+
+    .option-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .option-btn {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1.5px solid rgba(255, 255, 255, 0.06);
+      border-radius: 10px;
+      padding: 9px 12px;
+      color: var(--text-main);
+      font-size: 14px;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: var(--transition-smooth);
+    }
+
+    .option-btn:hover:not(.disabled) {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(255, 255, 255, 0.12);
+      transform: translateY(-1px);
+    }
+
+    .option-letter {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 12px;
+      flex-shrink: 0;
+      transition: var(--transition-smooth);
+    }
+
+    .option-text {
+      line-height: 1.4;
+      flex: 1;
+    }
+
+    /* Quiz Option Feedback States */
+    .option-btn.correct {
+      background: rgba(16, 185, 129, 0.15) !important;
+      border-color: var(--primary) !important;
+      color: var(--correct-text) !important;
+    }
+
+    .option-btn.correct .option-letter {
+      background: var(--primary) !important;
+      color: #030806 !important;
+    }
+
+    .option-btn.wrong {
+      background: rgba(239, 68, 68, 0.15) !important;
+      border-color: var(--danger) !important;
+      color: var(--wrong-text) !important;
+    }
+
+    .option-btn.wrong .option-letter {
+      background: var(--danger) !important;
+      color: #fff !important;
+    }
+
+    .next-hint {
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 16px;
+      animation: pulse 1.5s infinite;
+      cursor: pointer;
+    }
+
+    /* ------------------------------------------------------------- */
+    /* RESULT SCREEN */
+    /* ------------------------------------------------------------- */
+    .result-icon {
+      font-size: 72px;
+      text-align: center;
+      margin-top: 10px;
+      margin-bottom: 8px;
+      filter: drop-shadow(0 8px 16px rgba(0,0,0,0.2));
+    }
+
+    .result-title {
+      font-size: 22px;
+      text-align: center;
+      margin-bottom: 20px;
+      background: var(--result-title-color);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .stats-table {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .stats-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 15px;
+    }
+
+    .stats-row span {
+      color: var(--text-muted);
+    }
+
+    .stats-row strong {
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .calc-banner {
+      border-radius: 16px;
+      padding: 14px 16px;
+      font-size: 13.5px;
+      line-height: 1.5;
+      margin-top: 14px;
+      font-weight: 500;
+    }
+
+    .calc-banner.warning {
+      background: var(--warning-bg);
+      border: 1px solid var(--warning-border);
+      color: var(--warning-text);
+    }
+
+    .calc-banner.success {
+      background: var(--success-bg);
+      border: 1px solid var(--success-border);
+      color: var(--success-text);
+    }
+
+    .my-rank-result {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 12px;
+      text-align: center;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 20px;
+    }
+
+    /* ------------------------------------------------------------- */
+    /* MODAL OVERLAY (FEEDBACK / DERS ISTEGI) */
+    /* ------------------------------------------------------------- */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 16px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-box {
+      width: 100%;
+      max-width: 400px;
+      background: var(--bg-dark);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+      animation: modalSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .modal-header {
+      margin-bottom: 12px;
+    }
+
+    .modal-title {
+      font-size: 20px;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
+
+    .modal-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .feedback-textarea {
+      width: 100%;
+      height: 100px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 14px;
+      color: var(--text-main);
+      font-family: var(--font-body);
+      font-size: 14px;
+      resize: none;
+      outline: none;
+      box-sizing: border-box;
+      margin-bottom: 16px;
+      transition: var(--transition-smooth);
+    }
+
+    .feedback-textarea:focus {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: var(--primary);
+    }
+
+    .feedback-history {
+      margin-top: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 16px;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .history-title {
+      font-size: 11px;
+      letter-spacing: 1px;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+
+    .feedback-item {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 14px;
+      padding: 12px;
+      margin-bottom: 10px;
+      font-size: 13px;
+    }
+
+    .feedback-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .feedback-status {
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .status-checked {
+      color: var(--primary);
+    }
+
+    .status-pending {
+      color: var(--accent);
+    }
+
+    .feedback-date {
+      color: var(--text-muted);
+      font-size: 11px;
+    }
+
+    .admin-reply {
+      margin-top: 8px;
+      padding: 8px 12px;
+      background: rgba(16, 185, 129, 0.08);
+      border-left: 2.5px solid var(--primary);
+      border-radius: 6px;
+      font-size: 12px;
+      color: #a7f3d0;
+      line-height: 1.4;
+    }
+
+    .success-icon-animated {
+      font-size: 48px;
+      text-align: center;
+      animation: pulse 1.2s infinite;
+      padding: 20px 0;
+    }
+
+    /* Keyframe Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes modalSlideUp {
+      from { opacity: 0; transform: translateY(20px) scale(0.96); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.05); opacity: 0.8; }
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-6px); }
+      40%, 80% { transform: translateX(6px); }
+    }
+
+    @keyframes ambientGlow1 {
+      0% {
+        transform: translate(0, 0) scale(1) rotate(0deg);
+        filter: blur(160px);
+      }
+      50% {
+        transform: translate(80px, 60px) scale(1.2) rotate(180deg);
+        filter: blur(190px);
+        opacity: 0.18;
+      }
+      100% {
+        transform: translate(-30px, 120px) scale(0.9) rotate(360deg);
+        filter: blur(150px);
+      }
+    }
+
+    @keyframes ambientGlow2 {
+      0% {
+        transform: translate(0, 0) scale(1) rotate(0deg);
+        filter: blur(140px);
+      }
+      50% {
+        transform: translate(-60px, -80px) scale(1.25) rotate(-180deg);
+        filter: blur(170px);
+        opacity: 0.14;
+      }
+      100% {
+        transform: translate(40px, 40px) scale(0.95) rotate(-360deg);
+        filter: blur(130px);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-viewport">
+    
+    <!-- Persistent Theme Toggle -->
+    <button class="theme-toggle-btn" id="theme-btn-global" onclick="toggleTheme()" title="Temayı Değiştir">
+      🌙
+    </button>
+    
+    <!-- ========================================== -->
+    <!-- 1. SPLASH SCREEN -->
+    <!-- ========================================== -->
+    <div id="screen-splash" class="screen active">
+      <div class="splash-content">
+        <div class="logo-container">
+          <div class="logo-glow"></div>
+          <div class="logo-circle">
+            <span>📚</span>
+          </div>
+        </div>
+        <h1 class="app-title">AÖF Sesli Notlar</h1>
+        <p class="app-subtitle">Yapay zeka sesli anlatımları ve çıkmış sınav soruları ile hedefine ulaş.</p>
+      </div>
+      
+      <div style="display: flex; flex-direction: column; gap: 12px; margin-top: auto; padding-bottom: 20px;">
+        <button class="btn-primary" onclick="navigateTo('screen-anonymous')">
+          <span>Anonim Devam Et</span> 👤
+        </button>
+        <button class="btn-secondary" onclick="openAuth('login')">
+          <span>Giriş Yap / Kayıt Ol</span> 🔑
+        </button>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- 2. ANONYMOUS USERNAME SCREEN -->
+    <!-- ========================================== -->
+    <div id="screen-anonymous" class="screen">
+      <div class="splash-content" style="justify-content: flex-start; padding-top: 30px;">
+        <div style="font-size: 50px; margin-bottom: 16px;">👤</div>
+        <h2 style="font-size: 22px; text-align: center; margin-bottom: 8px;">Kullanıcı Adı Seç</h2>
+        <p class="app-subtitle" style="margin-bottom: 30px;">Liderlik tablosunda diğer hazırlananlar arasında bu isimle görüneceksin.</p>
+        
+        <div class="glass-card" style="width: 100%;">
+          <div id="anon-error" class="error-msg" style="display: none;"></div>
+          <div class="input-group">
+            <input type="text" id="anon-username" class="input-field" placeholder="Kullanıcı adın (örn: AhmetAÖF)" maxlength="20">
+          </div>
+          <button class="btn-primary" style="margin-top: 10px;" onclick="handleAnonLogin()">
+            <span>Başla</span> 🚀
+          </button>
+        </div>
+      </div>
+      
+      <div style="margin-top: auto; padding-bottom: 20px;">
+        <button class="btn-secondary" onclick="navigateTo('screen-splash')">← Geri</button>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- 3. LOGIN / REGISTER SCREEN -->
+    <!-- ========================================== -->
+    <div id="screen-auth" class="screen">
+      <div class="splash-content" style="justify-content: flex-start; padding-top: 30px;">
+        <h2 style="font-size: 22px; text-align: center; margin-bottom: 24px;">Hesabına Giriş Yap</h2>
+        
+        <div class="glass-card" style="width: 100%;">
+          <div class="auth-tab-row">
+            <button id="tab-login" class="auth-tab active" onclick="setAuthTab('login')">Giriş Yap</button>
+            <button id="tab-register" class="auth-tab" onclick="setAuthTab('register')">Kayıt Ol</button>
+          </div>
+          
+          <div id="auth-error" class="error-msg" style="display: none;"></div>
+          
+          <!-- Register Only Field -->
+          <div class="input-group" id="group-username" style="display: none;">
+            <input type="text" id="auth-username" class="input-field" placeholder="Kullanıcı adın">
+          </div>
+          
+          <div class="input-group">
+            <input type="email" id="auth-email" class="input-field" placeholder="E-posta adresin">
+          </div>
+          
+          <div class="input-group" style="margin-bottom: 20px;">
+            <input type="password" id="auth-password" class="input-field" placeholder="Şifren (En az 6 karakter)">
+          </div>
+          
+          <button class="btn-primary" id="btn-auth-submit" onclick="handleAuthSubmit()">
+            <span>Giriş Yap</span> 🚀
+          </button>
+        </div>
+      </div>
+      
+      <div style="margin-top: auto; padding-bottom: 20px;">
+        <button class="btn-secondary" onclick="navigateTo('screen-splash')">← Geri</button>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- 4. HOME / DASHBOARD SCREEN -->
+    <!-- ========================================== -->
+    <div id="screen-home" class="screen">
+      <!-- Header -->
+      <div class="dashboard-header">
+        <div class="user-profile">
+          <div class="user-avatar">👤</div>
+          <div>
+            <div class="greeting-text">Merhaba,</div>
+            <div class="username-text" id="display-name">Öğrenci 👋</div>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button class="btn-icon" id="theme-btn-home" onclick="toggleTheme()" title="Temayı Değiştir">🌙</button>
+          <button class="btn-icon" title="Geri Bildirim / Ders İste" onclick="toggleFeedbackModal(true)">💬</button>
+          <button class="btn-text-sm" onclick="handleLogout()">Çıkış</button>
+        </div>
+      </div>
+
+      <!-- PDF Kitap Tanıtım Banner'ı -->
+      <div class="glass-card promo-banner-card" onclick="navigateToProductDetail('home')" style="cursor: pointer; background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%); border: 1px solid rgba(245, 158, 11, 0.2); display: flex; gap: 14px; align-items: center; padding: 14px; margin-bottom: 16px;">
+        <div style="font-size: 28px; background: rgba(245, 158, 11, 0.15); width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">📚</div>
+        <div style="flex: 1;">
+          <h4 style="font-size: 14px; font-weight: 700; color: var(--accent); margin-bottom: 3px;">AÖF Özet Ders Kitapları PDF</h4>
+          <p style="font-size: 12px; color: var(--text-muted); line-height: 1.4;">Sınav algoritmasına göre hazırlanmış özet PDF'leri incele.</p>
+        </div>
+        <div style="color: var(--accent); font-weight: 800; font-size: 16px;">&rsaquo;</div>
+      </div>
+
+      <!-- Leaders widget -->
+      <div class="glass-card">
+        <h3 class="section-title">🏆 Bugünün Liderleri</h3>
+        
+        <!-- Joke banner -->
+        <div class="joke-banner">
+          <span style="font-size: 18px;">🔥</span>
+          <span id="daily-joke-text">Yükleniyor...</span>
+        </div>
+
+        <div class="leaderboard-list">
+          <div class="leaderboard-row">
+            <div class="leader-name">
+              <span class="leader-rank">🥇</span>
+              <span id="rank-1-name">Mehmet_AÖF</span>
+            </div>
+            <span class="leader-score">340 XP</span>
+          </div>
+          <div class="leaderboard-row">
+            <div class="leader-name">
+              <span class="leader-rank">🥈</span>
+              <span id="rank-2-name">ZeynepMuhasebe</span>
+            </div>
+            <span class="leader-score">280 XP</span>
+          </div>
+          <div class="leaderboard-row">
+            <div class="leader-name">
+              <span class="leader-rank">🥉</span>
+              <span id="rank-3-name">Ahmet_Iktisat</span>
+            </div>
+            <span class="leader-score">210 XP</span>
+          </div>
+        </div>
+
+        <div class="my-stats-banner">
+          <span>📍 Bugün 4. sıradasın</span>
+          <span id="my-score-display">0 XP</span>
+        </div>
+      </div>
+
+      <!-- Exam Tabs -->
+      <h3 class="section-title" id="pratik-yap" style="margin-top: 10px; margin-bottom: 12px;">Soru Çözerek Hazırlan</h3>
+      
+      <div class="tabs-container">
+        <button id="tab-vize" class="exam-tab-btn active-vize" onclick="setExamType('vize')">
+          📗 Vize
+        </button>
+        <button id="tab-final" class="exam-tab-btn" onclick="setExamType('final')">
+          📘 Final
+        </button>
+      </div>
+
+      <!-- Categories Container -->
+      <div class="category-grid" id="categories-container">
+        <!-- Rendered dynamically in JS -->
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- 5. QUIZ SCREEN -->
+    <!-- ========================================== -->
+    <div id="screen-quiz" class="screen">
+      <div class="quiz-bar-fixed">
+        <div class="quiz-top-row">
+          <button class="btn-back" onclick="navigateTo('screen-home')">← Çıkış</button>
+          <span class="quiz-progress" id="quiz-progress-text">1 / 4</span>
+          <span class="xp-badge" id="quiz-xp-badge">120 XP</span>
+        </div>
+        
+        <!-- Year selectors -->
+        <div class="year-scroller" id="quiz-year-tabs">
+          <!-- Dynanmically filled -->
+        </div>
+      </div>
+
+      <!-- Quiz card content -->
+      <div class="glass-card" style="margin-bottom: 10px;">
+        <div class="quiz-meta-row">
+          <span class="category-label" id="quiz-category-title">İktisada Giriş</span>
+          <div class="badge-row">
+            <span class="quiz-badge-item badge-year" id="quiz-badge-year">2024</span>
+            <span class="quiz-badge-item badge-frequency" id="quiz-badge-freq">🔥 3x Soruldu</span>
+          </div>
+        </div>
+        
+        <!-- Question Text -->
+        <div class="q-text" id="quiz-question-text">
+          <!-- Text loaded from JS -->
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Options Container -->
+        <div class="option-list" id="quiz-options-container">
+          <!-- Buttons dynamically created -->
+        </div>
+      </div>
+
+      <!-- Next question hint (Hidden by default, shown when answered) -->
+      <div id="quiz-next-hint" class="next-hint" style="display: none;" onclick="handleNextQuestion()">
+        Devam etmek için ekrana dokun veya buraya tıklat 👆
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- 6. RESULT SCREEN -->
+    <!-- ========================================== -->
+    <div id="screen-result" class="screen">
+      <div class="splash-content" style="justify-content: flex-start; padding-top: 10px; flex: 1;">
+        <div class="result-icon" id="result-emoji">🎉</div>
+        <h2 class="result-title" id="result-title-text">Harika Sonuç!</h2>
+
+        <div class="glass-card" style="width: 100%;">
+          <div class="stats-table">
+            <div class="stats-row">
+              <span>✅ Doğru Sayısı</span>
+              <strong id="result-correct" style="color: var(--primary);">4</strong>
+            </div>
+            <div class="stats-row">
+              <span>❌ Yanlış Sayısı</span>
+              <strong id="result-wrong" style="color: var(--danger);">0</strong>
+            </div>
+            <div class="stats-row">
+              <span>📊 Başarı Puanı</span>
+              <strong id="result-score">100 / 100</strong>
+            </div>
+            
+            <div class="divider"></div>
+            
+            <!-- Midterm / Final specific calculation advice -->
+            <div class="stats-row" id="result-calc-label">
+              <span>Vize Etkisi (%30)</span>
+              <strong id="result-calc-value">30.0 Puan</strong>
+            </div>
+            
+            <div class="calc-banner warning" id="result-calc-banner">
+              Dersi geçebilmek için ortalaman en az 35 olmalıdır. Final sınavından <strong>36</strong> almalısın.
+            </div>
+          </div>
+        </div>
+
+        <div class="my-rank-result" id="result-rank-info">
+          📍 Bugün sıralamada 3. sıradasın!
+        </div>
+
+        <!-- PDF Satış Sayfasına Yönlendiren Kart -->
+        <div class="glass-card promo-banner-card" onclick="navigateToProductDetail('result')" style="cursor: pointer; background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%); border: 1px solid rgba(245, 158, 11, 0.2); display: flex; gap: 14px; align-items: center; padding: 14px; margin-bottom: 16px; width: 100%;">
+          <div style="font-size: 28px; background: rgba(245, 158, 11, 0.15); width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">📚</div>
+          <div style="flex: 1; text-align: left;">
+            <h4 style="font-size: 14px; font-weight: 700; color: var(--accent); margin-bottom: 3px;">Sınavı Şansa Bırakma!</h4>
+            <p style="font-size: 11px; color: var(--text-muted); line-height: 1.4;">Netlerini artıracak özet PDF notlarımıza göz at.</p>
+          </div>
+          <div style="color: var(--accent); font-weight: 800; font-size: 16px;">&rsaquo;</div>
+        </div>
+
+        <div style="width: 100%; display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;">
+          <button class="btn-primary" id="btn-result-action" onclick="handleResultAction()">
+            <span>Tekrar Çöz</span> 🔄
+          </button>
+          <button class="btn-secondary" onclick="navigateTo('screen-home')">
+            <span>Ana Sayfa</span> 🏠
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- 7. PRODUCT DETAIL (PDF SALES) SCREEN -->
+    <!-- ========================================== -->
+    <div id="screen-product-detail" class="screen">
+      <div class="splash-content" style="justify-content: flex-start; padding-top: 10px; flex: 1; width: 100%;">
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 16px;">
+          <button class="btn-back" onclick="navigateBackFromProductDetail()">← Geri</button>
+          <span style="font-family: var(--font-display); font-weight: 700; font-size: 15px;">Ders Kitabı & Özet PDF</span>
+          <div style="width: 50px;"></div>
+        </div>
+
+        <div class="glass-card" style="width: 100%; text-align: center;">
+          <!-- SVG Illustration for Book Cover -->
+          <div style="margin-bottom: 16px; display: flex; justify-content: center;">
+            <div style="width: 120px; height: 160px; background: linear-gradient(135deg, #059669 0%, #10b981 100%); border-radius: 12px; box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3); border: 2px solid rgba(255, 255, 255, 0.15); display: flex; flex-direction: column; justify-content: space-between; padding: 16px; color: #fff; text-align: left; position: relative; overflow: hidden;">
+              <div style="font-size: 11px; font-weight: 800; opacity: 0.8; letter-spacing: 1px; text-transform: uppercase;">AÖF SESLİ NOTLAR</div>
+              <div style="font-family: var(--font-display); font-weight: 900; font-size: 16px; line-height: 1.2;">ÖZET DERS KİTABI</div>
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 18px;">📚</span>
+                <span style="font-size: 10px; font-weight: 700; background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 6px;">PDF</span>
+              </div>
+            </div>
+          </div>
+
+          <h3 style="font-size: 18px; font-weight: 800; color: var(--text-main); margin-bottom: 8px;">AÖF Sınavı Şansa Bırakılmaz!</h3>
+          <p style="font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 16px;">
+            Sınav algoritmasına göre hazırlanmış özet PDF notları ile derslerinizi kolayca geçin. Hangi konuların tekrar tekrar sorulduğu çıkmış sorulardan analiz edilerek bu evrak özenle hazırlandı.
+          </p>
+
+          <div style="display: inline-flex; align-items: center; gap: 6px; background: rgba(16, 185, 129, 0.1); color: var(--primary); padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; margin-bottom: 16px; border: 1px solid rgba(16, 185, 129, 0.2);">
+            <span>📚</span> 10+ Ders Seçeneği
+          </div>
+
+          <!-- Feature Bullets -->
+          <div style="text-align: left; display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;">
+            <div style="display: flex; gap: 10px; align-items: flex-start;">
+              <span style="font-size: 16px; flex-shrink: 0;">🎯</span>
+              <div style="font-size: 13px; line-height: 1.4;">
+                <strong style="color: var(--text-main);">Sınav Sabahı Bilmen Gereken 25 Terim:</strong> Sınavdan hemen önce bilmeniz gereken en kritik 25 terim ve tanım elinizin altında.
+              </div>
+            </div>
+            <div style="display: flex; gap: 10px; align-items: flex-start;">
+              <span style="font-size: 16px; flex-shrink: 0;">📊</span>
+              <div style="font-size: 13px; line-height: 1.4;">
+                <strong style="color: var(--text-main);">Çıkmış Soru Analizi:</strong> Geçmiş sınav soruları analiz edilerek, tekrar tekrar sorulan konular özel bir algoritmayla belirlendi ve damıtıldı.
+              </div>
+            </div>
+            <div style="display: flex; gap: 10px; align-items: flex-start;">
+              <span style="font-size: 16px; flex-shrink: 0;">⚡</span>
+              <div style="font-size: 13px; line-height: 1.4;">
+                <strong style="color: var(--text-main);">Shopier Güvencesiyle Anında E-posta:</strong> Ödemenizden hemen sonra PDF dosyanız otomatik olarak mail adresinize gönderilir.
+              </div>
+            </div>
+          </div>
+
+          <!-- Buttons -->
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <a href="https://www.shopier.com" target="_blank" rel="noopener noreferrer" class="btn-primary" style="background: var(--accent); color: #0a1712; text-decoration: none; box-shadow: 0 4px 15px var(--accent-glow);">
+              <span>Shopier ile Hemen Al & İndir</span> 🚀
+            </a>
+            <a href="/ornek-dokuman.pdf" target="_blank" rel="noopener noreferrer" class="btn-secondary" style="text-decoration: none;">
+              <span>📄 Örnek PDF İndir & İncele</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div> <!-- End Viewport -->
+
+
+  <!-- ========================================== -->
+  <!-- FEEDBACK MODAL OVERLAY -->
+  <!-- ========================================== -->
+  <div class="modal-overlay" id="feedback-modal" onclick="toggleFeedbackModal(false)">
+    <div class="modal-box" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3 class="modal-title">💬 Geri Bildirim & İstek</h3>
+        <p class="modal-desc">Eklenmesini istediğin dersleri yaz veya önerilerini bizimle paylaş.</p>
+      </div>
+      
+      <div id="feedback-form-content">
+        <textarea id="feedback-text" class="feedback-textarea" placeholder="Mesajını, ders isteklerini veya önerilerini detaylıca buraya yazabilirsin..."></textarea>
+        
+        <div style="display: flex; gap: 10px;">
+          <button class="btn-primary" style="flex: 1; padding: 12px;" onclick="submitFeedback()">Gönder</button>
+          <button class="btn-secondary" style="flex: 1; padding: 12px;" onclick="toggleFeedbackModal(false)">İptal</button>
+        </div>
+      </div>
+
+      <div id="feedback-success-content" style="display: none; text-align: center;">
+        <div class="success-icon-animated">✅</div>
+        <p style="font-weight: 600; font-size: 15px; margin-bottom: 8px;">Geri Bildirimin İletildi!</p>
+        <p class="modal-desc" style="margin-bottom: 20px;">Önerilerin bizim için çok değerli. En kısa sürede inceleyeceğiz.</p>
+      </div>
+
+      <!-- User history feedbacks mock list -->
+      <div class="feedback-history">
+        <div class="history-title">Önceki Bildirimlerin</div>
+        
+        <div class="feedback-item">
+          <div class="feedback-item-header">
+            <span class="feedback-status status-checked">✓ Çözüldü</span>
+            <span class="feedback-date">24.06.2026</span>
+          </div>
+          <div style="color: var(--text-main); font-weight: 500;">Genel Muhasebe 2024 soruları eklenebilir mi?</div>
+          <div class="admin-reply">
+            <strong>Admin Yanıtı:</strong> Merhaba, talebiniz üzerine Genel Muhasebe dersinin tüm çıkmış vize ve final soruları sisteme eklenmiştir. Başarılar dileriz!
+          </div>
+        </div>
+
+        <div class="feedback-item">
+          <div class="feedback-item-header">
+            <span class="feedback-status status-pending">⏳ İnceleniyor</span>
+            <span class="feedback-date">Bugün</span>
+          </div>
+          <div style="color: var(--text-main); font-weight: 500;">İktisada Giriş ders anlatımları ses kalitesi harika olmuş, teşekkürler!</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ========================================== -->
+  <!-- APPLICATION LOGIC (JAVASCRIPT) -->
+  <!-- ========================================== -->
+  <script>
+    // State management
+    const state = {
+      user: null,
+      score: 0,
+      favorites: ['cat-iktisat', 'cat-hukuk'], // Default starred
+      examType: 'vize', // 'vize' or 'final'
+      activeCategory: null,
+      activeYear: null,
+      currentQuestionIndex: 0,
+      correctCount: 0,
+      wrongCount: 0,
+      selectedOption: null,
+      authMode: 'login' // 'login' or 'register'
+    };
+
+    // Jokes collection
+    const jokes = [
+      "Kusursuz bir başarı, böyle devam et!",
+      "Azminin zaferi, liderliği sonuna kadar hak ettin!",
+      "Muazzam bir odaklanma ve harika bir skor!",
+      "Zirvedeki yerini aldın, tebrikler!",
+      "Günün en yüksek skoruna ulaştın, harika iş çıkardın!",
+      "Bugün tablonun en parlak ismi sensin."
+    ];
+
+    // Mock Database
+    const categories = [
+      { id: 'cat-iktisat', name: 'İktisada Giriş', years: ['2024', '2023', '2022'], keywords: ['vize', 'final'] },
+      { id: 'cat-muhasebe', name: 'Genel Muhasebe (Vize)', years: ['2024', '2023'], keywords: ['vize'] },
+      { id: 'cat-muhasebe-final', name: 'Genel Muhasebe (Final)', years: ['2024', '2023'], keywords: ['final'] },
+      { id: 'cat-hukuk', name: 'Hukukun Temel Kavramları', years: ['2024', '2023', '2022'], keywords: ['vize', 'final'] },
+      { id: 'cat-isletme', name: 'İşletme İlkeleri', years: ['2023', '2022'], keywords: ['vize', 'final'] },
+      { id: 'cat-davranis', name: 'Davranış Bilimleri (Vize)', years: ['2024', '2023'], keywords: ['vize'] }
+    ];
+
+    const questionsDb = {
+      'cat-iktisat': {
+        '2024': [
+          {
+            id: 'q1',
+            question_text: "Fiyatlar genel düzeyinin sürekli ve hissedilir derecede artması durumuna ne ad verilir?\nI. Enflasyon\nII. Deflasyon\nIII. Stagflasyon",
+            option_a: "Yalnız I",
+            option_b: "Yalnız II",
+            option_c: "I ve II",
+            option_d: "II ve III",
+            option_e: "I, II ve III",
+            correct_option: "A",
+            year: "2024",
+            frequency: 3
+          },
+          {
+            id: 'q2',
+            question_text: "Aşağıdakilerden hangisi mikro iktisadın konuları arasında yer alır?",
+            option_a: "Enflasyon oranı",
+            option_b: "Tüketicinin fayda maksimizasyonu",
+            option_c: "İşsizlik oranı",
+            option_d: "Gayri safi yurtiçi hasıla",
+            option_e: "Dış ticaret dengesi",
+            correct_option: "B",
+            year: "2024",
+            frequency: 2
+          },
+          {
+            id: 'q3',
+            question_text: "Bir malın fiyatı arttığında o mala olan talebin azalması durumunu açıklayan kanuna ne ad verilir?",
+            option_a: "Arz kanunu",
+            option_b: "Talep kanunu",
+            option_c: "Fayda kanunu",
+            option_d: "Azalan marjinal verimler kanunu",
+            option_e: "Gresham kanunu",
+            correct_option: "B",
+            year: "2024",
+            frequency: 4
+          },
+          {
+            id: 'q4',
+            question_text: "Üretim faktörlerinin tamamının değişken olduğu dönem aşağıdakilerden hangisidir?",
+            option_a: "Çok kısa dönem",
+            option_b: "Kısa dönem",
+            option_c: "Orta dönem",
+            option_d: "Uzun dönem",
+            option_e: "Pazar dönemi",
+            correct_option: "D",
+            year: "2024",
+            frequency: 1
+          }
+        ],
+        '2023': [
+          {
+            id: 'q5',
+            question_text: "Tüketicinin bir maldan daha fazla tüketmesiyle elde ettiği toplam faydanın artış hızının azalarak sıfıra ulaşması yasasına ne ad verilir?",
+            option_a: "Azalan Marjinal Fayda Yasası",
+            option_b: "Değer Paradoksu",
+            option_c: "Tüketici Rantı",
+            option_d: "Fayda Maksimizasyonu",
+            option_e: "Gossen Yasası",
+            correct_option: "A",
+            year: "2023",
+            frequency: 2
+          }
+        ]
+      },
+      'cat-hukuk': {
+        '2024': [
+          {
+            id: 'q6',
+            question_text: "Kişinin kendi isteği dışında oluşan ve hukuk düzeninin kendisine hukuki sonuç bağladığı olaylara ne ad verilir?",
+            option_a: "Hukuki Eylem",
+            option_b: "Hukuki İşlem",
+            option_c: "Hukuki Olay",
+            option_d: "Hukuki Durum",
+            option_e: "Hukuki Sözleşme",
+            correct_option: "C",
+            year: "2024",
+            frequency: 2
+          }
+        ]
+      }
+    };
+
+    // Theme Toggle Logic
+    function toggleTheme() {
+      const currentTheme = document.body.getAttribute('data-theme') || 'dark';
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      document.body.setAttribute('data-theme', newTheme);
+      localStorage.setItem('demo_theme', newTheme);
+      
+      const icon = newTheme === 'dark' ? '🌙' : '☀️';
+      const btnGlobal = document.getElementById('theme-btn-global');
+      const btnHome = document.getElementById('theme-btn-home');
+      if (btnGlobal) btnGlobal.innerText = icon;
+      if (btnHome) btnHome.innerText = icon;
+    }
+
+    // Startup Init
+    window.addEventListener('DOMContentLoaded', () => {
+      // Theme setup
+      const savedTheme = localStorage.getItem('demo_theme') || 'dark';
+      document.body.setAttribute('data-theme', savedTheme);
+      const icon = savedTheme === 'dark' ? '🌙' : '☀️';
+      const btnGlobal = document.getElementById('theme-btn-global');
+      const btnHome = document.getElementById('theme-btn-home');
+      if (btnGlobal) btnGlobal.innerText = icon;
+      if (btnHome) btnHome.innerText = icon;
+
+      // Load cache if exists
+      const savedUserStr = localStorage.getItem('demo_user');
+      const savedScore = localStorage.getItem('demo_score');
+      if (savedUserStr) {
+        state.user = JSON.parse(savedUserStr);
+        state.score = parseInt(savedScore) || 0;
+        initDashboard();
+        navigateTo('screen-home');
+      } else {
+        navigateTo('screen-splash');
+      }
+    });
+
+    // Navigation utility
+    function navigateTo(screenId) {
+      document.querySelectorAll('.screen').forEach(scr => {
+        scr.classList.remove('active');
+      });
+      document.getElementById(screenId).classList.add('active');
+      
+      // Show global theme toggle on splash, login, anonymous, results. Hide on home, quiz, and product-detail.
+      const globalThemeBtn = document.getElementById('theme-btn-global');
+      if (globalThemeBtn) {
+        if (screenId === 'screen-home' || screenId === 'screen-quiz' || screenId === 'screen-product-detail') {
+          globalThemeBtn.style.display = 'none';
+        } else {
+          globalThemeBtn.style.display = 'flex';
+        }
+      }
+
+      // Auto triggers on entering screens
+      if (screenId === 'screen-home') {
+        initDashboard();
+      }
+    }
+
+    function navigateToProductDetail(fromScreen) {
+      state.prevProductScreen = fromScreen;
+      navigateTo('screen-product-detail');
+    }
+
+    function navigateBackFromProductDetail() {
+      navigateTo(state.prevProductScreen || 'screen-home');
+    }
+
+    // AUTH ACTIONS
+    function openAuth(mode) {
+      state.authMode = mode;
+      document.getElementById('auth-error').style.display = 'none';
+      setAuthTab(mode);
+      navigateTo('screen-auth');
+    }
+
+    function setAuthTab(mode) {
+      state.authMode = mode;
+      const tabL = document.getElementById('tab-login');
+      const tabR = document.getElementById('tab-register');
+      const groupU = document.getElementById('group-username');
+      const btnSubmit = document.getElementById('btn-auth-submit');
+      
+      if (mode === 'login') {
+        tabL.classList.add('active');
+        tabR.classList.remove('active');
+        groupU.style.display = 'none';
+        btnSubmit.querySelector('span').innerText = 'Giriş Yap';
+      } else {
+        tabL.classList.remove('active');
+        tabR.classList.add('active');
+        groupU.style.display = 'block';
+        btnSubmit.querySelector('span').innerText = 'Kayıt Ol';
+      }
+    }
+
+    // Handle anonymous username choice
+    function handleAnonLogin() {
+      const input = document.getElementById('anon-username').value.trim();
+      const errDiv = document.getElementById('anon-error');
+      
+      if (!input) {
+        showError(errDiv, 'Lütfen bir kullanıcı adı girin.');
+        return;
+      }
+      
+      state.user = { username: input, isAnonymous: true };
+      localStorage.setItem('demo_user', JSON.stringify(state.user));
+      localStorage.setItem('demo_score', state.score);
+      
+      navigateTo('screen-home');
+    }
+
+    // Handle authentication logic
+    function handleAuthSubmit() {
+      const email = document.getElementById('auth-email').value.trim();
+      const pass = document.getElementById('auth-password').value.trim();
+      const username = document.getElementById('auth-username').value.trim();
+      const errDiv = document.getElementById('auth-error');
+      
+      if (!email || !pass) {
+        showError(errDiv, 'Tüm alanları doldurmanız gerekmektedir.');
+        return;
+      }
+      
+      if (pass.length < 6) {
+        showError(errDiv, 'Şifreniz en az 6 karakter olmalıdır.');
+        return;
+      }
+      
+      if (state.authMode === 'register' && !username) {
+        showError(errDiv, 'Kayıt olmak için kullanıcı adı belirleyin.');
+        return;
+      }
+      
+      const chosenName = state.authMode === 'register' ? username : email.split('@')[0];
+      state.user = { username: chosenName, isAnonymous: false };
+      localStorage.setItem('demo_user', JSON.stringify(state.user));
+      localStorage.setItem('demo_score', state.score);
+      
+      navigateTo('screen-home');
+    }
+
+    function handleLogout() {
+      state.user = null;
+      state.score = 0;
+      localStorage.removeItem('demo_user');
+      localStorage.removeItem('demo_score');
+      
+      // Reset input fields
+      document.getElementById('anon-username').value = '';
+      document.getElementById('auth-email').value = '';
+      document.getElementById('auth-password').value = '';
+      document.getElementById('auth-username').value = '';
+      
+      navigateTo('screen-splash');
+    }
+
+    function showError(element, msg) {
+      element.innerText = '⚠️ ' + msg;
+      element.style.display = 'flex';
+    }
+
+    // DASHBOARD MANAGEMENT
+    function initDashboard() {
+      // Set Profile display
+      if (state.user) {
+        document.getElementById('display-name').innerText = state.user.username;
+        
+        // Random daily joke based on username
+        const index = Math.abs(state.user.username.charCodeAt(0) || 0) % jokes.length;
+        document.getElementById('daily-joke-text').innerText = `🏆 1. ${state.user.username} - ${jokes[index]}`;
+        
+        // Podium details mock
+        document.getElementById('rank-1-name').innerText = state.user.username;
+      }
+      
+      document.getElementById('my-score-display').innerText = state.score + ' XP';
+      renderCategories();
+    }
+
+    function setExamType(type) {
+      state.examType = type;
+      const vBtn = document.getElementById('tab-vize');
+      const fBtn = document.getElementById('tab-final');
+      
+      if (type === 'vize') {
+        vBtn.className = 'exam-tab-btn active-vize';
+        fBtn.className = 'exam-tab-btn';
+      } else {
+        vBtn.className = 'exam-tab-btn';
+        fBtn.className = 'exam-tab-btn active-final';
+      }
+      
+      renderCategories();
+    }
+
+    function toggleFavorite(event, catId) {
+      event.stopPropagation();
+      const idx = state.favorites.indexOf(catId);
+      if (idx > -1) {
+        state.favorites.splice(idx, 1);
+      } else {
+        state.favorites.push(catId);
+      }
+      renderCategories();
+    }
+
+    function renderCategories() {
+      const container = document.getElementById('categories-container');
+      container.innerHTML = '';
+      
+      // Sort categories: starred first
+      const sorted = [...categories].sort((a, b) => {
+        const isFavA = state.favorites.includes(a.id);
+        const isFavB = state.favorites.includes(b.id);
+        if (isFavA && !isFavB) return -1;
+        if (!isFavA && isFavB) return 1;
+        return 0;
+      });
+
+      // Filter categories by Exam Type keyword
+      const filtered = sorted.filter(cat => {
+        const nameLower = cat.name.toLowerCase();
+        const hasVize = nameLower.includes('vize');
+        const hasFinal = nameLower.includes('final');
+        
+        if (state.examType === 'vize') {
+          return hasVize || (!hasVize && !hasFinal);
+        } else {
+          return hasFinal || (!hasVize && !hasFinal);
+        }
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 30px; font-size: 14px;">Bu kategoride ders bulunamadı.</div>`;
+        return;
+      }
+
+      filtered.forEach(cat => {
+        // Strip (Vize) or (Final) labels from visual title
+        const cleanName = cat.name.replace(/\s*\(\s*(Vize|Final|[Vv]ize|[Ff]inal)\s*\)\s*/g, '').trim();
+        const isFav = state.favorites.includes(cat.id);
+        
+        const card = document.createElement('div');
+        card.className = 'category-card';
+        card.onclick = () => launchQuiz(cat);
+        
+        card.innerHTML = `
+          <div class="category-info">
+            <button class="star-btn ${isFav ? 'fav' : ''}" onclick="toggleFavorite(event, '${cat.id}')">
+              ${isFav ? '★' : '☆'}
+            </button>
+            <span class="category-title">${cleanName}</span>
+          </div>
+          <span class="category-arrow">→</span>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // QUIZ ENGAGEMENT
+    function launchQuiz(cat, preferredYear = null) {
+      state.activeCategory = cat;
+      state.currentQuestionIndex = 0;
+      state.correctCount = 0;
+      state.wrongCount = 0;
+      state.selectedOption = null;
+      
+      // Determine years
+      const years = cat.years;
+      state.activeYear = preferredYear || (years.length > 0 ? years[0] : '2024');
+      
+      // Populate Year scroller
+      const yearScroller = document.getElementById('quiz-year-tabs');
+      yearScroller.innerHTML = '';
+      
+      if (years && years.length > 1) {
+        years.forEach(y => {
+          const btn = document.createElement('button');
+          btn.className = `year-tab-btn ${y === state.activeYear ? 'active' : ''}`;
+          btn.innerText = y;
+          btn.onclick = () => launchQuiz(cat, y);
+          yearScroller.appendChild(btn);
+        });
+        yearScroller.style.display = 'flex';
+      } else {
+        yearScroller.style.display = 'none';
+      }
+      
+      renderQuestion();
+      navigateTo('screen-quiz');
+    }
+
+    function getActiveQuestions() {
+      // Try to get questions from DB, fallback to dummy questions
+      const catQuestions = questionsDb[state.activeCategory.id] || {};
+      const yearQuestions = catQuestions[state.activeYear] || [];
+      
+      if (yearQuestions.length > 0) {
+        return yearQuestions;
+      }
+      
+      // Fallback dummy questions
+      return [
+        {
+          id: 'dummy1',
+          question_text: `Örnek Soru 1: Bu derse ait ${state.activeYear} yılına ait çıkmış soru simülasyonudur.\nI. Bilgi 1\nII. Bilgi 2`,
+          option_a: "A şıkkı açıklaması",
+          option_b: "B şıkkı açıklaması",
+          option_c: "C şıkkı açıklaması",
+          option_d: "D şıkkı açıklaması",
+          option_e: "E şıkkı açıklaması",
+          correct_option: "C",
+          year: state.activeYear,
+          frequency: 2
+        },
+        {
+          id: 'dummy2',
+          question_text: "Örnek Soru 2: Aşağıdakilerden hangisi bu alandaki temel prensiplerden biridir?",
+          option_a: "Alternatif A",
+          option_b: "Alternatif B",
+          option_c: "Alternatif C",
+          option_d: "Alternatif D",
+          option_e: "Alternatif E",
+          correct_option: "E",
+          year: state.activeYear,
+          frequency: 1
+        }
+      ];
+    }
+
+    function renderQuestion() {
+      const qList = getActiveQuestions();
+      const q = qList[state.currentQuestionIndex];
+      
+      document.getElementById('quiz-progress-text').innerText = `${state.currentQuestionIndex + 1} / ${qList.length}`;
+      document.getElementById('quiz-xp-badge').innerText = `${state.score} XP`;
+      document.getElementById('quiz-category-title').innerText = state.activeCategory.name;
+      document.getElementById('quiz-badge-year').innerText = state.activeYear;
+      document.getElementById('quiz-badge-freq').innerText = q.frequency > 1 ? `🔥 ${q.frequency}x Soruldu` : '🎯 Çıkmış Soru';
+      
+      // Question Text Formatting (handle lines and roman numerals)
+      const qTextContainer = document.getElementById('quiz-question-text');
+      qTextContainer.innerHTML = '';
+      
+      const lines = q.question_text.split('\n');
+      lines.forEach((line, i) => {
+        const lineDiv = document.createElement('div');
+        const isRoman = /^(I{1,3}V?|IV|VI{0,3}|IX|[IVX]{1,4})[\s\-\–\.]/i.test(line.trim());
+        
+        lineDiv.className = 'q-line';
+        if (i === lines.length - 1 && lines.length > 1) {
+          lineDiv.className += ' q-line-bold';
+        }
+        
+        if (isRoman) {
+          lineDiv.style.paddingLeft = '12px';
+        }
+        
+        lineDiv.innerText = line;
+        qTextContainer.appendChild(lineDiv);
+      });
+
+      // Render Options
+      const optionsContainer = document.getElementById('quiz-options-container');
+      optionsContainer.innerHTML = '';
+      
+      const options = [
+        { letter: 'A', text: q.option_a },
+        { letter: 'B', text: q.option_b },
+        { letter: 'C', text: q.option_c },
+        { letter: 'D', text: q.option_d },
+        { letter: 'E', text: q.option_e }
+      ];
+
+      state.selectedOption = null;
+      document.getElementById('quiz-next-hint').style.display = 'none';
+
+      options.forEach(opt => {
+        if (!opt.text) return; // Ignore empty options
+        
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.id = `opt-${opt.letter}`;
+        btn.onclick = () => handleAnswerSelect(opt.letter);
+        
+        btn.innerHTML = `
+          <span class="option-letter">${opt.letter}</span>
+          <span class="option-text">${opt.text}</span>
+        `;
+        optionsContainer.appendChild(btn);
+      });
+    }
+
+    function handleAnswerSelect(letter) {
+      if (state.selectedOption) {
+        handleNextQuestion();
+        return;
+      }
+      
+      state.selectedOption = letter;
+      const qList = getActiveQuestions();
+      const q = qList[state.currentQuestionIndex];
+      const isCorrect = letter.toLowerCase() === q.correct_option.toLowerCase();
+      
+      // Update UI buttons styling
+      const correctBtn = document.getElementById(`opt-${q.correct_option.toUpperCase()}`);
+      const selectedBtn = document.getElementById(`opt-${letter}`);
+      
+      document.querySelectorAll('.option-btn').forEach(btn => {
+        btn.classList.add('disabled');
+      });
+
+      if (isCorrect) {
+        selectedBtn.classList.add('correct');
+        state.correctCount++;
+        state.score += 10;
+        localStorage.setItem('demo_score', state.score);
+      } else {
+        selectedBtn.classList.add('wrong');
+        correctBtn.classList.add('correct');
+        state.wrongCount++;
+      }
+      
+      // Show screen hint to go next
+      document.getElementById('quiz-next-hint').style.display = 'block';
+    }
+
+    function handleNextQuestion() {
+      const qList = getActiveQuestions();
+      if (state.currentQuestionIndex + 1 < qList.length) {
+        state.currentQuestionIndex++;
+        renderQuestion();
+      } else {
+        showResults();
+      }
+    }
+
+    // RESULT SCREEN CALCS
+    function showResults() {
+      const qList = getActiveQuestions();
+      const total = qList.length;
+      const successRate = Math.round((state.correctCount / total) * 100);
+      
+      document.getElementById('result-correct').innerText = state.correctCount;
+      document.getElementById('result-wrong').innerText = state.wrongCount;
+      document.getElementById('result-score').innerText = `${successRate} / 100`;
+      
+      const emojiDiv = document.getElementById('result-emoji');
+      const titleDiv = document.getElementById('result-title-text');
+      
+      if (successRate >= 50) {
+        emojiDiv.innerText = '🎉';
+        titleDiv.innerText = 'Harika Sonuç!';
+      } else {
+        emojiDiv.innerText = '📚';
+        titleDiv.innerText = 'Daha Çok Çalışmalısın!';
+      }
+
+      // Vize / Final Calculation Box details
+      const calcLabel = document.getElementById('result-calc-label');
+      const calcVal = document.getElementById('result-calc-value');
+      const calcBanner = document.getElementById('result-calc-banner');
+
+      if (state.examType === 'vize') {
+        const vizeContribution = successRate * 0.30;
+        const requiredFinal = Math.max(0, Math.ceil((35 - vizeContribution) / 0.70));
+        
+        calcLabel.innerHTML = `<span>Vize Etkisi (%30)</span>`;
+        calcVal.innerText = `${vizeContribution.toFixed(1)} Puan`;
+        
+        calcBanner.className = 'calc-banner warning';
+        calcBanner.innerHTML = `Dersi geçebilmek için ortalaman en az 35 olmalıdır. Final sınavından en az <strong>${requiredFinal}</strong> almalısın.`;
+      } else {
+        const finalContribution = successRate * 0.70;
+        
+        calcLabel.innerHTML = `<span>Final Etkisi (%70)</span>`;
+        calcVal.innerText = `${finalContribution.toFixed(1)} Puan`;
+        
+        calcBanner.className = 'calc-banner success';
+        calcBanner.innerHTML = `🎓 Tebrikler! Final etkisiyle başarı yüzdeniz yüksek oranda arttı. Ortalama hesabınıza vize notunuz da dahil edilecektir.`;
+      }
+
+      // Check if previous year button logic is needed
+      const currentYearIdx = state.activeCategory.years.indexOf(state.activeYear);
+      const hasPrevYear = currentYearIdx < state.activeCategory.years.length - 1;
+      const actBtn = document.getElementById('btn-result-action');
+      
+      if (hasPrevYear) {
+        const nextYear = state.activeCategory.years[currentYearIdx + 1];
+        actBtn.querySelector('span').innerText = `Önceki Yıla Geç (${nextYear})`;
+        actBtn.onclick = () => launchQuiz(state.activeCategory, nextYear);
+      } else {
+        actBtn.querySelector('span').innerText = 'Tekrar Çöz';
+        actBtn.onclick = () => launchQuiz(state.activeCategory, state.activeYear);
+      }
+
+      // Update ranking statement
+      if (state.user) {
+        document.getElementById('result-rank-info').innerText = `📍 Tebrikler ${state.user.username}! Sıralamada XP durumun güncellendi.`;
+      }
+
+      navigateTo('screen-result');
+    }
+
+    // FEEDBACK MODAL
+    function toggleFeedbackModal(show) {
+      const modal = document.getElementById('feedback-modal');
+      const form = document.getElementById('feedback-form-content');
+      const success = document.getElementById('feedback-success-content');
+      
+      if (show) {
+        modal.classList.add('active');
+        form.style.display = 'block';
+        success.style.display = 'none';
+        document.getElementById('feedback-text').value = '';
+      } else {
+        modal.classList.remove('active');
+      }
+    }
+
+    function submitFeedback() {
+      const text = document.getElementById('feedback-text').value.trim();
+      if (!text) return;
+
+      document.getElementById('feedback-form-content').style.display = 'none';
+      document.getElementById('feedback-success-content').style.display = 'block';
+      
+      setTimeout(() => {
+        toggleFeedbackModal(false);
+      }, 1500);
+    }
+  </script>
+</body>
+</html>
