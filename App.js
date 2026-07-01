@@ -1,8 +1,11 @@
-import { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 
 // Varsa kendi API sunucunu buraya yaz, şu an boş bırakıldığı için bağlantı hatası veriyordu:
 const API = 'https://aofnotlar.com';
 const SHOPIER_URL = 'https://www.shopier.com/aofseslinotlar';
+
+// Sınav türü adı regex — her seferinde yeni instance (global /g regex stateful, lastIndex sorununu önler)
+const getExamTypeRegex = () => /\s*\(\s*(Vize|Final|Yaz okulu|[Vv]ize|[Ff]inal|[Yy]az [Oo]kulu)\s*\)\s*/g;
 
 // ── VEKTÖREL SİMGE BİLEŞENLERİ (UI/UX Pro Max)
 const IconChevronRight = ({ size = 18, style = {} }) => (
@@ -486,7 +489,7 @@ export default function App() {
   };
 
   // ── KATEGORİ AÇ (token yoksa nickname modalı göster)
-  const handleCategoryClick = (cat) => {
+  const handleCategoryClick = useCallback((cat) => {
     if (!token) {
       setPendingCategory(cat);
       setAnonName('');
@@ -495,7 +498,8 @@ export default function App() {
     } else {
       openCategory(cat);
     }
-  };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token]);
 
   const openCategory = async (cat, year = null) => {
     setActiveCategory(cat);
@@ -570,14 +574,15 @@ export default function App() {
     }
     else setWrong(w => w + 1);
 
-    await fetch(API + '/api/answer', {
+    // Cevabı kaydet + kullanıcı/liderlik yenilemeyi paralel çalıştır (UI'ı bloklamasın)
+    fetch(API + '/api/answer', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
       body: JSON.stringify({ question_id: q.id, is_correct: isCorrect, category_id: activeCategory.id })
-    });
-
-    await refreshUser(token);
-    await fetchLeaderboard(token);
+    }).then(() => {
+      // Arka planda parallel güncelle
+      Promise.all([refreshUser(token), fetchLeaderboard(token)]).catch(() => {});
+    }).catch(() => {});
   };
 
   const handleNext = () => {
@@ -646,17 +651,16 @@ export default function App() {
   };
 
   // ── FAVORİ EKLE/ÇIKAR FONKSİYONU
-  const toggleFavorite = (e, catId) => {
+  const toggleFavorite = useCallback((e, catId) => {
     e.stopPropagation();
-    let newFavs;
-    if (favorites.includes(catId)) {
-      newFavs = favorites.filter(id => id !== catId);
-    } else {
-      newFavs = [...favorites, catId];
-    }
-    setFavorites(newFavs);
-    localStorage.setItem('favs', JSON.stringify(newFavs));
-  };
+    setFavorites(prev => {
+      const newFavs = prev.includes(catId)
+        ? prev.filter(id => id !== catId)
+        : [...prev, catId];
+      localStorage.setItem('favs', JSON.stringify(newFavs));
+      return newFavs;
+    });
+  }, []);
 
   // Kategorileri favorilere göre sırala (Favoriler en üstte) — memoized
   const sortedCategories = useMemo(() => {
@@ -672,8 +676,8 @@ export default function App() {
   // Stylesheet dynamic generator — memoized (sadece theme değişince yeniden üretilir)
   const s = useMemo(() => getStyles(theme), [theme]);
 
+
   // Filtrelenmiş + temizlenmiş kategori listesi — memoized
-  const examTypeRegex = /\s*\(\s*(Vize|Final|Yaz okulu|[Vv]ize|[Ff]inal|[Yy]az [Oo]kulu)\s*\)\s*/g;
   const filteredCategoryNodes = useMemo(() => {
     return sortedCategories
       .filter(cat => {
@@ -686,27 +690,27 @@ export default function App() {
         return true;
       })
       .map(cat => {
-        const cleanName = cat.name.replace(examTypeRegex, '').trim();
+        const cleanName = cat.name.replace(getExamTypeRegex(), '').trim();
         const isFav = favorites.includes(cat.id);
         return (
-          <button key={cat.id} style={s.catBtn} onClick={() => handleCategoryClick(cat)}>
+          <button key={cat.id} style={s.catBtn} className="cat-btn-hover" onClick={() => handleCategoryClick(cat)}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
               <div
                 onClick={(e) => { e.stopPropagation(); toggleFavorite(e, cat.id); }}
-                style={{ fontSize: 20, cursor: 'pointer', color: isFav ? '#fbbf24' : '#d1d5db', transition: '0.2s', paddingRight: 4, transform: isFav ? 'scale(1.1)' : 'scale(1)' }}
+                style={{ fontSize: 18, cursor: 'pointer', color: isFav ? '#fbbf24' : (theme === 'dark' ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.25)'), transition: '0.2s', paddingRight: 4, transform: isFav ? 'scale(1.1)' : 'scale(1)' }}
               >
                 {isFav ? '★' : '☆'}
               </div>
-              <span style={{ fontWeight: '600' }}>{cleanName}</span>
+              <span style={{ fontWeight: 500, fontSize: 14 }}>{cleanName}</span>
             </div>
             <span style={s.catArrow}>
-              <IconChevronRight size={18} />
+              <IconChevronRight size={16} />
             </span>
           </button>
         );
       });
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sortedCategories, examType, favorites, s]);
+  }, [sortedCategories, examType, favorites, s, theme, handleCategoryClick, toggleFavorite]);
 
   // ════════════════════════════════════════════════════════════
   // EKRANLAR
@@ -1051,16 +1055,18 @@ export default function App() {
           </div>
           {/* Alt butonlar: her zaman ikisi de görünür */}
           <div style={{ display: 'flex', gap: 8, marginTop: 6, marginBottom: 4 }}>
-             {/* Hatalı soru bildir — her zaman tam görünür, sadece cevap sonrası arkaplanı dolup belirginleşir */}
+             {/* Hatalı soru bildir — tema'ya duyarlı renkler (gündüz/gece modu desteği) */}
             <button
               className="btn-hover"
               style={{
                 flex: 1,
-                background: selected ? 'rgba(255,255,255,0.12)' : 'transparent',
-                border: '1px solid rgba(255,255,255,0.20)',
+                background: selected
+                  ? (theme === 'dark' ? 'rgba(255,255,255,0.10)' : 'rgba(0,0,0,0.05)')
+                  : 'transparent',
+                border: theme === 'dark' ? '1px solid rgba(255,255,255,0.18)' : '1px solid rgba(0,0,0,0.14)',
                 borderRadius: 12,
                 padding: '9px 14px',
-                color: 'rgba(255,255,255,0.45)',
+                color: theme === 'dark' ? 'rgba(255,255,255,0.50)' : 'rgba(0,0,0,0.45)',
                 fontSize: 12,
                 fontWeight: 500,
                 cursor: 'pointer',
@@ -1076,17 +1082,17 @@ export default function App() {
               <span>Hatalı bildir</span>
             </button>
 
-            {/* Bu soruyu geç — sadece cevap verilmemişken aktif */}
+            {/* Bu soruyu geç — sadece cevap verilmemişken aktif, tema'ya duyarlı */}
             {!selected && (
               <button
                 className="btn-hover"
                 style={{
                   flex: 1,
                   background: 'transparent',
-                  border: '1px solid rgba(255,255,255,0.2)',
+                  border: theme === 'dark' ? '1px solid rgba(255,255,255,0.18)' : '1px solid rgba(0,0,0,0.14)',
                   borderRadius: 12,
                   padding: '9px 14px',
-                  color: 'rgba(255,255,255,0.45)',
+                  color: theme === 'dark' ? 'rgba(255,255,255,0.50)' : 'rgba(0,0,0,0.45)',
                   fontSize: 12,
                   fontWeight: 500,
                   cursor: 'pointer',
@@ -1737,8 +1743,8 @@ const getStyles = (theme) => {
       marginBottom: 8,
     },
     logoText: {
-      fontSize: 24,
-      fontWeight: 900,
+      fontSize: 22,
+      fontWeight: 800,
       color: colors.textMain,
       fontFamily: "'Outfit', sans-serif",
       marginBottom: 6,
@@ -1798,12 +1804,12 @@ const getStyles = (theme) => {
     },
     btn: {
       width: '100%',
-      padding: '13px 20px',
+      padding: '12px 20px',
       borderRadius: 14,
       border: 'none',
       background: colors.primary,
       color: isDark ? '#030806' : '#fff',
-      fontWeight: 700,
+      fontWeight: 600,
       fontSize: 14,
       cursor: 'pointer',
       marginTop: 4,
@@ -1817,12 +1823,12 @@ const getStyles = (theme) => {
     },
     btnOutline: {
       width: '100%',
-      padding: '13px 20px',
+      padding: '12px 20px',
       borderRadius: 14,
       border: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(5, 150, 105, 0.15)',
       background: isDark ? 'rgba(255, 255, 255, 0.04)' : 'rgba(5, 150, 105, 0.05)',
       color: colors.textMain,
-      fontWeight: 700,
+      fontWeight: 500,
       fontSize: 14,
       cursor: 'pointer',
       marginTop: 10,
@@ -1859,8 +1865,8 @@ const getStyles = (theme) => {
       paddingTop: 8,
     },
     greeting: {
-      fontSize: 20,
-      fontWeight: 800,
+      fontSize: 18,
+      fontWeight: 700,
       color: colors.textMain,
       fontFamily: "'Outfit', sans-serif",
     },
@@ -1926,8 +1932,8 @@ const getStyles = (theme) => {
       boxShadow: '0 20px 50px rgba(0,0,0,0.4)',
     },
     modalTitle: {
-      fontWeight: 800,
-      fontSize: 18,
+      fontWeight: 700,
+      fontSize: 17,
       color: colors.textMain,
       marginBottom: 6,
       fontFamily: "'Outfit', sans-serif",
@@ -1956,15 +1962,15 @@ const getStyles = (theme) => {
       boxShadow: '0 10px 30px rgba(0, 0, 0, 0.15)',
     },
     cardTitle: {
-      fontWeight: 800,
-      fontSize: 16,
+      fontWeight: 700,
+      fontSize: 15,
       marginBottom: 12,
       color: colors.textMain,
       fontFamily: "'Outfit', sans-serif",
     },
     cardTitle2: {
-      fontWeight: 800,
-      fontSize: 15,
+      fontWeight: 700,
+      fontSize: 14,
       marginBottom: 10,
       color: colors.textMain,
       fontFamily: "'Outfit', sans-serif",
@@ -2018,17 +2024,17 @@ const getStyles = (theme) => {
       background: isDark ? 'rgba(255, 255, 255, 0.04)' : 'rgba(255, 255, 255, 0.85)',
       border: `1px solid ${colors.cardBorder}`,
       borderRadius: 12,
-      padding: '13px 16px',
+      padding: '11px 14px',
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
-      fontWeight: 700,
-      fontSize: 15,
+      fontWeight: 500,
+      fontSize: 14,
       cursor: 'pointer',
-      marginBottom: 10,
+      marginBottom: 8,
       color: colors.textMain,
-      transition: 'all 0.3s',
-      minHeight: 48,
+      transition: 'all 0.2s',
+      minHeight: 44,
     },
     catArrow: {
       color: colors.primary,
@@ -2131,15 +2137,15 @@ const getStyles = (theme) => {
     quizCard: {
       background: colors.cardBg,
       border: `1px solid ${colors.cardBorder}`,
-      borderRadius: 20,
-      padding: '18px 16px',
-      marginBottom: 10,
+      borderRadius: 16,
+      padding: '14px 14px',
+      marginBottom: 8,
       width: '100%',
       maxWidth: 600,
       boxSizing: 'border-box',
       backdropFilter: 'blur(20px)',
       WebkitBackdropFilter: 'blur(20px)',
-      boxShadow: '0 10px 30px rgba(0, 0, 0, 0.15)',
+      boxShadow: '0 8px 24px rgba(0, 0, 0, 0.12)',
     },
     catLabel: {
       fontSize: 10,
@@ -2149,42 +2155,42 @@ const getStyles = (theme) => {
       letterSpacing: 1,
     },
     qText: {
-      fontSize: 15,
+      fontSize: 14,
       color: colors.textMain,
-      lineHeight: 1.6,
-      fontWeight: 500,
+      lineHeight: 1.55,
+      fontWeight: 400,
     },
     divider: {
       height: 1,
       background: isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(5, 150, 105, 0.08)',
-      margin: '16px 0',
+      margin: '12px 0',
     },
     optBtn: {
       width: '100%',
-      padding: '12px 14px',
+      padding: '9px 12px',
       borderRadius: 10,
       cursor: 'pointer',
       fontWeight: 400,
-      fontSize: 14,
+      fontSize: 13,
       textAlign: 'left',
-      marginBottom: 6,
+      marginBottom: 5,
       display: 'flex',
       alignItems: 'center',
-      gap: 10,
-      transition: 'all 0.3s',
-      minHeight: 44,
+      gap: 9,
+      transition: 'all 0.2s',
+      minHeight: 40,
     },
     optLetter: {
       borderRadius: '50%',
-      width: 26,
-      height: 26,
+      width: 24,
+      height: 24,
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      fontWeight: 800,
-      fontSize: 12,
+      fontWeight: 700,
+      fontSize: 11,
       flexShrink: 0,
-      transition: 'all 0.3s',
+      transition: 'all 0.2s',
     },
     optText: {
       flex: 1,
@@ -2223,8 +2229,8 @@ const getStyles = (theme) => {
     },
     resultTitle: {
       textAlign: 'center',
-      fontSize: 22,
-      fontWeight: 900,
+      fontSize: 20,
+      fontWeight: 800,
       color: colors.textMain,
       marginTop: 4,
       marginBottom: 20,
@@ -2293,70 +2299,70 @@ const getStyles = (theme) => {
     },
     examTab: {
       flex: 1,
-      padding: '11px 10px',
+      padding: '10px 8px',
       borderRadius: 10,
       border: 'none',
       background: 'transparent',
       color: colors.textMuted,
-      fontWeight: 700,
-      fontSize: 14,
+      fontWeight: 500,
+      fontSize: 13,
       cursor: 'pointer',
-      transition: 'all 0.3s',
+      transition: 'all 0.25s',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      gap: 6,
+      gap: 5,
     },
     examTabActiveVize: {
       flex: 1,
-      padding: '11px 10px',
+      padding: '10px 8px',
       borderRadius: 10,
       border: 'none',
       background: colors.vizeActiveBg,
       color: colors.vizeActiveText,
-      fontWeight: 800,
-      fontSize: 14,
+      fontWeight: 700,
+      fontSize: 13,
       cursor: 'pointer',
-      boxShadow: `0 4px 12px ${colors.primaryGlow}`,
-      transition: 'all 0.3s',
+      boxShadow: `0 3px 10px ${colors.primaryGlow}`,
+      transition: 'all 0.25s',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      gap: 6,
+      gap: 5,
     },
     examTabActiveFinal: {
       flex: 1,
-      padding: '11px 10px',
+      padding: '10px 8px',
       borderRadius: 10,
       border: 'none',
       background: colors.accent,
       color: isDark ? '#0a1712' : '#fff',
-      fontWeight: 800,
-      fontSize: 14,
+      fontWeight: 700,
+      fontSize: 13,
       cursor: 'pointer',
-      boxShadow: `0 4px 12px ${isDark ? 'rgba(245, 158, 11, 0.3)' : 'rgba(217, 119, 6, 0.25)'}`,
-      transition: 'all 0.3s',
+      boxShadow: `0 3px 10px ${isDark ? 'rgba(245, 158, 11, 0.3)' : 'rgba(217, 119, 6, 0.25)'}`,
+      transition: 'all 0.25s',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      gap: 6,
+      gap: 5,
     },
     examTabActiveYazOkulu: {
       flex: 1,
-      padding: '11px 10px',
+      padding: '10px 8px',
       borderRadius: 10,
       border: 'none',
       background: '#eab308',
       color: '#fff',
-      fontWeight: 800,
-      fontSize: 14,
+      fontWeight: 700,
+      fontSize: 13,
       cursor: 'pointer',
-      boxShadow: `0 4px 12px rgba(234, 179, 8, 0.25)`,
-      transition: 'all 0.3s',
+      boxShadow: `0 3px 10px rgba(234, 179, 8, 0.25)`,
+      transition: 'all 0.25s',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      gap: 6,
+      gap: 5,
     },
     examDesc: {
       fontSize: 13,
