@@ -4,8 +4,9 @@ set -e
 echo "🚀 Deploy başlıyor..."
 cd /var/www/aofnotlar
 
-echo "📥 Git pull..."
-git pull origin main
+echo "📥 Git güncelleme (force fetch/reset)..."
+git fetch origin main
+git reset --hard origin/main
 
 echo "📦 Backend bağımlılıkları..."
 npm install --production
