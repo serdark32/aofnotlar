@@ -641,7 +641,7 @@ export default function App() {
       const isOnly = arr.length === 1;
       return (
         <div key={i} style={{
-          fontWeight: (isLast || isOnly) ? 700 : 400,
+          fontWeight: (isLast || isOnly) ? 500 : 400,
           paddingLeft: isMadde ? 4 : 0,
           marginBottom: isMadde ? 2 : (isLast ? 0 : 6),
           fontSize: 15,
@@ -882,19 +882,20 @@ export default function App() {
         <button
           className="btn-hover"
           style={{
-            width: '100%',
+            width: '90%',
+            maxWidth: '340px',
+            margin: '0 auto 10px auto',
             background: theme === 'dark' ? 'rgba(255,255,255,0.06)' : 'rgba(5, 150, 105, 0.05)',
-            border: theme === 'dark' ? '1.5px solid rgba(255,255,255,0.1)' : '1.5px solid rgba(5, 150, 105, 0.15)',
-            borderRadius: 14,
-            padding: '14px 18px',
+            border: theme === 'dark' ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(5, 150, 105, 0.15)',
+            borderRadius: 10,
+            padding: '10px 14px',
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
             cursor: 'pointer',
             color: s.greeting.color,
-            fontWeight: 700,
-            fontSize: 15,
-            marginBottom: 12,
+            fontWeight: 500,
+            fontSize: 13,
             transition: 'all 0.2s'
           }}
           onClick={async () => {
@@ -911,30 +912,31 @@ export default function App() {
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <IconFileText size={18} style={{ color: theme === 'dark' ? '#10b981' : '#059669' }} />
+            <IconFileText size={16} style={{ color: theme === 'dark' ? '#10b981' : '#059669' }} />
             <span>Ücretsiz Ders Kitabı İndir</span>
           </div>
-          <IconChevronRight size={18} style={{ color: theme === 'dark' ? 'rgba(255,255,255,0.5)' : 'rgba(5, 150, 105, 0.5)' }} />
+          <IconChevronRight size={16} style={{ color: theme === 'dark' ? 'rgba(255,255,255,0.5)' : 'rgba(5, 150, 105, 0.5)' }} />
         </button>
  
         {/* PDF Satış Yönlendirme Butonu */}
         <button
           className="btn-hover"
           style={{
-            width: '100%',
+            width: '90%',
+            maxWidth: '340px',
+            margin: '0 auto 16px auto',
             background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
             border: 'none',
-            borderRadius: 14,
-            padding: '14px 18px',
+            borderRadius: 10,
+            padding: '10px 14px',
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
             cursor: 'pointer',
             color: '#fff',
-            fontWeight: 800,
-            fontSize: 15,
-            marginBottom: 16,
-            boxShadow: '0 4px 14px rgba(245, 158, 11, 0.25)',
+            fontWeight: 600,
+            fontSize: 13,
+            boxShadow: '0 3px 10px rgba(245, 158, 11, 0.15)',
             transition: 'all 0.2s'
           }}
           onClick={() => {
@@ -943,10 +945,10 @@ export default function App() {
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <IconBookOpen size={18} />
+            <IconBookOpen size={16} />
             <span>AÖF'ü Geçiren Pratik Özetler</span>
           </div>
-          <IconChevronRight size={18} style={{ color: 'rgba(255,255,255,0.8)' }} />
+          <IconChevronRight size={16} style={{ color: 'rgba(255,255,255,0.8)' }} />
         </button>
  
         <div style={s.cardTitle2} id="pratik-yap">Pratik Yap</div>
@@ -1744,7 +1746,7 @@ const getStyles = (theme) => {
     },
     logoText: {
       fontSize: 22,
-      fontWeight: 800,
+      fontWeight: 600,
       color: colors.textMain,
       fontFamily: "'Outfit', sans-serif",
       marginBottom: 6,
@@ -1769,7 +1771,7 @@ const getStyles = (theme) => {
       border: 'none',
       background: 'transparent',
       color: colors.textMuted,
-      fontWeight: 700,
+      fontWeight: 500,
       fontSize: 14,
       cursor: 'pointer',
       borderRadius: 10,
@@ -1781,7 +1783,7 @@ const getStyles = (theme) => {
       border: 'none',
       background: colors.primary,
       color: isDark ? '#030806' : '#fff',
-      fontWeight: 700,
+      fontWeight: 600,
       fontSize: 14,
       cursor: 'pointer',
       borderRadius: 10,
@@ -1866,7 +1868,7 @@ const getStyles = (theme) => {
     },
     greeting: {
       fontSize: 18,
-      fontWeight: 700,
+      fontWeight: 600,
       color: colors.textMain,
       fontFamily: "'Outfit', sans-serif",
     },
@@ -1932,7 +1934,7 @@ const getStyles = (theme) => {
       boxShadow: '0 20px 50px rgba(0,0,0,0.4)',
     },
     modalTitle: {
-      fontWeight: 700,
+      fontWeight: 600,
       fontSize: 17,
       color: colors.textMain,
       marginBottom: 6,
@@ -1962,14 +1964,14 @@ const getStyles = (theme) => {
       boxShadow: '0 10px 30px rgba(0, 0, 0, 0.15)',
     },
     cardTitle: {
-      fontWeight: 700,
+      fontWeight: 600,
       fontSize: 15,
       marginBottom: 12,
       color: colors.textMain,
       fontFamily: "'Outfit', sans-serif",
     },
     cardTitle2: {
-      fontWeight: 700,
+      fontWeight: 600,
       fontSize: 14,
       marginBottom: 10,
       color: colors.textMain,
@@ -1986,7 +1988,7 @@ const getStyles = (theme) => {
       color: colors.textMain,
     },
     lbScore: {
-      fontWeight: 700,
+      fontWeight: 600,
       color: colors.primary,
       fontFamily: "'Outfit', sans-serif",
     },
@@ -2038,7 +2040,7 @@ const getStyles = (theme) => {
     },
     catArrow: {
       color: colors.primary,
-      fontWeight: 900,
+      fontWeight: 500,
       fontSize: 18,
       display: 'flex',
       alignItems: 'center',
@@ -2320,7 +2322,7 @@ const getStyles = (theme) => {
       border: 'none',
       background: colors.vizeActiveBg,
       color: colors.vizeActiveText,
-      fontWeight: 700,
+      fontWeight: 600,
       fontSize: 13,
       cursor: 'pointer',
       boxShadow: `0 3px 10px ${colors.primaryGlow}`,
@@ -2337,7 +2339,7 @@ const getStyles = (theme) => {
       border: 'none',
       background: colors.accent,
       color: isDark ? '#0a1712' : '#fff',
-      fontWeight: 700,
+      fontWeight: 600,
       fontSize: 13,
       cursor: 'pointer',
       boxShadow: `0 3px 10px ${isDark ? 'rgba(245, 158, 11, 0.3)' : 'rgba(217, 119, 6, 0.25)'}`,
@@ -2354,7 +2356,7 @@ const getStyles = (theme) => {
       border: 'none',
       background: '#eab308',
       color: '#fff',
-      fontWeight: 700,
+      fontWeight: 600,
       fontSize: 13,
       cursor: 'pointer',
       boxShadow: `0 3px 10px rgba(234, 179, 8, 0.25)`,
@@ -2395,7 +2397,7 @@ const getStyles = (theme) => {
     heroText: {
       margin: 0,
       fontSize: 11,
-      fontWeight: 700,
+      fontWeight: 600,
       lineHeight: 1.4,
       color: '#fff',
       textAlign: 'left',
@@ -2458,7 +2460,7 @@ const getStyles = (theme) => {
     promoCardTitle: {
       margin: '0 0 3px 0',
       fontSize: 14,
-      fontWeight: 700,
+      fontWeight: 600,
       color: colors.accent,
     },
     promoCardText: {
@@ -2496,7 +2498,7 @@ const getStyles = (theme) => {
     stickyText: {
       margin: 0,
       fontSize: 11,
-      fontWeight: 700,
+      fontWeight: 600,
       lineHeight: 1.3,
       color: '#ffffff',
       textAlign: 'left',
