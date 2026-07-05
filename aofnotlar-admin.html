@@ -1069,6 +1069,9 @@
       <button class="nav-item" data-page="pdf-courses" onclick="navigate('pdf-courses', this); closeSidebar()">
         <span class="nav-icon">📄</span> PDF Arşivi
       </button>
+      <button class="nav-item" data-page="pdf-notes" onclick="navigate('pdf-notes', this); closeSidebar()">
+        <span class="nav-icon">📝</span> Özet Notlar
+      </button>
       <button class="nav-item" data-page="course-requests" onclick="navigate('course-requests', this); closeSidebar()">
         <span class="nav-icon">📝</span> Ders İstekleri
       </button>
@@ -1484,6 +1487,38 @@
         </div>
       </div>
 
+      <!-- ÖZET NOTLAR -->
+      <div class="page" id="page-pdf-notes">
+        <div class="page-header">
+          <div>
+            <div class="page-title">📝 Özet Notlar</div>
+            <div class="page-subtitle">Ücretsiz özet ders notlarını yönet — öğrencilere otomatik mail gönderilir</div>
+          </div>
+          <button class="btn btn-green" onclick="openAddNoteModal()">+ Yeni Özet Ekle</button>
+        </div>
+
+        <div id="notes-msg-area"></div>
+
+        <div class="card" style="padding:0; overflow:hidden;">
+          <div class="table-wrap">
+            <table class="mobile-card-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Ders Adı</th>
+                  <th>Drive Linki</th>
+                  <th>Eklenme</th>
+                  <th>İşlem</th>
+                </tr>
+              </thead>
+              <tbody id="notes-table-body">
+                <tr><td colspan="5"><div class="empty-state"><div class="empty-icon">⏳</div>Yükleniyor...</div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
       <!-- DERS İSTEKLERİ -->
       <div class="page" id="page-course-requests">
         <div class="page-header">
@@ -1629,6 +1664,29 @@
       <div class="btn-row" style="margin-top:4px;">
         <button class="btn btn-green" onclick="savePdfCourse()">Kaydet</button>
         <button class="btn btn-ghost" onclick="closePdfModal()">İptal</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Özet Notu Ekle -->
+  <div class="modal-overlay" id="note-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">📝 Yeni Özet Ekle</div>
+        <button class="modal-close" onclick="closeNoteModal()">✕</button>
+      </div>
+      <div id="note-modal-msg"></div>
+      <div class="field-group">
+        <label class="field-label">Ders Adı</label>
+        <input type="text" id="note-name" placeholder="örn: İş ve Sosyal Güvenlik Hukuku Özet">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Drive Linki</label>
+        <input type="url" id="note-link" placeholder="https://drive.google.com/file/d/...">
+      </div>
+      <div class="btn-row" style="margin-top:4px;">
+        <button class="btn btn-green" onclick="saveNote()">Kaydet</button>
+        <button class="btn btn-ghost" onclick="closeNoteModal()">İptal</button>
       </div>
     </div>
   </div>
@@ -1798,6 +1856,7 @@
       if (page === 'users') loadUsers();
       if (page === 'feedback') loadFeedback();
       if (page === 'pdf-courses') loadPdfCourses();
+      if (page === 'pdf-notes') loadPdfNotes();
       if (page === 'excel-upload' || page === 'add-question') populateCatSelects();
     }
 
@@ -2436,6 +2495,68 @@
         await apiFetch(`/api/admin/pdf-courses/${id}`, { method: 'DELETE' });
         loadPdfCourses();
         showMsg('pdf-msg-area', '🗑 Ders silindi', 'success');
+      } catch (e) { alert('❌ ' + e.message); }
+    }
+
+    // ============================================================
+    // ÖZET NOTLAR
+    // ============================================================
+    async function loadPdfNotes() {
+      const tbody = document.getElementById('notes-table-body');
+      tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="empty-icon">⏳</div>Yükleniyor...</div></td></tr>`;
+      try {
+        const data = await apiFetch('/api/pdf-notes');
+        if (!data.length) {
+          tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="empty-icon">📭</div>Henüz özet eklenmedi</div></td></tr>`;
+          return;
+        }
+        tbody.innerHTML = data.map(d => `<tr>
+          <td data-label="ID" style="color:var(--muted)">${d.id}</td>
+          <td data-label="Ders Adı"><strong>${esc(d.name)}</strong></td>
+          <td data-label="Drive Linki"><a href="${esc(d.drive_link)}" target="_blank" style="color:var(--green-mid);font-size:12px;">🔗 Linki Aç</a></td>
+          <td data-label="Eklenme" style="color:var(--muted);font-size:12px;">${new Date(d.created_at).toLocaleDateString('tr')}</td>
+          <td data-label="İşlem"><button class="btn btn-danger btn-sm" onclick="deleteNote(${d.id}, '${esc(d.name)}')">Sil</button></td>
+        </tr>`).join('');
+      } catch (e) {
+        tbody.innerHTML = `<tr><td colspan="5"><div class="alert alert-error">❌ ${e.message}</div></td></tr>`;
+      }
+    }
+
+    function openAddNoteModal() {
+      document.getElementById('note-name').value = '';
+      document.getElementById('note-link').value = '';
+      document.getElementById('note-modal-msg').innerHTML = '';
+      document.getElementById('note-modal').classList.add('open');
+    }
+
+    function closeNoteModal() { document.getElementById('note-modal').classList.remove('open'); }
+
+    async function saveNote() {
+      const name = document.getElementById('note-name').value.trim();
+      const link = document.getElementById('note-link').value.trim();
+      if (!name || !link) {
+        document.getElementById('note-modal-msg').innerHTML = `<div class="alert alert-error">❌ Ders adı ve link zorunlu</div>`;
+        return;
+      }
+      try {
+        await apiFetch('/api/admin/pdf-notes', {
+          method: 'POST',
+          body: JSON.stringify({ name, drive_link: link })
+        });
+        closeNoteModal();
+        loadPdfNotes();
+        showMsg('notes-msg-area', '✅ Özet eklendi!', 'success');
+      } catch (e) {
+        document.getElementById('note-modal-msg').innerHTML = `<div class="alert alert-error">❌ ${e.message}</div>`;
+      }
+    }
+
+    async function deleteNote(id, name) {
+      if (!confirm(`"${name}" özetini silmek istediğine emin misin?`)) return;
+      try {
+        await apiFetch(`/api/admin/pdf-notes/${id}`, { method: 'DELETE' });
+        loadPdfNotes();
+        showMsg('notes-msg-area', '🗑 Özet silindi', 'success');
       } catch (e) { alert('❌ ' + e.message); }
     }
 

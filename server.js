@@ -612,6 +612,38 @@ app.delete('/api/admin/pdf-courses/:id', adminAuth, async (req, res) => {
 });
 
 // ============================================================
+// ÜCRETSİZ ÖZET DERS NOTLARI
+// ============================================================
+// Herkese açık: özet notu listesini döner
+app.get('/api/pdf-notes', async (req, res) => {
+  try {
+    const r = await pool.query('SELECT id, name, drive_link, created_at FROM pdf_notes ORDER BY created_at DESC');
+    res.json(r.rows);
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Admin: yeni özet notu ekle
+app.post('/api/admin/pdf-notes', adminAuth, async (req, res) => {
+  const { name, drive_link } = req.body;
+  if (!name || !drive_link) return res.status(400).json({ error: 'Ders adı ve link zorunlu' });
+  try {
+    const r = await pool.query(
+      'INSERT INTO pdf_notes (name, drive_link) VALUES ($1, $2) RETURNING *',
+      [name.trim(), drive_link.trim()]
+    );
+    res.json(r.rows[0]);
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Admin: özet notu sil
+app.delete('/api/admin/pdf-notes/:id', adminAuth, async (req, res) => {
+  try {
+    await pool.query('DELETE FROM pdf_notes WHERE id=$1', [req.params.id]);
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// ============================================================
 // DERS İSTEKLERİ
 // ============================================================
 app.post('/api/course-request', async (req, res) => {
@@ -703,6 +735,59 @@ app.post('/api/send-pdf', async (req, res) => {
       res.status(500).json({ error: error.message });
     });
     
+    request.write(data);
+    request.end();
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// Rate limit: aynı e-posta günde 1 kez (özet notlar için ayrı, kitap indirmesini etkilemez)
+const notesRateLimit = new Map(); // email -> timestamp
+
+app.post('/api/send-notes', async (req, res) => {
+  try {
+    const email = (req.body.email || '').trim().toLowerCase();
+    if (!email) return res.status(400).json({ error: 'E-posta gerekli' });
+
+    const now = Date.now();
+    const ONE_DAY = 24 * 60 * 60 * 1000; // 24 saat
+
+    // Eski kayıtları temizle
+    for (const [key, time] of notesRateLimit) {
+      if (now - time > ONE_DAY) notesRateLimit.delete(key);
+    }
+
+    // Bu e-posta daha önce istekte bulundu mu?
+    if (notesRateLimit.has(email)) {
+      const kalan = Math.ceil((ONE_DAY - (now - notesRateLimit.get(email))) / (60 * 60 * 1000));
+      return res.status(429).json({ error: `Bu e-posta ile günde 1 kez talep yapabilirsiniz. ~${kalan} saat sonra tekrar deneyin.` });
+    }
+
+    notesRateLimit.set(email, now);
+
+    const https = require('https');
+    const data = JSON.stringify(req.body);
+
+    const options = {
+      hostname: 'novantera.com',
+      port: 443,
+      path: '/webhook/aof-ozet-pdf-iste',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(data)
+      }
+    };
+
+    const request = https.request(options, (response) => {
+      res.json({ success: true });
+    });
+
+    request.on('error', (error) => {
+      res.status(500).json({ error: error.message });
+    });
+
     request.write(data);
     request.end();
   } catch (e) {

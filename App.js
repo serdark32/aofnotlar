@@ -204,6 +204,15 @@ export default function App() {
   const [pdfKvkk, setPdfKvkk] = useState(false);
   const [pdfSending, setPdfSending] = useState(false);
   const [pdfResult, setPdfResult] = useState(null); // 'success' | 'error' | null
+
+  // Ücretsiz Özet Ders Notu İndir
+  const [pdfNotes, setPdfNotes] = useState([]);
+  const [notesSelected, setNotesSelected] = useState([]);
+  const [notesEmail, setNotesEmail] = useState('');
+  const [notesKvkk, setNotesKvkk] = useState(false);
+  const [notesSending, setNotesSending] = useState(false);
+  const [notesResult, setNotesResult] = useState(null); // 'success' | 'error' | null
+
   const N8N_WEBHOOK = 'BURAYA_N8N_PRODUCTION_URL_GELECEK';
 
   // Ders isteği
@@ -917,7 +926,47 @@ export default function App() {
           </div>
           <IconChevronRight size={16} style={{ color: theme === 'dark' ? 'rgba(255,255,255,0.5)' : 'rgba(5, 150, 105, 0.5)' }} />
         </button>
- 
+
+        {/* Özet Ders Notu İndir Butonu */}
+        <button
+          className="btn-hover"
+          style={{
+            width: '90%',
+            maxWidth: '340px',
+            margin: '0 auto 10px auto',
+            background: theme === 'dark' ? 'rgba(255,255,255,0.06)' : 'rgba(5, 150, 105, 0.05)',
+            border: theme === 'dark' ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(5, 150, 105, 0.15)',
+            borderRadius: 10,
+            padding: '10px 14px',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            cursor: 'pointer',
+            color: s.greeting.color,
+            fontWeight: 500,
+            fontSize: 13,
+            transition: 'all 0.2s'
+          }}
+          onClick={async () => {
+            try {
+              const res = await fetch(API + '/api/pdf-notes');
+              const data = await res.json();
+              setPdfNotes(data);
+              setNotesSelected([]);
+              setNotesEmail('');
+              setNotesKvkk(false);
+              setNotesResult(null);
+              setScreen('notes-download');
+            } catch (e) { alert('Özet notlar yüklenemedi'); }
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <IconFileText size={16} style={{ color: theme === 'dark' ? '#10b981' : '#059669' }} />
+            <span>Ücretsiz Özet Ders Notu İndir</span>
+          </div>
+          <IconChevronRight size={16} style={{ color: theme === 'dark' ? 'rgba(255,255,255,0.5)' : 'rgba(5, 150, 105, 0.5)' }} />
+        </button>
+
         {/* PDF Satış Yönlendirme Butonu */}
         <button
           className="btn-hover"
@@ -1654,6 +1703,126 @@ export default function App() {
             )}
           </div>
 
+        </div>
+      </div>
+    );
+  }
+
+  if (screen === 'notes-download') {
+    return (
+      <div style={s.bg}>
+        <div style={s.container}>
+          <div style={s.header}>
+            <button style={s.backBtn} className="btn-hover" onClick={() => setScreen('home')}>
+              <IconChevronLeft size={16} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 4 }} />
+              Geri
+            </button>
+            <div style={s.greeting}>Özet Ders Notları</div>
+            <div style={{ width: 60 }}></div>
+          </div>
+
+          <div style={s.card}>
+            <IconBookOpen size={48} style={{ color: theme === 'dark' ? '#10b981' : '#059669', marginBottom: 8, display: 'block', margin: '0 auto 8px auto' }} />
+            <div style={s.cardTitle}>Derslerini Seç</div>
+            <div style={{ fontSize: 13, color: theme === 'dark' ? '#aeb5c1' : '#6b7280', marginBottom: 16 }}>
+              Seçtiğin derslerin özet notlarını e-posta olarak göndereceğiz. En fazla 3 ders seçebilirsin.
+            </div>
+
+            {pdfNotes.length === 0 ? (
+              <div style={s.empty}>Henüz özet notu eklenmemiş.</div>
+            ) : (
+              <div style={{ maxHeight: 300, overflowY: 'auto', marginBottom: 16 }}>
+                {pdfNotes.map(c => (
+                  <label key={c.id} style={{ display: 'flex', alignItems: 'center', padding: '12px 14px', border: theme === 'dark' ? '1.5px solid rgba(255, 255, 255, 0.08)' : '1.5px solid #e5e7eb', borderRadius: 12, marginBottom: 8, cursor: 'pointer', background: notesSelected.some(p => p.id === c.id) ? (theme === 'dark' ? 'rgba(16, 185, 129, 0.15)' : '#f0faf4') : 'transparent' }}>
+                    <input
+                      type="checkbox"
+                      style={{ width: 18, height: 18, marginRight: 12, accentColor: GREEN }}
+                      checked={notesSelected.some(p => p.id === c.id)}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          if (notesSelected.length >= 3) return alert('En fazla 3 ders seçebilirsiniz!');
+                          setNotesSelected([...notesSelected, c]);
+                        } else {
+                          setNotesSelected(notesSelected.filter(p => p.id !== c.id));
+                        }
+                        setNotesResult(null);
+                      }}
+                    />
+                    <span style={{ fontSize: 14, fontWeight: 600, color: s.qText.color }}>{c.name}</span>
+                  </label>
+                ))}
+              </div>
+            )}
+
+            <div style={{ marginBottom: 16 }}>
+              <label style={{ fontSize: 12, fontWeight: 700, color: theme === 'dark' ? '#aeb5c1' : '#6b7280', display: 'block', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>E-posta Adresin</label>
+              <input
+                type="email"
+                placeholder=""
+                value={notesEmail}
+                onChange={e => { setNotesEmail(e.target.value); setNotesResult(null); }}
+                style={s.input}
+              />
+            </div>
+
+            <label style={{ display: 'flex', alignItems: 'flex-start', marginBottom: 20, cursor: 'pointer' }}>
+              <input type="checkbox" checked={notesKvkk} onChange={e => { setNotesKvkk(e.target.checked); setNotesResult(null); }} style={{ width: 16, height: 16, marginRight: 10, marginTop: 2 }} />
+              <span style={{ fontSize: 12, color: theme === 'dark' ? '#aeb5c1' : '#6b7280', lineHeight: 1.4 }}>
+                E-posta adresimin kampanya ve duyurular (YouTube vs.) için kaydedilmesini ve bana e-posta gönderilmesini onaylıyorum.
+              </span>
+            </label>
+
+            {notesResult === 'success' && (
+              <div style={{ background: 'rgba(16, 185, 129, 0.15)', color: theme === 'dark' ? '#a7f3d0' : '#065f46', border: '1px solid #10b981', padding: '12px', borderRadius: 12, fontSize: 14, fontWeight: 700, textAlign: 'center', marginBottom: 12 }}>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                  <IconCheckCircle size={16} />
+                  <span>Notların başarıyla e-postana gönderildi! Lütfen Spam (Gereksiz) kutunu da kontrol et.</span>
+                </span>
+              </div>
+            )}
+            {notesResult && notesResult !== 'success' && (
+              <div style={{ background: 'rgba(239, 68, 68, 0.15)', color: theme === 'dark' ? '#fca5a5' : '#991b1b', border: '1px solid #ef4444', padding: '12px', borderRadius: 12, fontSize: 13, fontWeight: 600, textAlign: 'center', marginBottom: 12 }}>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                  <IconXCircle size={16} />
+                  <span>{notesResult}</span>
+                </span>
+              </div>
+            )}
+
+            <button
+              className="btn-hover"
+              style={{ ...s.btn, background: (notesSending || notesSelected.length === 0 || !notesEmail || !notesKvkk) ? '#e5e7eb' : (theme === 'dark' ? '#10b981' : '#059669'), color: (notesSending || notesSelected.length === 0 || !notesEmail || !notesKvkk) ? '#9ca3af' : (theme === 'dark' ? '#030806' : '#fff'), cursor: (notesSending || notesSelected.length === 0 || !notesEmail || !notesKvkk) ? 'not-allowed' : 'pointer', fontSize: 16, padding: '16px', justifyContent: 'center' }}
+              disabled={notesSending || notesSelected.length === 0 || !notesEmail || !notesKvkk}
+              onClick={async () => {
+                setNotesSending(true);
+                try {
+                  const payload = {
+                    email: notesEmail.trim(),
+                    dersler: notesSelected.map(c => ({ ad: c.name, link: c.drive_link }))
+                  };
+                  const res = await fetch(API + '/api/send-notes', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                  });
+                  if (res.ok) {
+                    setNotesResult('success');
+                    setNotesSelected([]);
+                    setNotesEmail('');
+                    setNotesKvkk(false);
+                  } else {
+                    const err = await res.json().catch(() => null);
+                    setNotesResult(err?.error || 'Bir hata oluştu.');
+                  }
+                } catch (e) {
+                  setNotesResult('Bir hata oluştu. Lütfen tekrar deneyin.');
+                }
+                setNotesSending(false);
+              }}
+            >
+              <span>{notesSending ? 'Gönderiliyor...' : 'Notları Mailime Gönder'}</span>
+            </button>
+          </div>
         </div>
       </div>
     );
