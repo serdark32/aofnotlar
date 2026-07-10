@@ -178,6 +178,10 @@ export default function App() {
   // Yıl seçici
   const [availableYears, setAvailableYears] = useState([]);
   const [selectedYear, setSelectedYear] = useState(null);
+  const [quizLoading, setQuizLoading] = useState(false);
+  const [loadingCatId, setLoadingCatId] = useState(null);
+  // Hızlı ardışık yıl/kategori tıklamalarında geç gelen eski cevabın yenisini ezmesini önler
+  const fetchSeqRef = useRef(0);
 
   // Vize / Final seçimi
   const [examType, setExamType] = useState('yazokulu');
@@ -510,60 +514,54 @@ export default function App() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
-  const openCategory = async (cat, year = null) => {
-    setActiveCategory(cat);
-    setCorrect(0); setWrong(0);
-    setCurrentQ(0); setSelected(null);
-
-    const yearsRes = await fetch(API + `/api/questions/years/${cat.id}`, {
-      headers: { Authorization: 'Bearer ' + token }
-    });
-    const years = await yearsRes.json();
-    setAvailableYears(years);
-
-    const targetYear = year || (years.length > 0 ? years[0] : null);
-    setSelectedYear(targetYear);
-
-    const url = targetYear
-      ? `/api/questions/${cat.id}?year=${encodeURIComponent(targetYear)}&examType=${examType}`
-      : `/api/questions/${cat.id}?examType=${examType}`;
-    const res = await fetch(API + url, { headers: { Authorization: 'Bearer ' + token } });
-    const data = await res.json();
-    setQuestions(data);
-    setScreen('quiz');
-  };
-
+  // Yıllar + sorular PARALEL çekilir (yıl verilmezse sunucu zaten en son yılı seçiyor) — açılış süresi yarıya iner
   const openCategoryWithToken = async (cat, t, year = null) => {
-    setActiveCategory(cat);
-    setCorrect(0); setWrong(0);
-    setCurrentQ(0); setSelected(null);
+    const seq = ++fetchSeqRef.current;
+    setLoadingCatId(cat.id);
+    try {
+      const headers = { Authorization: 'Bearer ' + t };
+      const qUrl = year
+        ? `/api/questions/${cat.id}?year=${encodeURIComponent(year)}&examType=${examType}`
+        : `/api/questions/${cat.id}?examType=${examType}`;
 
-    const yearsRes = await fetch(API + `/api/questions/years/${cat.id}`, {
-      headers: { Authorization: 'Bearer ' + t }
-    });
-    const years = await yearsRes.json();
-    setAvailableYears(years);
+      const [yearsRes, qRes] = await Promise.all([
+        fetch(API + `/api/questions/years/${cat.id}`, { headers }),
+        fetch(API + qUrl, { headers }),
+      ]);
+      const [years, data] = await Promise.all([yearsRes.json(), qRes.json()]);
 
-    const targetYear = year || (years.length > 0 ? years[0] : null);
-    setSelectedYear(targetYear);
+      if (seq !== fetchSeqRef.current) return; // daha yeni bir istek başladı, bunu yok say
 
-    const url = targetYear
-      ? `/api/questions/${cat.id}?year=${encodeURIComponent(targetYear)}&examType=${examType}`
-      : `/api/questions/${cat.id}?examType=${examType}`;
-    const res = await fetch(API + url, { headers: { Authorization: 'Bearer ' + t } });
-    const data = await res.json();
-    setQuestions(data);
-    setScreen('quiz');
+      setActiveCategory(cat);
+      setAvailableYears(years);
+      setSelectedYear(year || (years.length > 0 ? years[0] : null));
+      setCorrect(0); setWrong(0);
+      setCurrentQ(0); setSelected(null);
+      setQuestions(data);
+      setScreen('quiz');
+    } finally {
+      if (seq === fetchSeqRef.current) setLoadingCatId(null);
+    }
   };
+
+  const openCategory = (cat, year = null) => openCategoryWithToken(cat, token, year);
 
   const changeYear = async (year) => {
+    const seq = ++fetchSeqRef.current;
     setSelectedYear(year);
-    setCorrect(0); setWrong(0);
-    setCurrentQ(0); setSelected(null);
-    const url = `/api/questions/${activeCategory.id}?year=${encodeURIComponent(year)}&examType=${examType}`;
-    const res = await fetch(API + url, { headers: { Authorization: 'Bearer ' + token } });
-    const data = await res.json();
-    setQuestions(data);
+    setQuizLoading(true);
+    try {
+      const url = `/api/questions/${activeCategory.id}?year=${encodeURIComponent(year)}&examType=${examType}`;
+      const res = await fetch(API + url, { headers: { Authorization: 'Bearer ' + token } });
+      const data = await res.json();
+      if (seq !== fetchSeqRef.current) return;
+      // Yeni sorular GELDİKTEN sonra tek seferde güncelle — eski sorunun bir an görünmesini önler
+      setCorrect(0); setWrong(0);
+      setCurrentQ(0); setSelected(null);
+      setQuestions(data);
+    } finally {
+      if (seq === fetchSeqRef.current) setQuizLoading(false);
+    }
   };
 
   // ── CEVAP
@@ -701,8 +699,9 @@ export default function App() {
       .map(cat => {
         const cleanName = cat.name.replace(getExamTypeRegex(), '').trim();
         const isFav = favorites.includes(cat.id);
+        const isLoading = loadingCatId === cat.id;
         return (
-          <button key={cat.id} style={s.catBtn} className="cat-btn-hover" onClick={() => handleCategoryClick(cat)}>
+          <button key={cat.id} style={{ ...s.catBtn, opacity: isLoading ? 0.55 : 1 }} className="cat-btn-hover" onClick={() => handleCategoryClick(cat)}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
               <div
                 onClick={(e) => { e.stopPropagation(); toggleFavorite(e, cat.id); }}
@@ -719,7 +718,7 @@ export default function App() {
         );
       });
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sortedCategories, examType, favorites, s, theme, handleCategoryClick, toggleFavorite]);
+  }, [sortedCategories, examType, favorites, s, theme, handleCategoryClick, toggleFavorite, loadingCatId]);
 
   // ════════════════════════════════════════════════════════════
   // EKRANLAR
@@ -1060,7 +1059,7 @@ export default function App() {
         </div>
 
         <div style={s.quizScroll} onClick={() => { if (selected) handleNext(); }}>
-          <div style={s.quizCard}>
+          <div style={{ ...s.quizCard, opacity: quizLoading ? 0.4 : 1, pointerEvents: quizLoading ? 'none' : 'auto', transition: 'opacity 0.15s ease' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10, gap: 10 }}>
               <div style={{ ...s.catLabel, flex: 1, wordBreak: 'break-word', lineHeight: 1.3 }}>{activeCategory?.name}</div>
               <div style={{ display: 'flex', gap: 6, flexShrink: 0, flexWrap: 'nowrap' }}>
