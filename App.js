@@ -728,28 +728,29 @@ export default function App() {
   if (screen === 'home') return (
     <div style={s.bg}>
       {/* Background Ambient Glows */}
+      {/* filter: blur() yerine hazır radial-gradient — GPU maliyeti yok, görünüm aynı */}
       <div style={{
         position: 'absolute',
-        width: 350,
-        height: 350,
-        background: theme === 'dark' ? '#10b981' : '#059669',
-        filter: 'blur(160px)',
-        opacity: theme === 'dark' ? 0.22 : 0.08,
-        top: -50,
-        left: -50,
+        width: 700,
+        height: 700,
+        background: theme === 'dark'
+          ? 'radial-gradient(circle, rgba(16,185,129,0.22) 0%, rgba(16,185,129,0) 70%)'
+          : 'radial-gradient(circle, rgba(5,150,105,0.08) 0%, rgba(5,150,105,0) 70%)',
+        top: -225,
+        left: -225,
         pointerEvents: 'none',
         zIndex: 0,
         transition: 'opacity 0.5s ease'
       }} />
       <div style={{
         position: 'absolute',
-        width: 300,
-        height: 300,
-        background: theme === 'dark' ? '#f59e0b' : '#d97706',
-        filter: 'blur(140px)',
-        opacity: theme === 'dark' ? 0.16 : 0.06,
-        bottom: '10%',
-        right: -50,
+        width: 600,
+        height: 600,
+        background: theme === 'dark'
+          ? 'radial-gradient(circle, rgba(245,158,11,0.16) 0%, rgba(245,158,11,0) 70%)'
+          : 'radial-gradient(circle, rgba(217,119,6,0.06) 0%, rgba(217,119,6,0) 70%)',
+        bottom: 'calc(10% - 150px)',
+        right: -200,
         pointerEvents: 'none',
         zIndex: 0,
         transition: 'opacity 0.5s ease'
@@ -1855,7 +1856,7 @@ const getStyles = (theme) => {
     danger: isDark ? '#ef4444' : '#dc2626',
     dangerBg: isDark ? 'rgba(239, 68, 68, 0.15)' : 'rgba(220, 38, 38, 0.08)',
     successBg: isDark ? 'rgba(16, 185, 129, 0.15)' : 'rgba(5, 150, 105, 0.08)',
-    cardBg: isDark ? 'rgba(20, 39, 30, 0.55)' : 'rgba(255, 255, 255, 0.85)',
+    cardBg: isDark ? 'rgba(20, 39, 30, 0.88)' : 'rgba(255, 255, 255, 0.94)',
     cardBorder: isDark ? 'rgba(255, 255, 255, 0.09)' : 'rgba(5, 150, 105, 0.12)',
     textMain: isDark ? '#f9fafb' : '#0c2619',
     textMuted: isDark ? '#aeb5c1' : '#4b5563',
@@ -2084,9 +2085,7 @@ const getStyles = (theme) => {
       left: 0,
       right: 0,
       bottom: 0,
-      background: 'rgba(0,0,0,0.65)',
-      backdropFilter: 'blur(8px)',
-      WebkitBackdropFilter: 'blur(8px)',
+      background: 'rgba(0,0,0,0.72)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
@@ -2128,8 +2127,6 @@ const getStyles = (theme) => {
       borderRadius: 16,
       padding: 16,
       marginBottom: 16,
-      backdropFilter: 'blur(20px)',
-      WebkitBackdropFilter: 'blur(20px)',
       boxShadow: '0 10px 30px rgba(0, 0, 0, 0.15)',
     },
     cardTitle: {
@@ -2314,8 +2311,6 @@ const getStyles = (theme) => {
       width: '100%',
       maxWidth: 600,
       boxSizing: 'border-box',
-      backdropFilter: 'blur(20px)',
-      WebkitBackdropFilter: 'blur(20px)',
       boxShadow: '0 8px 24px rgba(0, 0, 0, 0.12)',
     },
     catLabel: {
@@ -2414,8 +2409,6 @@ const getStyles = (theme) => {
       padding: 14,
       marginBottom: 12,
       marginTop: 8,
-      backdropFilter: 'blur(20px)',
-      WebkitBackdropFilter: 'blur(20px)',
       boxShadow: '0 10px 30px rgba(0, 0, 0, 0.15)',
     },
     resultRow: {
