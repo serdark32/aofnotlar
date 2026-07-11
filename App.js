@@ -146,7 +146,11 @@ export default function App() {
   const [token, setToken] = useState(null);
   const [showNicknameModal, setShowNicknameModal] = useState(false);
   const [pendingCategory, setPendingCategory] = useState(null);
-  const [categories, setCategories] = useState([]);
+  // Önbellekten anında yükle — yavaş bağlantıda ders listesi saniyelerce boş kalmasın
+  const [categories, setCategories] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('categories_cache')) || []; } catch { return []; }
+  });
+  const [catsLoaded, setCatsLoaded] = useState(false);
   const [questions, setQuestions] = useState([]);
   const [currentQ, setCurrentQ] = useState(0);
   const [selected, setSelected] = useState(null);
@@ -425,8 +429,13 @@ export default function App() {
     try {
       const headers = t ? { Authorization: 'Bearer ' + t } : {};
       const res = await fetch(API + '/api/categories', { headers });
-      if (res.ok) setCategories(await res.json());
+      if (res.ok) {
+        const data = await res.json();
+        setCategories(data);
+        try { localStorage.setItem('categories_cache', JSON.stringify(data)); } catch { }
+      }
     } catch (e) { }
+    setCatsLoaded(true);
   };
 
   const fetchLeaderboard = async (t) => {
@@ -727,9 +736,9 @@ export default function App() {
   if (screen === 'home') return (
     <div style={s.bg}>
       {/* Background Ambient Glows */}
-      {/* filter: blur() yerine hazır radial-gradient — GPU maliyeti yok, görünüm aynı */}
+      {/* position: fixed — sayfa kaydırma yüksekliğine karışmaz, kaydırma sırasında yeniden çizilmez */}
       <div style={{
-        position: 'absolute',
+        position: 'fixed',
         width: 700,
         height: 700,
         background: theme === 'dark'
@@ -742,13 +751,13 @@ export default function App() {
         transition: 'opacity 0.5s ease'
       }} />
       <div style={{
-        position: 'absolute',
+        position: 'fixed',
         width: 600,
         height: 600,
         background: theme === 'dark'
           ? 'radial-gradient(circle, rgba(245,158,11,0.16) 0%, rgba(245,158,11,0) 70%)'
           : 'radial-gradient(circle, rgba(217,119,6,0.06) 0%, rgba(217,119,6,0) 70%)',
-        bottom: 'calc(10% - 150px)',
+        bottom: -150,
         right: -200,
         pointerEvents: 'none',
         zIndex: 0,
@@ -1017,7 +1026,7 @@ export default function App() {
           </button>
         </div>
 
-        {categories.length === 0 && <div style={s.empty}>Yakında dersler eklenecek...</div>}
+        {categories.length === 0 && <div style={s.empty}>{catsLoaded ? 'Yakında dersler eklenecek...' : 'Dersler yükleniyor...'}</div>}
 
         {/* KATEGORİLER (Filtrelenmiş ve Temizlenmiş) */}
         <div style={{ minHeight: '65vh', paddingBottom: 40 }}>
@@ -1882,7 +1891,8 @@ const getStyles = (theme) => {
 
   return {
     bg: {
-      minHeight: '100dvh',
+      // 100dvh DEĞİL: dvh mobilde adres çubuğu gizlenince değişir → kaydırma sırasında sayfa boyu kayar
+      minHeight: '100vh',
       background: colors.bgDark,
       backgroundImage: colors.bgGradient,
       display: 'flex',
@@ -2637,8 +2647,7 @@ const getStyles = (theme) => {
       bottom: 0,
       left: 0,
       right: 0,
-      background: 'rgba(10, 23, 18, 0.95)',
-      backdropFilter: 'blur(10px)',
+      background: 'rgba(10, 23, 18, 0.97)',
       borderTop: '1px solid rgba(255, 255, 255, 0.1)',
       boxShadow: '0 -4px 12px rgba(0, 0, 0, 0.25)',
       padding: '8px 12px',
