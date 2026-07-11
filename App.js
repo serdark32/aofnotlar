@@ -1517,6 +1517,77 @@ export default function App() {
               </div>
             </div>
 
+            <div style={{ marginBottom: 24, marginTop: 24, paddingTop: 20, borderTop: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #e5e7eb' }}>
+              <div style={{ fontSize: 14, fontWeight: 700, color: s.qText.color, marginBottom: 16, textAlign: 'center' }}>
+                Öğrenciler ne diyor?
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                <div style={{
+                  background: theme === 'dark' ? 'rgba(16, 185, 129, 0.08)' : 'rgba(5, 150, 105, 0.05)',
+                  border: `1px solid ${theme === 'dark' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(5, 150, 105, 0.15)'}`,
+                  borderRadius: 12,
+                  padding: 12,
+                  borderLeft: `4px solid ${theme === 'dark' ? '#10b981' : '#059669'}`
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                    <div style={{ width: 32, height: 32, borderRadius: '50%', background: theme === 'dark' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(5, 150, 105, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: theme === 'dark' ? '#10b981' : '#059669' }}>
+                      A
+                    </div>
+                    <div>
+                      <div style={{ fontSize: 12, fontWeight: 700, color: s.qText.color }}>Atlas</div>
+                      <div style={{ fontSize: 11, color: theme === 'dark' ? '#6b7280' : '#9ca3af' }}>Yeni</div>
+                    </div>
+                  </div>
+                  <div style={{ fontSize: 12, color: s.qText.color, lineHeight: 1.5, fontStyle: 'italic' }}>
+                    "Tek kelimeyle harika 2 yıldır geçemedığim dersi sonunda verdim :)"
+                  </div>
+                </div>
+
+                <div style={{
+                  background: theme === 'dark' ? 'rgba(16, 185, 129, 0.08)' : 'rgba(5, 150, 105, 0.05)',
+                  border: `1px solid ${theme === 'dark' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(5, 150, 105, 0.15)'}`,
+                  borderRadius: 12,
+                  padding: 12,
+                  borderLeft: `4px solid ${theme === 'dark' ? '#10b981' : '#059669'}`
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                    <div style={{ width: 32, height: 32, borderRadius: '50%', background: theme === 'dark' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(5, 150, 105, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: theme === 'dark' ? '#10b981' : '#059669' }}>
+                      Y
+                    </div>
+                    <div>
+                      <div style={{ fontSize: 12, fontWeight: 700, color: s.qText.color }}>Yyyyy</div>
+                      <div style={{ fontSize: 11, color: theme === 'dark' ? '#6b7280' : '#9ca3af' }}>Yeni</div>
+                    </div>
+                  </div>
+                  <div style={{ fontSize: 12, color: s.qText.color, lineHeight: 1.5, fontStyle: 'italic' }}>
+                    "Uzun zamandır bu kadar iyi ihazırlanmış kaynak bulamıyordum umarm daha fazla ders eklenir 🌸"
+                  </div>
+                </div>
+
+                <div style={{
+                  background: theme === 'dark' ? 'rgba(16, 185, 129, 0.08)' : 'rgba(5, 150, 105, 0.05)',
+                  border: `1px solid ${theme === 'dark' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(5, 150, 105, 0.15)'}`,
+                  borderRadius: 12,
+                  padding: 12,
+                  borderLeft: `4px solid ${theme === 'dark' ? '#10b981' : '#059669'}`
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                    <div style={{ width: 32, height: 32, borderRadius: '50%', background: theme === 'dark' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(5, 150, 105, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: theme === 'dark' ? '#10b981' : '#059669' }}>
+                      S
+                    </div>
+                    <div>
+                      <div style={{ fontSize: 12, fontWeight: 700, color: s.qText.color }}>Serdar</div>
+                      <div style={{ fontSize: 11, color: theme === 'dark' ? '#6b7280' : '#9ca3af' }}>Yeni</div>
+                    </div>
+                  </div>
+                  <div style={{ fontSize: 12, color: s.qText.color, lineHeight: 1.5, fontStyle: 'italic' }}>
+                    "Her kuruşuna değer. Zaten 10 soru yapsam geçiyordum 6 sını sınav sabahı altın bilgiler içinden öğrendim"
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <a href={SHOPIER_URL} target="_blank" rel="noopener noreferrer" className="btn-hover" style={{ ...s.btn, background: '#f59e0b', color: '#fff', textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, fontWeight: 800, padding: '14px', borderRadius: 14, boxShadow: '0 4px 14px rgba(245, 158, 11, 0.3)' }}>
               <span>Shopier ile Hemen Al & İndir</span>
               <IconChevronRight size={18} />
