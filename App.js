@@ -1468,9 +1468,24 @@ export default function App() {
               />
             </div>
             
-            <div style={s.cardTitle}>AÖF Sınavı Şansa Bırakılmaz!</div>
+            <div style={s.cardTitle}>Tüm Kitabı Okuyacak Vaktin Yok. Sadece Çıkması En Muhtemel Konuları Çalış.</div>
             <div style={{ fontSize: 13, color: theme === 'dark' ? '#aeb5c1' : '#4b5563', lineHeight: 1.6, marginBottom: 16 }}>
-              Sınav algoritmasına göre hazırlanmış özet PDF notları ile derslerinizi kolayca geçin. Hangi konuların tekrar tekrar sorulduğu çıkmış sorulardan analiz edilerek bu evrak özenle hazırlandı.
+              Geçmiş 6-7 yılın çıkmış soruları tek tek analiz edildi. Hangi konudan kaç soru geldiği sayıldı, en çok tekrar edenler bu PDF'te toplandı. Sınava 1 gece kala bile fark yaratır.
+            </div>
+
+            <div style={{
+              background: theme === 'dark' ? 'rgba(255, 255, 255, 0.04)' : '#f9fafb',
+              border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid #e5e7eb',
+              borderRadius: 12,
+              padding: 14,
+              marginBottom: 16,
+              fontSize: 12.5,
+              color: theme === 'dark' ? '#c9cfd8' : '#4b5563',
+              lineHeight: 1.6,
+              fontStyle: 'italic',
+              textAlign: 'left'
+            }}>
+              "Ben de AÖF öğrencisiyim ve bu sınavlara ben de giriyorum. Bu notları önce kendim geçmek için hazırladım, sonra paylaşmaya karar verdim. İçinde işe yaramayan tek satır yok — çünkü ilk kullanan benim."
             </div>
 
             <div style={{
@@ -1500,7 +1515,7 @@ export default function App() {
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 14 }}>
                 <IconBarChart size={20} style={{ color: theme === 'dark' ? '#10b981' : '#059669', flexShrink: 0, marginTop: 2 }} />
                 <div style={{ fontSize: 13, color: s.qText.color, textAlign: 'left', lineHeight: 1.4 }}>
-                  <strong>Çıkmış Soru Analizi:</strong> Geçmiş sınav soruları analiz edilerek, tekrar tekrar sorulan konular özel bir algoritmayla belirlendi ve damıtıldı.
+                  <strong>Çıkmış Soru Analizi:</strong> Geçmiş sınav soruları tek tek incelenerek, tekrar tekrar sorulan konular tespit edildi.
                 </div>
               </div>
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 14 }}>
@@ -1517,7 +1532,22 @@ export default function App() {
               </div>
             </div>
 
-            <div style={{ marginBottom: 24, marginTop: 24, paddingTop: 20, borderTop: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #e5e7eb' }}>
+            <div style={{ marginBottom: 24 }}>
+              <div style={{ fontSize: 14, fontWeight: 700, color: s.qText.color, marginBottom: 4, textAlign: 'center' }}>
+                📸 Sayfadan Kesitler
+              </div>
+              <div style={{ fontSize: 11.5, color: theme === 'dark' ? '#9aa1ab' : '#6b7280', marginBottom: 12, textAlign: 'center' }}>
+                Aşağıdakiler PDF'in sadece birkaç sayfası — tam doküman 10-15 sayfa dolu içerik barındırıyor.
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                <img src="/pdf-kesit-1.png" alt="PDF sayfa kesiti 1" style={{ width: '100%', borderRadius: 10, border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #e5e7eb', boxShadow: theme === 'dark' ? '0 4px 14px rgba(0, 0, 0, 0.3)' : '0 4px 14px rgba(0, 0, 0, 0.06)' }} />
+                <img src="/pdf-kesit-2.png" alt="PDF sayfa kesiti 2" style={{ width: '100%', borderRadius: 10, border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #e5e7eb', boxShadow: theme === 'dark' ? '0 4px 14px rgba(0, 0, 0, 0.3)' : '0 4px 14px rgba(0, 0, 0, 0.06)' }} />
+                <img src="/pdf-kesit-3.png" alt="PDF sayfa kesiti 3" style={{ width: '100%', borderRadius: 10, border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #e5e7eb', boxShadow: theme === 'dark' ? '0 4px 14px rgba(0, 0, 0, 0.3)' : '0 4px 14px rgba(0, 0, 0, 0.06)' }} />
+                <img src="/pdf-kesit-4.png" alt="PDF sayfa kesiti 4" style={{ width: '100%', borderRadius: 10, border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #e5e7eb', boxShadow: theme === 'dark' ? '0 4px 14px rgba(0, 0, 0, 0.3)' : '0 4px 14px rgba(0, 0, 0, 0.06)' }} />
+              </div>
+            </div>
+
+            <div style={{ marginBottom: 24, paddingTop: 20, borderTop: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #e5e7eb' }}>
               <div style={{ fontSize: 14, fontWeight: 700, color: s.qText.color, marginBottom: 16, textAlign: 'center' }}>
                 Öğrenciler ne diyor?
               </div>
@@ -1574,10 +1604,10 @@ export default function App() {
                 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
                     <div style={{ width: 32, height: 32, borderRadius: '50%', background: theme === 'dark' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(5, 150, 105, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: theme === 'dark' ? '#10b981' : '#059669' }}>
-                      S
+                      M
                     </div>
                     <div>
-                      <div style={{ fontSize: 12, fontWeight: 700, color: s.qText.color }}>Serdar</div>
+                      <div style={{ fontSize: 12, fontWeight: 700, color: s.qText.color }}>Merve</div>
                       <div style={{ fontSize: 11, color: theme === 'dark' ? '#6b7280' : '#9ca3af' }}>Yeni</div>
                     </div>
                   </div>
@@ -1593,40 +1623,6 @@ export default function App() {
               <IconChevronRight size={18} />
             </a>
 
-            <a 
-              href="/ornek-dokuman.pdf" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="btn-hover"
-              style={{ 
-                ...s.btn, 
-                background: theme === 'dark' ? 'rgba(245, 158, 11, 0.12)' : 'rgba(245, 158, 11, 0.05)', 
-                color: theme === 'dark' ? '#fde68a' : '#d97706', 
-                border: '1.5px solid #f59e0b', 
-                textDecoration: 'none', 
-                display: 'flex', 
-                alignItems: 'center', 
-                justifyContent: 'center', 
-                gap: 8, 
-                fontWeight: 800, 
-                padding: '13px', 
-                borderRadius: 14, 
-                marginTop: 12, 
-                boxShadow: '0 2px 8px rgba(245, 158, 11, 0.05)', 
-                transition: 'all 0.2s' 
-              }}
-              onMouseEnter={(e) => { 
-                e.currentTarget.style.background = 'rgba(245, 158, 11, 0.15)'; 
-                e.currentTarget.style.transform = 'translateY(-1px)';
-              }}
-              onMouseLeave={(e) => { 
-                e.currentTarget.style.background = theme === 'dark' ? 'rgba(245, 158, 11, 0.12)' : 'rgba(245, 158, 11, 0.05)'; 
-                e.currentTarget.style.transform = 'none';
-              }}
-            >
-              <IconFileText size={18} />
-              <span>Örnek PDF İndir & İncele</span>
-            </a>
           </div>
         </div>
       </div>
