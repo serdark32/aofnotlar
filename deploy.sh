@@ -27,7 +27,7 @@ echo "✅ Deploy tamamlandı!"
 cp /var/www/aofnotlar/aofnotlar-admin.html /var/www/aofnotlar/frontend/build/admin.html
 cp /var/www/aofnotlar/shopier_promo_modules.html /var/www/aofnotlar/frontend/build/shopier_promo_modules.html
 cp /var/www/aofnotlar/shopier_promo_modules.html /var/www/aofnotlar/frontend/build/shopier.html
-cp "/var/www/aofnotlar/Untitled design.png" /var/www/aofnotlar/frontend/build/ozet-pdf-gorsel.png
+cp /var/www/aofnotlar/ozet-pdf-gorsel.jpg /var/www/aofnotlar/frontend/build/ozet-pdf-gorsel.jpg
 cp /var/www/aofnotlar/ornek-dokuman.pdf /var/www/aofnotlar/frontend/build/ornek-dokuman.pdf
 cp /var/www/aofnotlar/pdf-kesit-1.png /var/www/aofnotlar/frontend/build/pdf-kesit-1.png
 cp /var/www/aofnotlar/pdf-kesit-2.png /var/www/aofnotlar/frontend/build/pdf-kesit-2.png

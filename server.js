@@ -338,6 +338,44 @@ app.get('/api/leaderboard/:category_id', authMiddleware, async (req, res) => {
 });
 
 // ============================================================
+// TIKLAMA TAKİBİ
+// ============================================================
+// Sadece bu olaylar kaydedilir; bilinmeyen isimler sessizce yok sayılır.
+// dedupeMs: aynı IP'den bu süre içindeki tekrarlar sayılmaz (mobilde çift dokunma).
+// Sayfa açılışında 0 — operatör NAT'ı yüzünden aynı IP'den gelen farklı
+// kullanıcıları eksik saymamak için; tekrarı istemci tarafı zaten engelliyor.
+const TRACK_EVENTS = {
+  'shopier-click': { type: 'shopier_click', dedupeMs: 5000 },
+  'sales-page-view': { type: 'sales_page_view', dedupeMs: 0 },
+};
+
+const recentEvents = new Map();
+setInterval(() => {
+  const now = Date.now();
+  for (const [key, expires] of recentEvents) if (expires < now) recentEvents.delete(key);
+}, 60000);
+
+app.post('/api/track/:event', async (req, res) => {
+  // Takip hiçbir koşulda kullanıcının akışını engellememeli:
+  // hata olsa bile daima 204 döner.
+  try {
+    const cfg = TRACK_EVENTS[req.params.event];
+    if (cfg) {
+      const ip = req.headers['x-forwarded-for']?.split(',')[0].trim() || req.ip || 'unknown';
+      const key = req.params.event + '|' + ip;
+      const now = Date.now();
+      if (!cfg.dedupeMs || !(recentEvents.get(key) > now)) {
+        if (cfg.dedupeMs) recentEvents.set(key, now + cfg.dedupeMs);
+        await pool.query('INSERT INTO click_events (event_type) VALUES ($1)', [cfg.type]);
+      }
+    }
+  } catch (e) {
+    console.error('Takip kaydı hatası:', e.message);
+  }
+  res.status(204).end();
+});
+
+// ============================================================
 // ADMIN API
 // ============================================================
 app.post('/api/admin/login', (req, res) => {
@@ -371,11 +409,52 @@ app.get('/api/admin/stats', adminAuth, async (req, res) => {
       ORDER BY date DESC, count DESC
     `);
 
+    // Satış sayfası hunisi — tablo henüz oluşturulmadıysa dashboard'u bozmasın
+    let salesFunnel = { viewsTotal: 0, viewsToday: 0, clicksTotal: 0, clicksToday: 0, daily: [] };
+    try {
+      const [totals, daily] = await Promise.all([
+        pool.query(`
+          SELECT
+            COUNT(*) FILTER (WHERE event_type = 'sales_page_view')::int AS views_total,
+            COUNT(*) FILTER (WHERE event_type = 'sales_page_view' AND created_at >= CURRENT_DATE)::int AS views_today,
+            COUNT(*) FILTER (WHERE event_type = 'shopier_click')::int AS clicks_total,
+            COUNT(*) FILTER (WHERE event_type = 'shopier_click' AND created_at >= CURRENT_DATE)::int AS clicks_today
+          FROM click_events
+        `),
+        pool.query(`
+          SELECT
+            DATE(created_at) AS date,
+            COUNT(*) FILTER (WHERE event_type = 'sales_page_view')::int AS views,
+            COUNT(*) FILTER (WHERE event_type = 'shopier_click')::int AS clicks
+          FROM click_events
+          WHERE created_at >= NOW() - INTERVAL '30 days'
+          GROUP BY DATE(created_at)
+          ORDER BY date DESC
+        `),
+      ]);
+      const t = totals.rows[0];
+      salesFunnel = {
+        viewsTotal: t.views_total,
+        viewsToday: t.views_today,
+        clicksTotal: t.clicks_total,
+        clicksToday: t.clicks_today,
+        daily: daily.rows.map(r => ({
+          date: new Date(r.date).toLocaleDateString('tr'),
+          views: r.views,
+          clicks: r.clicks,
+          rate: r.views ? Math.round((r.clicks / r.views) * 1000) / 10 : null
+        }))
+      };
+    } catch (e) {
+      console.error('Satış sayfası istatistiği okunamadı:', e.message);
+    }
+
     res.json({
       users: parseInt(users.rows[0].count),
       questions: parseInt(questions.rows[0].count),
       categories: parseInt(categories.rows[0].count),
       answers: parseInt(answers.rows[0].count),
+      salesFunnel,
       catStats: catStats.rows,
       dailyCatStats: dailyCatStats.rows.map(r => ({
         date: new Date(r.date).toLocaleDateString('tr'),

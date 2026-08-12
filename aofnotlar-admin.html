@@ -1117,6 +1117,33 @@
           </div>
         </div>
 
+        <div class="card">
+          <div class="card-title">🛒 Satış Sayfası Hunisi</div>
+          <div class="stats-grid" style="margin-bottom:16px">
+            <div class="stat-card">
+              <div class="stat-num" id="stat-sales-views">—</div>
+              <div class="stat-label">Sayfa Açılışı (Toplam)</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-num" id="stat-sales-clicks">—</div>
+              <div class="stat-label">Shopier'e Gidiş (Toplam)</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-num" id="stat-sales-rate">—</div>
+              <div class="stat-label">Tıklama Oranı</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-num" id="stat-sales-today">—</div>
+              <div class="stat-label">Bugün (Açılış → Tıklama)</div>
+            </div>
+          </div>
+          <div id="sales-daily-stats">
+            <div class="empty-state">
+              <div class="empty-icon">⏳</div>Yükleniyor...
+            </div>
+          </div>
+        </div>
+
         <div class="dashboard-split-grid">
           <div class="card">
             <div class="card-title">📈 Kategoriye Göre Çözülen Soru Sayısı</div>
@@ -1889,6 +1916,24 @@
         document.getElementById('stat-questions').textContent = data.questions ?? '—';
         document.getElementById('stat-categories').textContent = data.categories ?? '—';
         document.getElementById('stat-answers').textContent = data.answers ?? '—';
+        // Satış sayfası hunisi
+        const f = data.salesFunnel || {};
+        document.getElementById('stat-sales-views').textContent = f.viewsTotal ?? '—';
+        document.getElementById('stat-sales-clicks').textContent = f.clicksTotal ?? '—';
+        document.getElementById('stat-sales-rate').textContent =
+          f.viewsTotal ? (Math.round((f.clicksTotal / f.viewsTotal) * 1000) / 10) + '%' : '—';
+        document.getElementById('stat-sales-today').textContent =
+          `${f.viewsToday ?? 0} → ${f.clicksToday ?? 0}`;
+
+        const salesEl = document.getElementById('sales-daily-stats');
+        if (f.daily && f.daily.length) {
+          salesEl.innerHTML = `<div class="table-wrap"><table>
+        <thead><tr><th>Tarih</th><th>Sayfa Açılışı</th><th>Shopier'e Gidiş</th><th>Oran</th></tr></thead>
+        <tbody>${f.daily.map(r => `<tr><td>${r.date}</td><td><span class="badge badge-blue">${r.views}</span></td><td><span class="badge badge-green">${r.clicks}</span></td><td>${r.rate === null ? '—' : r.rate + '%'}</td></tr>`).join('')}</tbody>
+      </table></div>`;
+        } else {
+          salesEl.innerHTML = `<div class="empty-state"><div class="empty-icon">📭</div>Henüz veri yok</div>`;
+        }
 
         // Cat stats
         const catEl = document.getElementById('cat-stats');

@@ -4,6 +4,17 @@ import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 const API = 'https://aofnotlar.com';
 const SHOPIER_URL = 'https://www.shopier.com/aofseslinotlar';
 
+// Satış sayfası takibi. Ateşle-unut: hata olsa bile kullanıcının akışını engellemez.
+const track = (event) => {
+  try {
+    const url = API + '/api/track/' + event;
+    if (navigator.sendBeacon) navigator.sendBeacon(url);
+    else fetch(url, { method: 'POST', keepalive: true }).catch(() => {});
+  } catch (e) { /* takip başarısız olsa da kullanıcı akışı devam etsin */ }
+};
+
+const trackShopierClick = () => track('shopier-click');
+
 // Sınav türü adı regex — her seferinde yeni instance (global /g regex stateful, lastIndex sorununu önler)
 const getExamTypeRegex = () => /\s*\(\s*(Vize|Final|Yaz okulu|[Vv]ize|[Ff]inal|[Yy]az [Oo]kulu)\s*\)\s*/g;
 
@@ -186,6 +197,18 @@ export default function App() {
   const [loadingCatId, setLoadingCatId] = useState(null);
   // Hızlı ardışık yıl/kategori tıklamalarında geç gelen eski cevabın yenisini ezmesini önler
   const fetchSeqRef = useRef(0);
+
+  // Satış sayfası her açıldığında bir görüntülenme say (aynı açılışta tekrar sayma)
+  const salesViewSentRef = useRef(false);
+  useEffect(() => {
+    if (screen !== 'product-detail') {
+      salesViewSentRef.current = false;
+      return;
+    }
+    if (salesViewSentRef.current) return;
+    salesViewSentRef.current = true;
+    track('sales-page-view');
+  }, [screen]);
 
   // Vize / Final seçimi
   const [examType, setExamType] = useState('yazokulu');
@@ -1454,12 +1477,15 @@ export default function App() {
 
           <div style={s.card}>
             <div style={{ textAlign: 'center', marginBottom: 16 }}>
-              <img 
-                src="/ozet-pdf-gorsel.png" 
-                alt="Özet PDF Görseli" 
-                style={{ 
-                  width: '100%', 
-                  maxWidth: 360, 
+              <img
+                src="/ozet-pdf-gorsel.jpg"
+                alt="Özet PDF Görseli"
+                width={720}
+                height={432}
+                style={{
+                  width: '100%',
+                  height: 'auto',
+                  maxWidth: 360,
                   borderRadius: 12, 
                   boxShadow: theme === 'dark' ? '0 8px 24px rgba(0, 0, 0, 0.4)' : '0 8px 24px rgba(0, 0, 0, 0.1)',
                   border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(0, 0, 0, 0.05)',
@@ -1540,10 +1566,10 @@ export default function App() {
                 Aşağıdakiler PDF'in sadece birkaç sayfası — tam doküman 10-15 sayfa dolu içerik barındırıyor.
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                <img src="/pdf-kesit-1.png" alt="PDF sayfa kesiti 1" style={{ width: '100%', borderRadius: 10, border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #e5e7eb', boxShadow: theme === 'dark' ? '0 4px 14px rgba(0, 0, 0, 0.3)' : '0 4px 14px rgba(0, 0, 0, 0.06)' }} />
-                <img src="/pdf-kesit-2.png" alt="PDF sayfa kesiti 2" style={{ width: '100%', borderRadius: 10, border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #e5e7eb', boxShadow: theme === 'dark' ? '0 4px 14px rgba(0, 0, 0, 0.3)' : '0 4px 14px rgba(0, 0, 0, 0.06)' }} />
-                <img src="/pdf-kesit-3.png" alt="PDF sayfa kesiti 3" style={{ width: '100%', borderRadius: 10, border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #e5e7eb', boxShadow: theme === 'dark' ? '0 4px 14px rgba(0, 0, 0, 0.3)' : '0 4px 14px rgba(0, 0, 0, 0.06)' }} />
-                <img src="/pdf-kesit-4.png" alt="PDF sayfa kesiti 4" style={{ width: '100%', borderRadius: 10, border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #e5e7eb', boxShadow: theme === 'dark' ? '0 4px 14px rgba(0, 0, 0, 0.3)' : '0 4px 14px rgba(0, 0, 0, 0.06)' }} />
+                <img src="/pdf-kesit-1.png" alt="PDF sayfa kesiti 1" loading="lazy" decoding="async" width={900} height={774} style={{ width: '100%', height: 'auto', borderRadius: 10, border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #e5e7eb', boxShadow: theme === 'dark' ? '0 4px 14px rgba(0, 0, 0, 0.3)' : '0 4px 14px rgba(0, 0, 0, 0.06)' }} />
+                <img src="/pdf-kesit-2.png" alt="PDF sayfa kesiti 2" loading="lazy" decoding="async" width={900} height={720} style={{ width: '100%', height: 'auto', borderRadius: 10, border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #e5e7eb', boxShadow: theme === 'dark' ? '0 4px 14px rgba(0, 0, 0, 0.3)' : '0 4px 14px rgba(0, 0, 0, 0.06)' }} />
+                <img src="/pdf-kesit-3.png" alt="PDF sayfa kesiti 3" loading="lazy" decoding="async" width={900} height={586} style={{ width: '100%', height: 'auto', borderRadius: 10, border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #e5e7eb', boxShadow: theme === 'dark' ? '0 4px 14px rgba(0, 0, 0, 0.3)' : '0 4px 14px rgba(0, 0, 0, 0.06)' }} />
+                <img src="/pdf-kesit-4.png" alt="PDF sayfa kesiti 4" loading="lazy" decoding="async" width={900} height={529} style={{ width: '100%', height: 'auto', borderRadius: 10, border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #e5e7eb', boxShadow: theme === 'dark' ? '0 4px 14px rgba(0, 0, 0, 0.3)' : '0 4px 14px rgba(0, 0, 0, 0.06)' }} />
               </div>
             </div>
 
@@ -1618,7 +1644,7 @@ export default function App() {
               </div>
             </div>
 
-            <a href={SHOPIER_URL} target="_blank" rel="noopener noreferrer" className="btn-hover" style={{ ...s.btn, background: '#f59e0b', color: '#fff', textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, fontWeight: 800, padding: '14px', borderRadius: 14, boxShadow: '0 4px 14px rgba(245, 158, 11, 0.3)' }}>
+            <a href={SHOPIER_URL} target="_blank" rel="noopener noreferrer" onClick={trackShopierClick} className="btn-hover" style={{ ...s.btn, background: '#f59e0b', color: '#fff', textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, fontWeight: 800, padding: '14px', borderRadius: 14, boxShadow: '0 4px 14px rgba(245, 158, 11, 0.3)' }}>
               <span>Shopier ile Hemen Al & İndir</span>
               <IconChevronRight size={18} />
             </a>
