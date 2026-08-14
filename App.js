@@ -1588,6 +1588,27 @@ export default function App() {
                 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
                     <div style={{ width: 32, height: 32, borderRadius: '50%', background: theme === 'dark' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(5, 150, 105, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: theme === 'dark' ? '#10b981' : '#059669' }}>
+                      Z
+                    </div>
+                    <div>
+                      <div style={{ fontSize: 12, fontWeight: 700, color: s.qText.color }}>Zeynep 🌷</div>
+                      <div style={{ fontSize: 11, color: theme === 'dark' ? '#6b7280' : '#9ca3af' }}>Yeni</div>
+                    </div>
+                  </div>
+                  <div style={{ fontSize: 12, color: s.qText.color, lineHeight: 1.5, fontStyle: 'italic' }}>
+                    "Yıllardır geçemediğim Sayısal Karar Verme'yi bu doküman sayesinde geçtim. Sözel sorularda zaten 7-8 soruyu garantilemiştim 🙏"
+                  </div>
+                </div>
+
+                <div style={{
+                  background: theme === 'dark' ? 'rgba(16, 185, 129, 0.08)' : 'rgba(5, 150, 105, 0.05)',
+                  border: `1px solid ${theme === 'dark' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(5, 150, 105, 0.15)'}`,
+                  borderRadius: 12,
+                  padding: 12,
+                  borderLeft: `4px solid ${theme === 'dark' ? '#10b981' : '#059669'}`
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                    <div style={{ width: 32, height: 32, borderRadius: '50%', background: theme === 'dark' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(5, 150, 105, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: theme === 'dark' ? '#10b981' : '#059669' }}>
                       A
                     </div>
                     <div>
