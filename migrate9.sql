@@ -1,0 +1,2 @@
+-- Admin panelinden kullanıcı engelleme
+ALTER TABLE users ADD COLUMN IF NOT EXISTS is_banned BOOLEAN DEFAULT false;

@@ -79,6 +79,7 @@ app.post('/api/auth/anonymous', async (req, res) => {
     let user;
     if (result.rows.length > 0) {
       user = result.rows[0];
+      if (user.is_banned) return res.status(403).json({ error: 'Bu kullanıcı adı engellenmiş' });
       // Günlük reset
       if (user.last_reset_date !== today) {
         await pool.query('UPDATE users SET daily_questions_used = 0, last_reset_date = $1 WHERE id = $2', [today, user.id]);
@@ -327,7 +328,7 @@ app.get('/api/leaderboard/:category_id', authMiddleware, async (req, res) => {
     const result = await pool.query(
       `SELECT u.username, ds.total_score
        FROM daily_scores ds JOIN users u ON u.id = ds.user_id
-       WHERE ds.category_id = $1 AND ds.score_date = $2
+       WHERE ds.category_id = $1 AND ds.score_date = $2 AND u.is_banned = false
        ORDER BY ds.total_score DESC LIMIT 10`,
       [req.params.category_id, today]
     );
@@ -598,7 +599,7 @@ app.post('/api/admin/questions/bulk', adminAuth, async (req, res) => {
 
 app.get('/api/admin/users', adminAuth, async (req, res) => {
   try {
-    const r = await pool.query('SELECT id, email, username, is_premium, premium_until, daily_questions_used, last_reset_date, created_at FROM users ORDER BY id DESC');
+    const r = await pool.query('SELECT id, email, username, is_premium, premium_until, is_banned, daily_questions_used, last_reset_date, created_at FROM users ORDER BY id DESC');
     res.json(r.rows);
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
@@ -609,6 +610,17 @@ app.put('/api/admin/users/:id/premium', adminAuth, async (req, res) => {
     const r = await pool.query(
       'UPDATE users SET is_premium=$1, premium_until=$2 WHERE id=$3 RETURNING id, email, username, is_premium, premium_until',
       [is_premium, premium_until || null, req.params.id]
+    );
+    res.json(r.rows[0]);
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+app.put('/api/admin/users/:id/ban', adminAuth, async (req, res) => {
+  const { is_banned } = req.body;
+  try {
+    const r = await pool.query(
+      'UPDATE users SET is_banned=$1 WHERE id=$2 RETURNING id, username, is_banned',
+      [is_banned, req.params.id]
     );
     res.json(r.rows[0]);
   } catch (e) { res.status(500).json({ error: e.message }); }
