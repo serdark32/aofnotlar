@@ -274,7 +274,7 @@ app.get('/api/leaderboard/general/top3', async (req, res) => {
     const top3 = await pool.query(
       `SELECT u.username, SUM(ds.total_score)::int as total_score
        FROM daily_scores ds JOIN users u ON u.id = ds.user_id
-       WHERE ds.score_date = $1
+       WHERE ds.score_date = $1 AND u.is_banned IS NOT TRUE
        GROUP BY u.id, u.username
        ORDER BY total_score DESC LIMIT 3`,
       [today]
@@ -328,7 +328,7 @@ app.get('/api/leaderboard/:category_id', authMiddleware, async (req, res) => {
     const result = await pool.query(
       `SELECT u.username, ds.total_score
        FROM daily_scores ds JOIN users u ON u.id = ds.user_id
-       WHERE ds.category_id = $1 AND ds.score_date = $2 AND u.is_banned = false
+       WHERE ds.category_id = $1 AND ds.score_date = $2 AND u.is_banned IS NOT TRUE
        ORDER BY ds.total_score DESC LIMIT 10`,
       [req.params.category_id, today]
     );
