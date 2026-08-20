@@ -155,11 +155,13 @@ app.get('/api/auth/me', authMiddleware, async (req, res) => {
       [today, req.user.id]
     );
     const result = await pool.query(
-      'SELECT id, email, username, is_premium, premium_until, daily_questions_used FROM users WHERE id = $1',
+      'SELECT id, email, username, is_premium, premium_until, is_banned, daily_questions_used FROM users WHERE id = $1',
       [req.user.id]
     );
     if (!result.rows[0]) return res.status(404).json({ error: 'Kullanıcı bulunamadı' });
     const user = result.rows[0];
+    // Engellenen kullanıcı: 401 → frontend token'ı silip çıkış yapar
+    if (user.is_banned) return res.status(401).json({ error: 'Hesabınız engellenmiştir' });
     res.json({ ...user, is_anonymous: !user.email });
   } catch (e) {
     res.status(500).json({ error: e.message });
@@ -235,6 +237,7 @@ app.post('/api/answer', authMiddleware, async (req, res) => {
     const userResult = await pool.query('SELECT * FROM users WHERE id = $1', [req.user.id]);
     const user = userResult.rows[0];
     if (!user) return res.status(401).json({ error: 'Kullanıcı bulunamadı' });
+    if (user.is_banned) return res.status(401).json({ error: 'Hesabınız engellenmiştir' });
     let dailyUsed = user.daily_questions_used || 0;
 
     if (user.last_reset_date !== today) {
