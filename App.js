@@ -1084,6 +1084,9 @@ export default function App() {
   useEffect(() => {
     localStorage.setItem('demo_theme', theme);
 
+    // text-transform: uppercase Türkçe kuralına göre çalışsın (pratik → PRATİK, i → İ)
+    document.documentElement.lang = 'tr';
+
     // Google Fonts Dinamik Yükleme
     const fontId = 'google-fonts-design-system';
     if (!document.getElementById(fontId)) {
@@ -1547,23 +1550,30 @@ export default function App() {
         if (examType === 'yazokulu') return nameLower.includes('yaz okulu');
         return true;
       })
-      .map(cat => {
+      .map((cat, i) => {
         const cleanName = cat.name.replace(getExamTypeRegex(), '').trim();
         const isFav = favorites.includes(cat.id);
         const isLoading = loadingCatId === cat.id;
         return (
           <button key={cat.id} style={{ ...s.catBtn, opacity: isLoading ? 0.55 : 1 }} className="cat-btn-hover" onClick={() => handleCategoryClick(cat)}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <div
-                onClick={(e) => { e.stopPropagation(); toggleFavorite(e, cat.id); }}
-                style={{ fontSize: 18, cursor: 'pointer', color: isFav ? '#ff9f0a' : (theme === 'dark' ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.25)'), transition: '0.2s', paddingRight: 4, transform: isFav ? 'scale(1.1)' : 'scale(1)' }}
-              >
-                <IconStar size={18} filled={isFav} />
-              </div>
-              <span style={{ fontWeight: 500, fontSize: 14 }}>{cleanName}</span>
+            {/* Ayraç ikon karosunun hizasından başlar (iOS gruplu liste) */}
+            {i > 0 && <span style={s.rowSep} />}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 0, flex: 1 }}>
+              <span style={{ ...s.rowTile, background: tileColor(cleanName, theme === 'dark') }}>
+                {tileInitials(cleanName)}
+              </span>
+              <span style={{ fontWeight: 500, fontSize: 14, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{cleanName}</span>
             </div>
-            <span style={s.catArrow}>
-              <IconChevronRight size={16} />
+            <span style={{ display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0 }}>
+              <span
+                onClick={(e) => { e.stopPropagation(); toggleFavorite(e, cat.id); }}
+                style={{ display: 'flex', cursor: 'pointer', color: isFav ? '#ff9f0a' : (theme === 'dark' ? 'rgba(255,255,255,0.28)' : 'rgba(0,0,0,0.22)'), transition: '0.2s' }}
+              >
+                <IconStar size={17} filled={isFav} />
+              </span>
+              <span style={s.catArrow}>
+                <IconChevronRight size={16} />
+              </span>
             </span>
           </button>
         );
@@ -1641,7 +1651,7 @@ export default function App() {
                 <>
                   <textarea style={s.feedbackInput} placeholder="Mesajını buraya yaz..."
                     value={feedbackText} onChange={e => setFeedbackText(e.target.value)} rows={3} />
-                  <button style={{ ...s.btn, color: '#fff', marginTop: 8 }} className="btn-hover" onClick={sendFeedback}>Gönder</button>
+                  <button style={{ ...s.btn, marginTop: 8 }} className="btn-hover" onClick={sendFeedback}>Gönder</button>
                   <button style={{ ...s.btnOutline, marginTop: 8 }} className="btn-hover" onClick={() => setShowFeedback(false)}>İptal</button>
                 </>
               )}
@@ -1709,113 +1719,79 @@ export default function App() {
           }
         </div>
 
-        {/* Özet Ders Notu İndir Butonu */}
-        <button
-          className="btn-hover"
-          style={{
-            width: '100%',
-            margin: '0 0 8px 0',
-            background: s.card.background,
-            border: s.card.border,
-            borderRadius: 12,
-            padding: '13px 16px',
-            boxShadow: s.card.boxShadow,
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            cursor: 'pointer',
-            color: s.greeting.color,
-            fontWeight: 500,
-            fontSize: 13,
-            transition: 'all 0.2s'
-          }}
-          onClick={async () => {
-            try {
-              const res = await fetch(API + '/api/pdf-notes');
-              const data = await res.json();
-              setPdfNotes(data);
-              setNotesSelected([]);
-              setNotesEmail('');
-              setNotesKvkk(false);
-              setNotesResult(null);
-              setScreen('notes-download');
-            } catch (e) { alert('Özet notlar yüklenemedi'); }
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <IconFileText size={16} style={{ color: theme === 'dark' ? '#30d47e' : '#0a7d55' }} />
-            <span>Ücretsiz Özet Ders Notu İndir</span>
-          </div>
-          <IconChevronRight size={16} style={{ color: theme === 'dark' ? 'rgba(255,255,255,0.5)' : 'rgba(0, 0, 0, 0.35)' }} />
-        </button>
+        {/* Kaynaklar — iOS gruplu liste, satır başına renkli karo */}
+        <div style={s.groupHeader}>Kaynaklar</div>
+        <div style={s.group}>
+          <button
+            className="cat-btn-hover"
+            style={s.catBtn}
+            onClick={async () => {
+              try {
+                const res = await fetch(API + '/api/pdf-notes');
+                const data = await res.json();
+                setPdfNotes(data);
+                setNotesSelected([]);
+                setNotesEmail('');
+                setNotesKvkk(false);
+                setNotesResult(null);
+                setScreen('notes-download');
+              } catch (e) { alert('Özet notlar yüklenemedi'); }
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 0, flex: 1 }}>
+              <span style={{ ...s.rowTile, background: theme === 'dark' ? '#30d47e' : '#0a6b47' }}>
+                <IconFileText size={15} />
+              </span>
+              <span style={{ minWidth: 0 }}>
+                <span style={{ display: 'block', fontWeight: 500, fontSize: 14 }}>Ücretsiz özet ders notu</span>
+                <span style={{ display: 'block', fontSize: 11.5, color: s.progress.color, marginTop: 1 }}>Dersini seç, PDF e-postana gelsin</span>
+              </span>
+            </div>
+            <span style={s.catArrow}><IconChevronRight size={16} /></span>
+          </button>
 
-        {/* Ders Materyali İsteği Butonu */}
-        <button
-          className="btn-hover"
-          style={{
-            width: '100%',
-            margin: '0 0 8px 0',
-            background: s.card.background,
-            border: s.card.border,
-            borderRadius: 12,
-            padding: '13px 16px',
-            boxShadow: s.card.boxShadow,
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            cursor: 'pointer',
-            color: s.greeting.color,
-            fontWeight: 500,
-            fontSize: 13,
-            transition: 'all 0.2s'
-          }}
-          onClick={() => {
-            setCrSelected([]);
-            setCrDone(false);
-            setCrOpenBolum('İşletme');
-            setScreen('course-request');
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <IconEdit size={16} style={{ color: theme === 'dark' ? '#30d47e' : '#0a7d55' }} />
-            <span>Ders Materyali İsteği Gönder</span>
-          </div>
-          <IconChevronRight size={16} style={{ color: theme === 'dark' ? 'rgba(255,255,255,0.5)' : 'rgba(0, 0, 0, 0.35)' }} />
-        </button>
+          <button
+            className="cat-btn-hover"
+            style={s.catBtn}
+            onClick={() => {
+              setCrSelected([]);
+              setCrDone(false);
+              setCrOpenBolum('İşletme');
+              setScreen('course-request');
+            }}
+          >
+            <span style={s.rowSep} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 0, flex: 1 }}>
+              <span style={{ ...s.rowTile, background: theme === 'dark' ? '#8b89f0' : '#4b49b6' }}>
+                <IconEdit size={15} />
+              </span>
+              <span style={{ minWidth: 0 }}>
+                <span style={{ display: 'block', fontWeight: 500, fontSize: 14 }}>Ders materyali iste</span>
+                <span style={{ display: 'block', fontSize: 11.5, color: s.progress.color, marginTop: 1 }}>Listede olmayan dersi yaz</span>
+              </span>
+            </div>
+            <span style={s.catArrow}><IconChevronRight size={16} /></span>
+          </button>
+        </div>
 
-        {/* PDF Satış Yönlendirme Butonu */}
-        <button
-          className="btn-hover"
-          style={{
-            width: '100%',
-            margin: '0 0 18px 0',
-            background: theme === 'dark' ? '#30d47e' : '#0a7d55',
-            border: 'none',
-            borderRadius: 12,
-            padding: '13px 16px',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            cursor: 'pointer',
-            color: '#fff',
-            fontWeight: 600,
-            fontSize: 13,
-            boxShadow: '0 3px 10px rgba(255, 159, 10, 0.14)',
-            transition: 'all 0.2s'
-          }}
-          onClick={() => {
-            setPrevScreen('home');
-            setScreen('product-detail');
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <IconBookOpen size={16} />
-            <span>AÖF'ü Geçiren Pratik Özetler</span>
+        {/* Ücretli özet — ayrı kart, tek dolu buton */}
+        <div style={{ ...s.card, marginBottom: 18, cursor: 'pointer' }} className="btn-hover"
+          onClick={() => { setPrevScreen('home'); setScreen('product-detail'); }}>
+          <div style={{ fontSize: 15, fontWeight: 600, letterSpacing: '-0.02em' }}>AÖF'ü Geçiren Pratik Özetler</div>
+          <div style={{ fontSize: 12.5, color: s.progress.color, margin: '4px 0 12px' }}>
+            Sınavda çıkması en muhtemel konular, 20 sayfada.
           </div>
-          <IconChevronRight size={16} style={{ color: 'rgba(255,255,255,0.8)' }} />
-        </button>
- 
-        <div style={s.cardTitle2} id="pratik-yap">Pratik Yap</div>
+          <span style={{
+            display: 'inline-flex', alignItems: 'center', gap: 6,
+            background: s.btn.background, color: s.btn.color,
+            fontWeight: 600, fontSize: 13, borderRadius: 980, padding: '8px 18px',
+          }}>
+            <IconBookOpen size={15} />
+            <span>İncele</span>
+          </span>
+        </div>
+
+        <div style={s.groupHeader} id="pratik-yap">Pratik Yap</div>
  
         <div style={s.examTabRow}>
           <button type="button" className="btn-hover" style={examType === 'vize' ? s.examTabActiveVize : s.examTab} onClick={(e) => { e.preventDefault(); setExamType('vize'); }}>
@@ -1834,9 +1810,11 @@ export default function App() {
 
         {categories.length === 0 && <div style={s.empty}>{catsLoaded ? 'Yakında dersler eklenecek...' : 'Dersler yükleniyor...'}</div>}
 
-        {/* KATEGORİLER (Filtrelenmiş ve Temizlenmiş) */}
+        {/* KATEGORİLER (Filtrelenmiş ve Temizlenmiş) — tek gruplu liste */}
         <div style={{ minHeight: '65vh', paddingBottom: 40 }}>
-          {filteredCategoryNodes}
+          {filteredCategoryNodes.length > 0 && (
+            <div style={s.group}>{filteredCategoryNodes}</div>
+          )}
         </div>
 
       </div>
@@ -2021,11 +1999,11 @@ export default function App() {
           <div style={{ ...s.stickyBottom, cursor: 'pointer' }} onClick={() => { setPrevScreen('quiz'); setScreen('product-detail'); }}>
             <button style={s.stickyClose} onClick={(e) => { e.stopPropagation(); setShowStickyBottom(false); }} aria-label="Kapat">&times;</button>
             <div style={s.stickyContainer}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#fff', fontSize: 12, fontWeight: 700 }}>
-                <IconZap size={16} style={{ color: '#a1a1a6' }} />
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: s.greeting.color, fontSize: 12, fontWeight: 600 }}>
+                <IconZap size={16} style={{ color: theme === 'dark' ? '#30d47e' : '#0a6b47' }} />
                 <span>Sınav Sabahı Bilmen Gereken 25 Terim</span>
               </div>
-              <IconChevronRight size={18} style={{ color: '#a1a1a6' }} />
+              <IconChevronRight size={18} style={{ color: s.progress.color }} />
             </div>
           </div>
         )}
@@ -2212,7 +2190,7 @@ export default function App() {
               </div>
 
               <button
-                style={{ ...s.btn, background: '#30d47e', color: isThemeLight(theme) ? '#fff' : '#04140b', marginBottom: 8 }}
+                style={{ ...s.btn, marginBottom: 8 }}
                 onClick={() => {
                   const vize = parseFloat(vizeInput);
                   if (isNaN(vize) || vize < 0 || vize > 100) return;
@@ -2450,7 +2428,7 @@ export default function App() {
               </div>
             </div>
 
-            <a href={SHOPIER_URL} target="_blank" rel="noopener noreferrer" onClick={trackShopierClick} className="btn-hover" style={{ ...s.btn, background: '#09694a', color: '#fff', textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, fontWeight: 600, padding: '14px', borderRadius: 14, boxShadow: '0 4px 14px rgba(23, 63, 53, 0.18)' }}>
+            <a href={SHOPIER_URL} target="_blank" rel="noopener noreferrer" onClick={trackShopierClick} className="btn-hover" style={{ ...s.btn, textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, fontWeight: 600, padding: '14px', borderRadius: 980, boxShadow: 'none' }}>
               <span>Shopier ile Hemen Al & İndir</span>
               <IconChevronRight size={18} />
             </a>
@@ -2726,12 +2704,39 @@ const GREEN = '#0a7d55';
 const GREEN_DARK = '#09694a';
 const GREEN_LIGHT = '#30d47e';
 
+// iOS gruplu liste: satır başına renkli ikon karosu.
+// Açık temada koyu dolgu + beyaz yazı, koyu temada parlak dolgu + koyu yazı.
+const TILE_COLORS = [
+  { light: '#0a6b47', dark: '#30d47e' }, // yeşil (marka)
+  { light: '#4b49b6', dark: '#8b89f0' }, // indigo
+  { light: '#b45f00', dark: '#ff9f0a' }, // turuncu
+  { light: '#b03258', dark: '#f07a9a' }, // pembe
+  { light: '#1c5fa8', dark: '#64a9f0' }, // mavi
+  { light: '#6f3fa5', dark: '#b98af0' }, // mor
+];
+
+// Ders adından sabit bir renk seç — aynı ders her açılışta aynı renkte kalsın.
+const tileColor = (name, isDark) => {
+  let h = 0;
+  for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) >>> 0;
+  const c = TILE_COLORS[h % TILE_COLORS.length];
+  return isDark ? c.dark : c.light;
+};
+
+// "İşletme Yönetimi" → "İY", "İstatistik" → "İS"
+const tileInitials = (name) => {
+  const words = name.trim().split(/\s+/).filter(Boolean);
+  if (words.length === 0) return '?';
+  if (words.length === 1) return words[0].slice(0, 2).toLocaleUpperCase('tr');
+  return (words[0][0] + words[1][0]).toLocaleUpperCase('tr');
+};
+
 const getStyles = (theme) => {
   const isDark = theme === 'dark';
   
   // Apple-clean sistem: serin nötr griler, tek yeşil aksan, semantik kırmızı/amber.
   const colors = {
-    bgDark: isDark ? '#000000' : '#fbfbfd',
+    bgDark: isDark ? '#000000' : '#f2f2f7',
     bgGradient: 'none',
     primary: isDark ? '#30d47e' : '#0a7d55',
     primaryHover: isDark ? '#28bd6f' : '#09694a',
@@ -2748,6 +2753,13 @@ const getStyles = (theme) => {
     textFaint: isDark ? '#8d8d93' : '#86868b',
     surface2: isDark ? '#2c2c2e' : '#f5f5f7',
     line: isDark ? '#38383a' : '#d2d2d7',
+    separator: isDark ? '#38383a' : '#e5e5ea',
+    segTrack: isDark ? 'rgba(120,120,128,0.32)' : 'rgba(120,120,128,0.16)',
+    // Dolu butonlar: açık temada koyu yeşil + beyaz (parlamasın),
+    // koyu temada parlak yeşil + koyu yazı (beyaz okunmuyordu).
+    accentFill: isDark ? '#30d47e' : '#0a6b47',
+    accentFillText: isDark ? '#04140b' : '#ffffff',
+    accentFillHover: isDark ? '#28bd6f' : '#08573a',
     elev: isDark
       ? '0 1px 2px rgba(0,0,0,0.5), 0 8px 24px rgba(0,0,0,0.5)'
       : '0 1px 2px rgba(0,0,0,0.05), 0 8px 24px rgba(0,0,0,0.06)',
@@ -2873,8 +2885,8 @@ const getStyles = (theme) => {
       padding: '12px 20px',
       borderRadius: 980,
       border: 'none',
-      background: colors.primary,
-      color: isDark ? '#04140b' : '#fff',
+      background: colors.accentFill,
+      color: colors.accentFillText,
       fontWeight: 600,
       fontSize: 14,
       cursor: 'pointer',
@@ -2989,8 +3001,8 @@ const getStyles = (theme) => {
     },
     modalBox: {
       background: colors.cardBg,
-      border: `1px solid ${colors.cardBorder}`,
-      borderRadius: 16,
+      border: 'none',
+      borderRadius: 14,
       padding: 24,
       width: '100%',
       maxWidth: 400,
@@ -3018,11 +3030,48 @@ const getStyles = (theme) => {
     },
     card: {
       background: colors.cardBg,
-      border: `1px solid ${colors.cardBorder}`,
-      borderRadius: 16,
+      border: 'none',
+      borderRadius: 12,
       padding: 16,
       marginBottom: 16,
-      boxShadow: colors.elevSm,
+      boxShadow: 'none',
+    },
+    // iOS gruplu liste kabı: satırlar içine gelir, ayraçlar ikon hizasından başlar
+    group: {
+      background: colors.cardBg,
+      borderRadius: 12,
+      overflow: 'hidden',
+      marginBottom: 16,
+    },
+    groupHeader: {
+      fontSize: 11,
+      fontWeight: 500,
+      letterSpacing: '0.02em',
+      textTransform: 'uppercase',
+      color: colors.textFaint,
+      padding: '0 4px 7px 4px',
+    },
+    rowTile: {
+      width: 28,
+      height: 28,
+      borderRadius: 8,
+      flexShrink: 0,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontSize: 10,
+      fontWeight: 600,
+      letterSpacing: '0.02em',
+      lineHeight: 1,
+      color: isDark ? '#0b0b0d' : '#ffffff',
+    },
+    rowSep: {
+      position: 'absolute',
+      left: 56,
+      right: 0,
+      top: 0,
+      height: 1,
+      background: colors.separator,
     },
     cardTitle: {
       fontWeight: 600,
@@ -3085,21 +3134,24 @@ const getStyles = (theme) => {
       fontSize: 14,
     },
     catBtn: {
+      position: 'relative',
       width: '100%',
-      background: colors.cardBg,
-      border: `1px solid ${colors.cardBorder}`,
-      borderRadius: 12,
-      padding: '13px 16px',
+      background: 'transparent',
+      border: 'none',
+      borderRadius: 0,
+      padding: '11px 16px',
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
+      gap: 12,
       fontWeight: 500,
       fontSize: 14,
       cursor: 'pointer',
-      marginBottom: 8,
+      marginBottom: 0,
       color: colors.textMain,
-      transition: 'all 0.2s',
-      minHeight: 44,
+      transition: 'background 0.18s',
+      minHeight: 48,
+      textAlign: 'left',
     },
     catArrow: {
       color: colors.textFaint,
@@ -3205,14 +3257,14 @@ const getStyles = (theme) => {
     },
     quizCard: {
       background: colors.cardBg,
-      border: `1px solid ${colors.cardBorder}`,
-      borderRadius: 16,
+      border: 'none',
+      borderRadius: 12,
       padding: '16px 16px',
       marginBottom: 8,
       width: '100%',
       maxWidth: 600,
       boxSizing: 'border-box',
-      boxShadow: colors.elevSm,
+      boxShadow: 'none',
     },
     catLabel: {
       fontSize: 13,
@@ -3307,12 +3359,12 @@ const getStyles = (theme) => {
     },
     resultCard: {
       background: colors.cardBg,
-      border: `1px solid ${colors.cardBorder}`,
-      borderRadius: 16,
+      border: 'none',
+      borderRadius: 12,
       padding: 16,
       marginBottom: 12,
       marginTop: 8,
-      boxShadow: colors.elevSm,
+      boxShadow: 'none',
     },
     resultRow: {
       display: 'flex',
@@ -3362,7 +3414,7 @@ const getStyles = (theme) => {
       display: 'flex',
       gap: 3,
       margin: '14px 0 16px',
-      background: colors.surface2,
+      background: colors.segTrack,
       border: 'none',
       padding: 3,
       borderRadius: 980,
@@ -3483,8 +3535,8 @@ const getStyles = (theme) => {
     
     promoCard: {
       background: colors.cardBg,
-      border: `1px solid ${colors.cardBorder}`,
-      borderRadius: 16,
+      border: 'none',
+      borderRadius: 12,
       position: 'relative',
       overflow: 'hidden',
       display: 'flex',
@@ -3492,7 +3544,7 @@ const getStyles = (theme) => {
       boxSizing: 'border-box',
       marginBottom: 12,
       width: '100%',
-      boxShadow: colors.elevSm,
+      boxShadow: 'none',
     },
     promoCardAccent: {
       height: 0,
