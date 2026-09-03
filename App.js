@@ -1679,9 +1679,9 @@ export default function App() {
                 <div style={{ marginTop: 16, borderTop: `1px solid ${theme === 'dark' ? 'rgba(255, 255, 255, 0.08)' : '#e5e7eb'}`, paddingTop: 14 }}>
                   <div style={{ fontSize: 12, fontWeight: 700, color: theme === 'dark' ? '#aeb5c1' : '#6b7280', marginBottom: 10 }}>GEÇMİŞ GERİ BİLDİRİMLERİN</div>
                   {myFeedbacks.map((f, i) => (
-                    <div key={i} style={{ marginBottom: 10, padding: '10px 12px', background: theme === 'dark' ? 'rgba(255,255,255,0.03)' : '#f9fafb', borderRadius: 10, borderLeft: `3px solid ${f.is_read ? '#8fc3aa' : '#b08a52'}`, borderTop: `1px solid ${theme === 'dark' ? 'rgba(255,255,255,0.04)' : '#e5e7eb'}`, borderRight: `1px solid ${theme === 'dark' ? 'rgba(255,255,255,0.04)' : '#e5e7eb'}`, borderBottom: `1px solid ${theme === 'dark' ? 'rgba(255,255,255,0.04)' : '#e5e7eb'}` }}>
+                    <div key={i} style={{ marginBottom: 10, padding: '10px 12px', background: theme === 'dark' ? 'rgba(255,255,255,0.03)' : '#f9fafb', borderRadius: 10, borderLeft: `3px solid ${f.is_read ? '#8fc3aa' : '#527165'}`, borderTop: `1px solid ${theme === 'dark' ? 'rgba(255,255,255,0.04)' : '#e5e7eb'}`, borderRight: `1px solid ${theme === 'dark' ? 'rgba(255,255,255,0.04)' : '#e5e7eb'}`, borderBottom: `1px solid ${theme === 'dark' ? 'rgba(255,255,255,0.04)' : '#e5e7eb'}` }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
-                        <span style={{ fontSize: 11, fontWeight: 700, color: f.is_read ? '#8fc3aa' : '#8a683c', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                        <span style={{ fontSize: 11, fontWeight: 700, color: f.is_read ? '#8fc3aa' : '#527165', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
                           {f.is_read ? (
                             <>
                               <IconCheckCircle size={12} />
@@ -1713,13 +1713,13 @@ export default function App() {
 
         <div style={s.card}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, ...s.cardTitle }}>
-            <IconAward size={20} style={{ color: '#b08a52' }} />
+            <IconAward size={20} style={{ color: theme === 'dark' ? '#8fc3aa' : '#235b43' }} />
             <span>Bugünün Liderleri</span>
           </div>
 
           {/* GÜNÜN ŞAKASI BURAYA EKLENDİ */}
           {top3.length > 0 && (
-            <div style={{ fontWeight: '600', color: theme === 'dark' ? '#fde68a' : '#8a683c', marginBottom: 12, textAlign: 'center', background: theme === 'dark' ? 'rgba(245, 158, 11, 0.12)' : '#fef3c7', padding: '10px', borderRadius: 10, fontSize: 13, lineHeight: 1.4, border: theme === 'dark' ? '1px dashed rgba(245, 158, 11, 0.3)' : 'none' }}>
+            <div style={{ fontWeight: '600', color: theme === 'dark' ? '#d7e3dd' : '#214f3e', marginBottom: 12, textAlign: 'center', background: theme === 'dark' ? 'rgba(143, 195, 170, 0.12)' : '#e4ece7', padding: '10px', borderRadius: 10, fontSize: 13, lineHeight: 1.4, border: theme === 'dark' ? '1px solid rgba(143, 195, 170, 0.22)' : '1px solid #cbd8d1' }}>
               <span style={{ display: 'inline-flex', alignItems: 'center', gap: 7 }}><IconAward size={15} />{getDailyJoke(top3[0]?.username)}</span>
             </div>
           )}
@@ -1819,7 +1819,7 @@ export default function App() {
             width: '90%',
             maxWidth: '340px',
             margin: '0 auto 16px auto',
-            background: 'linear-gradient(135deg, #b08a52 0%, #8a683c 100%)',
+            background: 'linear-gradient(135deg, #235b43 0%, #173f35 100%)',
             border: 'none',
             borderRadius: 10,
             padding: '10px 14px',
@@ -2023,7 +2023,7 @@ export default function App() {
                     {[
                       { icon: <IconEdit size={20} style={{ color: theme === 'dark' ? '#8fc3aa' : '#235b43' }} />, label: 'Yazım / imla hatası', desc: 'Soruda veya seçeneklerde yazım yanlışı var' },
                       { icon: <IconXCircle size={20} style={{ color: theme === 'dark' ? '#ef4444' : '#dc2626' }} />, label: 'Doğru şık yanlış işaretli', desc: 'Cevap anahtarı yanlış görünüyor' },
-                      { icon: <IconHelpCircle size={20} style={{ color: '#b08a52' }} />, label: 'Mantık / içerik hatası', desc: 'Soru mantıksal olarak hatalı veya eksik' },
+                      { icon: <IconHelpCircle size={20} style={{ color: '#527165' }} />, label: 'Mantık / içerik hatası', desc: 'Soru mantıksal olarak hatalı veya eksik' },
                     ].map(opt => (
                       <button key={opt.label}
                         className="opt-btn-hover"
@@ -2052,10 +2052,10 @@ export default function App() {
             <button style={s.stickyClose} onClick={(e) => { e.stopPropagation(); setShowStickyBottom(false); }} aria-label="Kapat">&times;</button>
             <div style={s.stickyContainer}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#fff', fontSize: 12, fontWeight: 700 }}>
-                <IconZap size={16} style={{ color: '#b08a52' }} />
+                <IconZap size={16} style={{ color: '#d7e3dd' }} />
                 <span>Sınav Sabahı Bilmen Gereken 25 Terim</span>
               </div>
-              <IconChevronRight size={18} style={{ color: '#b08a52' }} />
+              <IconChevronRight size={18} style={{ color: '#d7e3dd' }} />
             </div>
           </div>
         )}
@@ -2126,7 +2126,7 @@ export default function App() {
               <>
                 <div style={s.resultRow}>
                   <span>
-                    <IconGraduationCap size={16} style={{ color: '#b08a52', marginRight: 8, display: 'inline', verticalAlign: 'middle' }} />
+                    <IconGraduationCap size={16} style={{ color: theme === 'dark' ? '#8fc3aa' : '#235b43', marginRight: 8, display: 'inline', verticalAlign: 'middle' }} />
                     <span>Final Etkisi (%70)</span>
                   </span>
                   <strong>{r.katki} puan</strong>
@@ -2478,7 +2478,7 @@ export default function App() {
               </div>
             </div>
 
-            <a href={SHOPIER_URL} target="_blank" rel="noopener noreferrer" onClick={trackShopierClick} className="btn-hover" style={{ ...s.btn, background: '#b08a52', color: '#fff', textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, fontWeight: 800, padding: '14px', borderRadius: 14, boxShadow: '0 4px 14px rgba(245, 158, 11, 0.3)' }}>
+            <a href={SHOPIER_URL} target="_blank" rel="noopener noreferrer" onClick={trackShopierClick} className="btn-hover" style={{ ...s.btn, background: '#173f35', color: '#fff', textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, fontWeight: 800, padding: '14px', borderRadius: 14, boxShadow: '0 4px 14px rgba(23, 63, 53, 0.18)' }}>
               <span>Shopier ile Hemen Al & İndir</span>
               <IconChevronRight size={18} />
             </a>
@@ -2765,8 +2765,8 @@ const getStyles = (theme) => {
     primary: isDark ? '#8fc3aa' : '#235b43',
     primaryHover: isDark ? '#a6d2bc' : '#173f35',
     primaryGlow: isDark ? 'rgba(143, 195, 170, 0.18)' : 'rgba(35, 91, 67, 0.13)',
-    accent: isDark ? '#d8bf86' : '#8a683c',
-    accentHover: isDark ? '#e5cf9d' : '#6f512e',
+    accent: isDark ? '#a9c8ba' : '#355f50',
+    accentHover: isDark ? '#c2dbcf' : '#214f3e',
     danger: isDark ? '#ef4444' : '#dc2626',
     dangerBg: isDark ? 'rgba(239, 68, 68, 0.15)' : 'rgba(220, 38, 38, 0.08)',
     successBg: isDark ? 'rgba(143, 195, 170, 0.15)' : 'rgba(35, 91, 67, 0.08)',
@@ -3456,8 +3456,8 @@ const getStyles = (theme) => {
     // Shopier Promo Modülleri
     heroBanner: {
       fontFamily: "'Manrope', sans-serif",
-      background: isDark ? '#244c40' : '#dfe8e2',
-      color: isDark ? '#f3f1ea' : '#234c3d',
+      background: isDark ? '#244c40' : '#173f35',
+      color: '#f3f1ea',
       padding: '8px 12px',
       display: 'flex',
       flexDirection: 'row',
@@ -3477,14 +3477,14 @@ const getStyles = (theme) => {
       fontSize: 11,
       fontWeight: 600,
       lineHeight: 1.4,
-      color: isDark ? '#f3f1ea' : '#234c3d',
+      color: '#f3f1ea',
       textAlign: 'left',
       flexGrow: 1,
     },
     heroClose: {
       background: 'none',
       border: 'none',
-      color: isDark ? 'rgba(255,255,255,0.7)' : '#5f786e',
+      color: 'rgba(255,255,255,0.72)',
       fontSize: 18,
       cursor: 'pointer',
       lineHeight: 1,
@@ -3518,7 +3518,7 @@ const getStyles = (theme) => {
       textAlign: 'left',
     },
     promoCardIconBox: {
-      background: isDark ? 'rgba(245, 158, 11, 0.15)' : 'rgba(245, 158, 11, 0.08)',
+      background: isDark ? 'rgba(143, 195, 170, 0.14)' : '#e4ece7',
       borderRadius: 12,
       width: 48,
       height: 48,
