@@ -674,38 +674,6 @@ app.post('/api/feedback', authMiddleware, async (req, res) => {
 });
 
 // ============================================================
-// PDF ARŞİVİ
-// ============================================================
-// Herkese açık: ders listesini döner
-app.get('/api/pdf-courses', async (req, res) => {
-  try {
-    const r = await pool.query('SELECT id, name, drive_link, created_at FROM pdf_courses ORDER BY created_at DESC');
-    res.json(r.rows);
-  } catch (e) { res.status(500).json({ error: e.message }); }
-});
-
-// Admin: yeni ders ekle
-app.post('/api/admin/pdf-courses', adminAuth, async (req, res) => {
-  const { name, drive_link } = req.body;
-  if (!name || !drive_link) return res.status(400).json({ error: 'Ders adı ve link zorunlu' });
-  try {
-    const r = await pool.query(
-      'INSERT INTO pdf_courses (name, drive_link) VALUES ($1, $2) RETURNING *',
-      [name.trim(), drive_link.trim()]
-    );
-    res.json(r.rows[0]);
-  } catch (e) { res.status(500).json({ error: e.message }); }
-});
-
-// Admin: ders sil
-app.delete('/api/admin/pdf-courses/:id', adminAuth, async (req, res) => {
-  try {
-    await pool.query('DELETE FROM pdf_courses WHERE id=$1', [req.params.id]);
-    res.json({ ok: true });
-  } catch (e) { res.status(500).json({ error: e.message }); }
-});
-
-// ============================================================
 // ÜCRETSİZ ÖZET DERS NOTLARI
 // ============================================================
 // Herkese açık: özet notu listesini döner
@@ -741,21 +709,40 @@ app.delete('/api/admin/pdf-notes/:id', adminAuth, async (req, res) => {
 // DERS İSTEKLERİ
 // ============================================================
 app.post('/api/course-request', async (req, res) => {
-  const { course_name } = req.body;
-  if (!course_name || !course_name.trim()) return res.status(400).json({ error: 'Ders adı zorunlu' });
+  // İki format destekleniyor:
+  //  1) { course_name: "..." }                          (eski serbest metin)
+  //  2) { courses: [{ name: "...", department: "..." }] } (yeni çoklu seçim)
+  let items = [];
+  if (Array.isArray(req.body.courses)) {
+    items = req.body.courses
+      .map(c => ({
+        name: String(c && c.name || '').trim(),
+        department: String(c && c.department || '').trim() || null
+      }))
+      .filter(c => c.name)
+      .slice(0, 100);
+  } else if (req.body.course_name && String(req.body.course_name).trim()) {
+    items = [{ name: String(req.body.course_name).trim(), department: null }];
+  }
+
+  if (!items.length) return res.status(400).json({ error: 'Ders adı zorunlu' });
+
   try {
-    // Aynı ders adı varsa count'u artır, yoksa yeni kayıt oluştur
-    const result = await pool.query(
-      `INSERT INTO course_requests (course_name, request_count, updated_at)
-       VALUES ($1, 1, NOW())
-       ON CONFLICT (LOWER(course_name))
-       DO UPDATE SET request_count = course_requests.request_count + 1, updated_at = NOW()
-       RETURNING *`,
-      [course_name.trim()]
-    );
-    res.json({ ok: true, course: result.rows[0] });
+    for (const it of items) {
+      // Aynı ders adı varsa count'u artır, yoksa yeni kayıt oluştur
+      await pool.query(
+        `INSERT INTO course_requests (course_name, department, request_count, updated_at)
+         VALUES ($1, $2, 1, NOW())
+         ON CONFLICT (LOWER(course_name))
+         DO UPDATE SET request_count = course_requests.request_count + 1,
+                       department = COALESCE(course_requests.department, EXCLUDED.department),
+                       updated_at = NOW()`,
+        [it.name, it.department]
+      );
+    }
+    res.json({ ok: true, count: items.length });
   } catch (e) {
-    // Tablo yoksa sessizce başarısız ol
+    // Tablo/kolon yoksa sessizce başarısız ol
     console.log('Course request error (tablo yok olabilir):', e.message);
     res.json({ ok: true });
   }
@@ -765,7 +752,7 @@ app.post('/api/course-request', async (req, res) => {
 app.get('/api/admin/course-requests', adminAuth, async (req, res) => {
   try {
     const result = await pool.query(
-      'SELECT * FROM course_requests ORDER BY request_count DESC, updated_at DESC LIMIT 200'
+      'SELECT * FROM course_requests ORDER BY department NULLS LAST, request_count DESC, updated_at DESC LIMIT 500'
     );
     res.json(result.rows);
   } catch (e) {
@@ -778,59 +765,6 @@ app.delete('/api/admin/course-requests/:id', adminAuth, async (req, res) => {
   try {
     await pool.query('DELETE FROM course_requests WHERE id = $1', [req.params.id]);
     res.json({ ok: true });
-  } catch (e) {
-    res.status(500).json({ error: e.message });
-  }
-});
-
-// Rate limit: aynı e-posta günde 1 kez
-const pdfRateLimit = new Map(); // email -> timestamp
-
-app.post('/api/send-pdf', async (req, res) => {
-  try {
-    const email = (req.body.email || '').trim().toLowerCase();
-    if (!email) return res.status(400).json({ error: 'E-posta gerekli' });
-
-    const now = Date.now();
-    const ONE_DAY = 24 * 60 * 60 * 1000; // 24 saat
-
-    // Eski kayıtları temizle
-    for (const [key, time] of pdfRateLimit) {
-      if (now - time > ONE_DAY) pdfRateLimit.delete(key);
-    }
-
-    // Bu e-posta daha önce istekte bulundu mu?
-    if (pdfRateLimit.has(email)) {
-      const kalan = Math.ceil((ONE_DAY - (now - pdfRateLimit.get(email))) / (60 * 60 * 1000));
-      return res.status(429).json({ error: `Bu e-posta ile günde 1 kez talep yapabilirsiniz. ~${kalan} saat sonra tekrar deneyin.` });
-    }
-
-    pdfRateLimit.set(email, now);
-
-    const https = require('https');
-    const data = JSON.stringify(req.body);
-    
-    const options = {
-      hostname: 'novantera.com',
-      port: 443,
-      path: '/webhook/aof-pdf-iste',
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Content-Length': Buffer.byteLength(data)
-      }
-    };
-    
-    const request = https.request(options, (response) => {
-      res.json({ success: true });
-    });
-    
-    request.on('error', (error) => {
-      res.status(500).json({ error: error.message });
-    });
-    
-    request.write(data);
-    request.end();
   } catch (e) {
     res.status(500).json({ error: e.message });
   }

@@ -18,6 +18,806 @@ const trackShopierClick = () => track('shopier-click');
 // Sınav türü adı regex — her seferinde yeni instance (global /g regex stateful, lastIndex sorununu önler)
 const getExamTypeRegex = () => /\s*\(\s*(Vize|Final|Yaz okulu|[Vv]ize|[Ff]inal|[Yy]az [Oo]kulu)\s*\)\s*/g;
 
+// Anadolu Üniversitesi Açıköğretim lisans programları ve dersleri
+// Kaynak: abp.anadolu.edu.tr (Anadolu Bilgi Paketi)
+const AOF_BOLUMLER = [
+  { bolum: "İşletme", dersler: [
+    "Hukukun Temel Kavramları",
+    "İktisada Giriş I",
+    "İşletme İlkeleri",
+    "Genel Matematik",
+    "Davranış Bilimleri I",
+    "İktisada Giriş II",
+    "İşletme Fonksiyonları",
+    "İşletme İletişimi",
+    "Finansal Muhasebe",
+    "Davranış Bilimleri II",
+    "İstatistik",
+    "İşletmelerde Sosyal Sorumluluk ve Etik",
+    "İşletme Yönetimi",
+    "Dönemsonu İşlemleri",
+    "Atatürk İlkeleri ve İnkılap Tarihi I",
+    "Türk Dili I",
+    "Ticaret Hukuku",
+    "Pazarlamaya Giriş",
+    "Teknoloji, İnnovasyon ve Girişimcilik",
+    "Tedarik Zinciri Yönetimi",
+    "Atatürk İlkeleri ve İnkılap Tarihi II",
+    "Türk Dili II",
+    "Finansal Yönetim I",
+    "Uluslararası İşletmecilik",
+    "Üretim Yönetimi",
+    "Maliyet ve Yönetim Muhasebesi",
+    "Pazarlama Yönetimi",
+    "Finansal Yönetim II",
+    "İş ve Sosyal Güvenlik Hukuku",
+    "Örgüt Kuramı",
+    "Pazarlama İletişimi",
+    "Örgütsel Davranış",
+    "Stratejik Yönetim",
+    "İşletme Bilgi Sistemleri",
+    "Denetim",
+    "Sermaye Piyasaları ve Finansal Kurumlar",
+    "Türk Vergi Sistemi",
+    "Finansal Tablolar Analizi",
+    "Türkiye Ekonomisi",
+    "İnsan Kaynakları Yönetimi",
+    "Sayısal Karar Verme Teknikleri",
+    "Küresel Pazarlama",
+  ] },
+  { bolum: "İktisat", dersler: [
+    "Hukukun Temel Kavramları",
+    "İktisada Giriş I",
+    "Genel İşletme",
+    "Matematik I",
+    "Genel Muhasebe I",
+    "İktisada Giriş II",
+    "Ekonomi Sosyolojisi",
+    "Yönetim ve Organizasyon",
+    "Matematik II",
+    "Genel Muhasebe II",
+    "Anayasa Hukuku",
+    "Mikro İktisat",
+    "İstatistik I",
+    "Kamu Maliyesi",
+    "Atatürk İlkeleri ve İnkılap Tarihi I",
+    "Türk Dili I",
+    "Ticaret Hukuku",
+    "Makro İktisat",
+    "İktisat Tarihi",
+    "İstatistik II",
+    "Atatürk İlkeleri ve İnkılap Tarihi II",
+    "Türk Dili II",
+    "Matematiksel İktisat",
+    "Para Teorisi",
+    "Tarım Ekonomisi ve Tarımsal Politikalar",
+    "Uluslararası İktisat Teorisi",
+    "Sosyal Bilimlerde Proje Yönetimi",
+    "Çalışma Ekonomisi",
+    "İş ve Sosyal Güvenlik Hukuku",
+    "Para Politikası",
+    "Uluslararası İktisat Politikası",
+    "Ekonometrinin Temelleri",
+    "İktisadi Düşünceler Tarihi",
+    "İktisadi Kalkınma",
+    "Finansal Ekonomi",
+    "Girişimcilik ve İş Kurma",
+    "Türk Vergi Sistemi",
+    "Doğal Kaynaklar ve Çevre Ekonomisi",
+    "Türkiye Ekonomisi",
+    "Avrupa Birliği ve Türkiye İlişkileri",
+    "Ekonominin Güncel Sorunları",
+    "İktisadi Büyüme",
+  ] },
+  { bolum: "Maliye", dersler: [
+    "Hukukun Temel Kavramları",
+    "İktisada Giriş I",
+    "Genel İşletme",
+    "Genel Matematik",
+    "Genel Muhasebe I",
+    "Borçlar Hukuku",
+    "Temel İdare Hukuku",
+    "İktisada Giriş II",
+    "Genel Muhasebe II",
+    "İnsan ve Toplum",
+    "Mikro İktisat",
+    "İstatistik",
+    "Kamu Maliyesi",
+    "Genel Vergi Hukuku",
+    "Atatürk İlkeleri ve İnkılap Tarihi I",
+    "Türk Dili I",
+    "Ticaret Hukuku",
+    "Vergi Usul Hukuku",
+    "Makro İktisat",
+    "Vergi Teorisi",
+    "Atatürk İlkeleri ve İnkılap Tarihi II",
+    "Türk Dili II",
+    "Özel Vergi Hukuku I",
+    "Para ve Banka",
+    "Kamu Ekonomisi I",
+    "Devlet Bütçesi",
+    "Maliyet Muhasebesi",
+    "Özel Vergi Hukuku II",
+    "Kamu Ekonomisi II",
+    "Mahalli İdareler Maliyesi",
+    "Kamu Mali Yönetimi",
+    "Uluslararası Kamu Maliyesi",
+    "Vergi Ceza Hukuku",
+    "Vergi İcra Hukuku",
+    "Devlet Borçları",
+    "Muhasebe Denetimi",
+    "Gümrük Mevzuatı",
+    "Türkiye Ekonomisi",
+    "Ekonominin Güncel Sorunları",
+    "Maliye Politikası",
+    "Vergi Yargılaması Hukuku",
+    "Vergi Planlaması",
+  ] },
+  { bolum: "Yönetim Bilişim Sistemleri", dersler: [
+    "İktisada Giriş",
+    "İşletme İlkeleri",
+    "Matematik I",
+    "Genel Muhasebe",
+    "Bilişim Teknolojileri",
+    "Bilişim Hukuku",
+    "Proje Yönetimi",
+    "Yeni İletişim Teknolojileri",
+    "İşletme Fonksiyonları",
+    "Matematik II",
+    "İstatistik",
+    "Atatürk İlkeleri ve İnkılap Tarihi I",
+    "Türk Dili I",
+    "Bilgisayar ve Programlamaya Giriş",
+    "İşlem Tabloları",
+    "Bilişim Sistemleri",
+    "Atatürk İlkeleri ve İnkılap Tarihi II",
+    "Türk Dili II",
+    "İşletme Analitiği",
+    "Algoritmalar ve Programlama",
+    "Veritabanı Sistemleri",
+    "İş Süreçleri Yönetimi",
+    "Dijital Dönüşüm",
+    "Üretim Yönetimi",
+    "İşlem Tablosu Programlama",
+    "Kullanıcı Deneyimi Tasarımı",
+    "Sistem Analizi ve Tasarımı",
+    "Kurumsal Kaynak Planlama Sistemleri",
+    "Marka ve Yönetimi",
+    "Örgütsel Davranış",
+    "Ağ Yönetimi ve Bilgi Güvenliği",
+    "Veritabanı Programlama",
+    "İleri Programlama",
+    "Sosyal Ağ Analizi",
+    "Girişimcilik ve İş Kurma",
+    "Yenilik Yönetimi",
+    "Yöneylem Araştırması",
+    "Karar Modelleri",
+    "İnternet ve Web Programlama",
+    "Finansal Tablolar Analizi",
+    "Müşteri İlişkileri Yönetimi",
+    "Karar Destek Sistemleri",
+    "Veri Madenciliği",
+    "Programlamada Yeni Eğilimler",
+  ] },
+  { bolum: "Uluslararası Ticaret ve Lojistik", dersler: [
+    "Temel Bilgi Teknolojileri",
+    "Hukukun Temel Kavramları",
+    "İktisada Giriş I",
+    "Genel İşletme",
+    "Genel Muhasebe I",
+    "İktisada Giriş II",
+    "Yönetim ve Organizasyon",
+    "Genel Muhasebe II",
+    "Dış Ticarete Giriş",
+    "Uluslararası Ticaret Hukuku",
+    "İstatistik",
+    "Atatürk İlkeleri ve İnkılap Tarihi I",
+    "Dış Ticarette Girişimcilik",
+    "Dış Ticaretin Finansmanı ve Teşviki",
+    "Türk Dili I",
+    "Uluslararası Ticarette Vergilendirme",
+    "Küresel Pazarlama",
+    "Atatürk İlkeleri ve İnkılap Tarihi II",
+    "Elektronik Ticaret",
+    "Türk Dili II",
+    "İşletme Analitiği",
+    "Uluslararası İşletmecilik",
+    "Lojistik İlkeleri",
+    "Dış Ticarette Risk Yönetimi ve Sigortacılık",
+    "Depolama ve Envanter Yönetimi",
+    "Uluslararası İktisat",
+    "Lojistik Yönetimi",
+    "Dış Ticaret İşlemleri ve Belgeleri",
+    "İşletme Finansmanı",
+    "Dış Ticaret İşlemlerinin Muhasebeleştirilmesi",
+    "Gümrük Mevzuatı",
+    "Uluslararası Lojistik",
+    "Ulaştırma Sistemleri ve Yönetimi",
+    "Tehlikeli Madde Lojistiği ve İş Güvenliği",
+    "Lojistik Maliyetleri ve Raporlama",
+    "Yöneylem Araştırması",
+    "Bilişim Sistemleri ve Lojistik",
+    "Lojistik Planlama ve Modelleme",
+    "Liman ve Terminal Yönetimi",
+    "Entegre Lojistik Destek",
+    "Tedarik Zinciri Yönetimi",
+  ] },
+  { bolum: "Uluslararası İlişkiler", dersler: [
+    "Hukukun Temel Kavramları",
+    "İdare Hukukuna Giriş",
+    "İktisada Giriş I",
+    "Davranış Bilimleri I",
+    "Siyasi Tarih I",
+    "İktisada Giriş II",
+    "Davranış Bilimleri II",
+    "Genel Uygarlık Tarihi",
+    "Siyasi Tarih II",
+    "Uluslararası İlişkilere Giriş",
+    "Anayasa Hukuku",
+    "Uluslararası Hukuk I",
+    "Atatürk İlkeleri ve İnkılap Tarihi I",
+    "Türk Dili I",
+    "Uluslararası Politika I",
+    "Türk Dış Politikası I",
+    "Uluslararası Hukuk II",
+    "Türkiye Ekonomisi",
+    "Atatürk İlkeleri ve İnkılap Tarihi II",
+    "Türk Dili II",
+    "Uluslararası Politika II",
+    "Türk Dış Politikası II",
+    "Balkanlar'da Siyaset",
+    "Orta Asya ve Kafkaslarda Siyaset",
+    "Strateji ve Güvenlik",
+    "İnsan Hakları ve Demokratikleşme Süreci",
+    "Karşılaştırmalı Siyasal Sistemler",
+    "Kültür Tarihi",
+    "Orta Doğuda Siyaset",
+    "Uluslararası Örgütler",
+    "Dış Politika Analizi",
+    "Uluslararası Politik Ekonomi",
+    "Avrupa Birliği",
+    "Siyaset Bilimi",
+    "Amerikan Dış Politikası",
+    "Uluslararası İlişkiler Kuramları I",
+    "Diplomasi Tarihi",
+    "Uluslararası İlişkilerde Araştırma Yöntemleri",
+    "Avrupa Birliği ve Türkiye İlişkileri",
+    "Küreselleşme ve Kültürlerarası İletişim",
+    "Gelişmekte Olan Ülkelerde Siyaset",
+    "Uluslararası İlişkiler Kuramları II",
+  ] },
+  { bolum: "Siyaset Bilimi ve Kamu Yönetimi", dersler: [
+    "Hukukun Temel Kavramları",
+    "İktisada Giriş I",
+    "Genel İşletme",
+    "Genel Muhasebe I",
+    "Davranış Bilimleri I",
+    "Borçlar Hukuku",
+    "İktisada Giriş II",
+    "Genel Muhasebe II",
+    "Davranış Bilimleri II",
+    "Genel Uygarlık Tarihi",
+    "Anayasa Hukuku",
+    "Yönetim Bilimi I",
+    "Kamu Maliyesi",
+    "Siyaset Bilimi",
+    "Atatürk İlkeleri ve İnkılap Tarihi I",
+    "Türk Dili I",
+    "İdare Hukuku",
+    "Kamu Yönetimi",
+    "Yönetim Bilimi II",
+    "Atatürk İlkeleri ve İnkılap Tarihi II",
+    "Türk Dili II",
+    "Yerel Yönetimler",
+    "Sosyal Bilimlerde Araştırma Yöntemleri",
+    "Sosyal Politika",
+    "Kamu Personel Hukuku",
+    "Siyasi Tarih",
+    "Karşılaştırmalı Siyasal Sistemler",
+    "İdari Yargı",
+    "İnsan Hakları ve Kamu Özgürlükleri",
+    "Türk Siyasal Hayatı",
+    "Örgütsel Davranış",
+    "Uluslararası Örgütler",
+    "Türk İdare Tarihi",
+    "Kentleşme ve Konut Politikaları",
+    "Türk Vergi Sistemi",
+    "Siyaset Sosyolojisi",
+    "Türkiye'nin Toplumsal Yapısı",
+    "Türkiye Ekonomisi",
+    "Avrupa Birliği ve Türkiye İlişkileri",
+    "Yönetimde Güncel Yaklaşımlar",
+    "Maliye Politikası",
+    "Siyasi Düşünceler Tarihi",
+  ] },
+  { bolum: "Çalışma Ekonomisi ve Endüstri İlişkileri", dersler: [
+    "Hukukun Temel Kavramları",
+    "İktisada Giriş I",
+    "Genel İşletme",
+    "Genel Muhasebe I",
+    "Davranış Bilimleri I",
+    "Borçlar Hukuku",
+    "İktisada Giriş II",
+    "Yönetim ve Organizasyon",
+    "Genel Muhasebe II",
+    "Davranış Bilimleri II",
+    "Sosyal Politika I",
+    "Çalışma Ekonomisi I",
+    "Mikro İktisat",
+    "Kamu Maliyesi",
+    "Atatürk İlkeleri ve İnkılap Tarihi I",
+    "Türk Dili I",
+    "Sosyal Politika II",
+    "Çalışma Ekonomisi II",
+    "İdare Hukuku",
+    "Makro İktisat",
+    "Atatürk İlkeleri ve İnkılap Tarihi II",
+    "Türk Dili II",
+    "Çalışma İlişkileri Tarihi",
+    "İstihdam ve İşsizlik",
+    "Türk Anayasa Hukuku",
+    "Bireysel İş Hukuku",
+    "Çalışma Sosyolojisi",
+    "Gelir Dağılımı ve Yoksulluk",
+    "Sendikacılık",
+    "Uluslararası Sosyal Politika",
+    "Toplu İş Hukuku",
+    "Örgütsel Davranış",
+    "Endüstri İlişkileri",
+    "İş Sağlığı ve Güvenliği",
+    "Sosyal Güvenlik",
+    "İstatistik",
+    "Türk Vergi Sistemi",
+    "Çalışma Yaşamının Denetimi",
+    "Ticaret Hukuku",
+    "Sosyal Güvenlik Hukuku",
+    "Türkiye Ekonomisi",
+    "İnsan Kaynakları Yönetimi",
+  ] },
+  { bolum: "Halkla İlişkiler ve Reklamcılık", dersler: [
+    "İktisada Giriş",
+    "İletişim Bilgisi",
+    "Genel İşletme",
+    "Psikoloji",
+    "Pazarlama Yönetimi",
+    "Halkla İlişkiler",
+    "Yeni İletişim Teknolojileri",
+    "İletişim Kuramları",
+    "Marka ve Yönetimi",
+    "Pazarlama İletişimi",
+    "Kurumsal İletişim",
+    "İkna Edici İletişim",
+    "Reklamcılık",
+    "Dijital Medya ve Tüketici",
+    "Atatürk İlkeleri ve İnkılap Tarihi I",
+    "Türk Dili I",
+    "Halkla İlişkiler Yazarlığı",
+    "Reklamda Yaratıcılık",
+    "Dijital İçerik Pazarlaması",
+    "Kriz İletişimi ve Yönetimi",
+    "Atatürk İlkeleri ve İnkılap Tarihi II",
+    "Türk Dili II",
+    "Felsefe",
+    "Kurumiçi Halkla İlişkiler",
+    "Tanıtım ve Pazarlama",
+    "İnternet ve Mobil Pazarlama",
+    "Sosyal Medya Yönetimi",
+    "Kamu Diplomasisi ve Uluslararası Halkla İlişkiler",
+    "Sürdürülebilirlik ve Halkla İlişkiler",
+    "Medyada Yapım",
+    "Marka İletişim Tasarımı ve Uygulamaları",
+    "Sanat Tarihi",
+    "Halkla İlişkiler Kampanya Analizi",
+    "İtibar Yönetimi",
+    "Kurum Kültürü",
+    "Medya Planlama",
+    "Tüketici Davranışları",
+    "Dijital Halkla İlişkiler",
+    "Halkla İlişkiler Araştırmaları",
+    "Reklam Kampanya Süreci",
+    "Kurumsal Kimlik ve İmaj Yönetimi",
+    "Reklamda Yaratıcılık ve Yazarlık",
+  ] },
+  { bolum: "Sağlık Yönetimi", dersler: [
+    "İktisada Giriş I",
+    "Genel Muhasebe I",
+    "Pazarlama Yönetimi",
+    "Sağlık İşletmeciliği I",
+    "Tıbbi Belgeleme",
+    "Sağlık Hukuku",
+    "İktisada Giriş II",
+    "Temel Sağlık ve Hastalık Bilgisi",
+    "Sağlık İşletmelerinde Davranış",
+    "Sağlık İşletmeciliği II",
+    "Denetim",
+    "Kamu Maliyesi",
+    "Sağlık İşletmelerinde Halkla İlişkiler",
+    "Sağlık İşletmelerinde Yönetim",
+    "Atatürk İlkeleri ve İnkılap Tarihi I",
+    "Türk Dili I",
+    "Sağlık Kurumlarında İletişim",
+    "Stratejik Yönetim II",
+    "Sağlık İşletmelerinde İnsan Kaynakları Yönetimi",
+    "Sağlık Politikaları",
+    "Atatürk İlkeleri ve İnkılap Tarihi II",
+    "Türk Dili II",
+    "Kamu Personel Hukuku",
+    "Psikoloji",
+    "Sağlık Alanında İstatistik",
+    "Sağlık Ekonomisi",
+    "Sağlık Kurumlarında Afet ve Kriz Yönetimi",
+    "Tıp Terimleri",
+    "Genel Beslenme",
+    "Proje Yönetimi",
+    "Temel İlkyardım Bilgisi",
+    "Genel Tıbbi Ürün ve Tıbbi Cihaz Bilgisi",
+    "Bakım Elemanı Yetiştirme ve Geliştirme I",
+    "Temel Sağlık Hizmetleri",
+    "İş Sağlığı ve Güvenliği",
+    "Sosyal Güvenlik",
+    "Sağlık Kurumlarında Maliyet Muhasebesi",
+    "Sağlık Hizmetlerinde Araştırma ve Değerlendirme",
+    "Sağlık Kurumlarında Operasyon Yönetimi",
+    "Sağlık Sigortacılığı",
+    "Yönetimde Güncel Yaklaşımlar",
+    "İnsan Beden Yapısı ve Fizyolojisi",
+    "Sağlık Bilimlerinde ve Yönetiminde Etik",
+    "Sağlık İşletmelerinde Finansal Yönetim",
+    "Sağlık İşletmelerinde Kalite Yönetimi",
+    "Sağlık Kurumlarında Bilgi Sistemleri",
+  ] },
+  { bolum: "Sosyal Hizmet", dersler: [
+    "Hukukun Temel Kavramları",
+    "Psikoloji",
+    "Sosyal Hizmet Mesleğine Giriş",
+    "İnsan Davranışı ve Sosyal Çevre I",
+    "Sosyolojiye Giriş",
+    "Etkili İletişim Teknikleri",
+    "Temel İlkyardım Bilgisi",
+    "Sosyal Hizmet Kuruluşları",
+    "İnsan Davranışı ve Sosyal Çevre II",
+    "Toplumsal Tabakalaşma ve Eşitsizlik",
+    "Sosyal Güvenlik",
+    "Sosyal Psikoloji I",
+    "Sosyal Hizmet Kuram ve Yaklaşımları",
+    "Türkiye'nin Toplumsal Yapısı",
+    "Atatürk İlkeleri ve İnkılap Tarihi I",
+    "Türk Dili I",
+    "İnsan Hakları ve Kamu Özgürlükleri",
+    "Görüşme Teknikleri",
+    "Sosyal Hizmet Mevzuatı",
+    "Bireylerle Sosyal Hizmet",
+    "Atatürk İlkeleri ve İnkılap Tarihi II",
+    "Türk Dili II",
+    "Sosyal Bilimlerde Araştırma Yöntemleri",
+    "Sosyal Politika",
+    "Yaşlılarla Sosyal Hizmet",
+    "Tıbbi ve Psiko-Sosyal Hizmet",
+    "Gruplarla Sosyal Hizmet",
+    "Toplumsal Cinsiyet Sosyolojisi",
+    "Sosyal Hizmette Kayıt Tutma ve Rapor Yazma İlke ve Teknikleri",
+    "Engellilerle Sosyal Hizmet",
+    "Aile ve Çocukla Sosyal Hizmet",
+    "Sosyal Hizmet Etiği",
+    "Toplumla Sosyal Hizmet",
+    "Adli Sosyal Hizmet",
+    "Göç ve Göçmen Sorunları",
+    "Sosyal Hizmet Uygulaması I",
+    "Sosyal Hizmet Yönetimi",
+    "Sosyal Hizmet Uygulaması II",
+  ] },
+  { bolum: "Sosyoloji", dersler: [
+    "Sosyal Politika",
+    "Psikoloji",
+    "Sosyolojiye Giriş",
+    "Sosyal Bilimlerde Temel Kavramlar",
+    "Sosyolojide Araştırma Yöntem ve Teknikleri",
+    "Nüfus ve Toplum",
+    "Etik",
+    "Sembolik Mantık",
+    "Türk Siyasal Hayatı",
+    "İnsan ve Toplum",
+    "Birey ve Davranış",
+    "Çocukluk Sosyolojisi",
+    "Felsefe",
+    "İstatistik",
+    "Sosyal Psikoloji I",
+    "Siyaset Bilimi",
+    "Klasik Sosyoloji Tarihi",
+    "Sosyal Antropoloji",
+    "Atatürk İlkeleri ve İnkılap Tarihi I",
+    "Türk Dili I",
+    "Eğitim Felsefesi",
+    "Sosyal Psikoloji II",
+    "Modern Sosyoloji Tarihi",
+    "Göç Sosyolojisi",
+    "Din ve Toplum",
+    "Atatürk İlkeleri ve İnkılap Tarihi II",
+    "Türk Dili II",
+    "Turizm Sosyolojisi",
+    "Çağdaş Sosyoloji Kuramları",
+    "Ekonomi Sosyolojisi",
+    "Aile Sosyolojisi",
+    "Kültür Sosyolojisi",
+    "Yeni Toplumsal Hareketler",
+    "Toplumsal Cinsiyet Sosyolojisi",
+    "Sosyolojide Yakın Dönem Gelişmeler",
+    "Toplumsal Tabakalaşma ve Eşitsizlik",
+    "Endüstri Sosyolojisi",
+    "Kent Sosyolojisi",
+    "Toplumsal Cinsiyet Çalışmaları",
+    "Sosyal Medya Sosyolojisi",
+    "Genel Uygarlık Tarihi",
+    "Toplumsal Değişme Kuramları",
+    "Türkiye'de Sosyoloji",
+    "İletişim Sosyolojisi",
+    "Hukuk Sosyolojisi",
+    "Türkiye'nin Toplumsal Yapısı",
+    "Çevre Sosyolojisi",
+    "Bilim Felsefesi",
+    "Klasik Mantık",
+    "Eğitim Psikolojisi",
+    "Türk Sosyologları",
+    "Medya Sosyolojisi",
+    "Suç Sosyolojisi",
+    "Tüketim Sosyolojisi",
+  ] },
+  { bolum: "Felsefe", dersler: [
+    "Sosyal Politika",
+    "İlkçağ Felsefesi",
+    "Hukukun Temel Kavramları",
+    "Psikoloji",
+    "Sosyolojiye Giriş",
+    "Sosyal Bilimlerde Temel Kavramlar",
+    "Kültür Tarihi",
+    "Genel Matematik",
+    "Sembolik Mantık",
+    "İnsan ve Toplum",
+    "Birey ve Davranış",
+    "Genel Uygarlık Tarihi",
+    "Epistemoloji",
+    "Yurttaşlık ve Çevre Bilgisi",
+    "Ortaçağ Felsefesi I",
+    "Felsefe",
+    "Türkiye'nin Toplumsal Yapısı",
+    "Atatürk İlkeleri ve İnkılap Tarihi I",
+    "Türk Dili I",
+    "Aile Psikolojisi ve Eğitimi",
+    "Metafizik",
+    "Ortaçağ Felsefesi II",
+    "Eğitim Psikolojisi",
+    "Modern Sosyoloji Tarihi",
+    "Atatürk İlkeleri ve İnkılap Tarihi II",
+    "Türk Dili II",
+    "Temel Bilgi Teknolojileri",
+    "Etik",
+    "Bilim Felsefesi",
+    "Modern Felsefe I",
+    "Siyaset Felsefesi I",
+    "Temel Fotoğrafçılık",
+    "Çağdaş Sosyoloji Kuramları",
+    "İnsan Hakları ve Kamu Özgürlükleri",
+    "Dijital Toplum Teknolojileri",
+    "Modern Felsefe II",
+    "Siyaset Felsefesi II",
+    "Mantığın Gelişimi",
+    "Türk Siyasal Hayatı",
+    "Sosyolojide Yakın Dönem Gelişmeler",
+    "Tarih Felsefesi I",
+    "Çağdaş Felsefe I",
+    "Türkiye'de Felsefenin Gelişimi I",
+    "Estetik ve Sanat Felsefesi",
+    "Dil Felsefesi",
+    "Sosyal Psikoloji I",
+    "Toplumsal Değişme Kuramları",
+    "Zihin Felsefesi",
+    "Tarih Felsefesi II",
+    "Çağdaş Felsefe II",
+    "Türkiye'de Felsefenin Gelişimi II",
+    "Etkili İletişim Teknikleri",
+    "Kültürlerarası İletişim",
+    "Klasik Mantık",
+    "Sosyal Psikoloji II",
+  ] },
+  { bolum: "Tarih", dersler: [
+    "Eski Anadolu Tarihi",
+    "İslam Tarihi ve Medeniyeti I",
+    "Tarih Metodu",
+    "Orta Asya Türk Tarihi",
+    "Hellen ve Roma Tarihi",
+    "Osmanlı Türkçesi I",
+    "Eski Mezopotamya ve Mısır Tarihi",
+    "İslam Tarihi ve Medeniyeti II",
+    "Büyük Selçuklu Tarihi",
+    "Bizans Tarihi",
+    "İlk Müslüman Türk Devletleri",
+    "Osmanlı Türkçesi II",
+    "Atatürk İlkeleri ve İnkılap Tarihi I",
+    "Ortaçağ ve Yeniçağ Türk Devletleri Tarihi",
+    "Türkiye Selçuklu Tarihi",
+    "Ortaçağ-Yeniçağ Avrupa Tarihi",
+    "Osmanlı Tarihi (1300-1566)",
+    "Osmanlı Türkçesi Metinleri I",
+    "Türk Mitolojisi",
+    "Türk Dili I",
+    "Atatürk İlkeleri ve İnkılap Tarihi II",
+    "Osmanlı Tarihi (1566-1789)",
+    "Osmanlı Tarihi (1789-1876)",
+    "Osmanlı Türkçesi Metinleri II",
+    "Osmanlı Devleti Yenileşme Hareketleri (1703-1876)",
+    "Türk Kültürü ve Tarihine Giriş",
+    "Türk Dili II",
+    "Sosyolojiye Giriş",
+    "Osmanlı Tarihi (1876-1918)",
+    "Tarihi Coğrafya",
+    "Osmanlı Devleti Yenileşme Hareketleri (1876-1918)",
+    "Osmanlı İktisat Tarihi",
+    "Osmanlı Diplomasisi",
+    "Türk Askeri Teşkilat Tarihi",
+    "Türkiye Cumhuriyeti Siyasi Tarihi",
+    "Türkiye Cumhuriyeti İktisat Tarihi",
+    "Xıx. Yüzyıl Türk Dünyası",
+    "Modern Ortadoğu Tarihi",
+    "Türkiye’De Demokrasi ve Parlamento Tarihi",
+    "Eğitim Tarihi",
+    "Birinci Dünya Savaşı'nda Türk Cepheleri",
+    "Osmanlı Merkez ve Taşra Teşkilatı",
+    "Yakınçağ Avrupa Tarihi",
+    "Sömürgecilik Tarihi (Avrupa-Amerika)",
+    "Çağdaş Türk Dünyası",
+    "Türk Basın Tarihi",
+    "Tarih Felsefesi",
+    "Türk Dış Politikası I",
+    "Kültür Tarihi",
+    "Sanat Tarihi",
+    "Osmanlıda İskan ve Göç",
+    "Rusya Tarihi",
+    "Hukuk Tarihi",
+    "Türk Düşünce Tarihi",
+    "Milli Mücadele Tarihi",
+    "Türk Dış Politikası II",
+  ] },
+  { bolum: "Türk Dili ve Edebiyatı", dersler: [
+    "Halk Edebiyatına Giriş I",
+    "Eski Türk Edebiyatına Giriş: Biçim ve Ölçü",
+    "Batı Edebiyatında Akımlar I",
+    "Yeni Türk Edebiyatına Giriş I",
+    "Türkçe Ses Bilgisi",
+    "Osmanlı Türkçesine Giriş I",
+    "Halk Edebiyatına Giriş II",
+    "Eski Türk Edebiyatına Giriş: Söz Sanatları",
+    "Batı Edebiyatında Akımlar II",
+    "Yeni Türk Edebiyatına Giriş II",
+    "Türkçe Biçim Bilgisi",
+    "Osmanlı Türkçesine Giriş II",
+    "Vııı-Xııı. Yüzyıllar Türk Edebiyatı",
+    "Tanzimat Dönemi Türk Edebiyatı I",
+    "Halk Hikayeleri",
+    "Atatürk İlkeleri ve İnkılap Tarihi I",
+    "Orhon Türkçesi",
+    "Türkçe Cümle Bilgisi I",
+    "Osmanlı Türkçesi Grameri I",
+    "Xıv-Xv. Yüzyıllar Türk Edebiyatı",
+    "Tanzimat Dönemi Türk Edebiyatı II",
+    "Halk Masalları",
+    "Atatürk İlkeleri ve İnkılap Tarihi II",
+    "Uygur Türkçesi",
+    "Türkçe Cümle Bilgisi II",
+    "Osmanlı Türkçesi Grameri II",
+    "Temel Bilgi Teknolojileri",
+    "Xvı. Yüzyıl Türk Edebiyatı",
+    "II. Abdülhamit Dönemi Türk Edebiyatı",
+    "Türk Halk Şiiri",
+    "Xı-Xııı. Yüzyıllar Türk Dili",
+    "Çağdaş Türk Yazı Dilleri I",
+    "Genel Dilbilim I",
+    "Dijital Toplum Teknolojileri",
+    "Xvıı. Yüzyıl Türk Edebiyatı",
+    "Türk Edebiyatının Mitolojik Kaynakları",
+    "Xıv-Xv. Yüzyıllar Türk Dili",
+    "Çağdaş Türk Yazı Dilleri II",
+    "Genel Dilbilim II",
+    "II. Meşrutiyet Dönemi Türk Edebiyatı",
+    "Xvııı. Yüzyıl Türk Edebiyatı",
+    "Cumhuriyet Dönemi Türk Şiiri",
+    "Çağdaş Türk Edebiyatları I",
+    "Cumhuriyet Dönemi Türk Nesri",
+    "Xvı-Xıx. Yüzyıllar Türk Dili",
+    "Eleştiri Tarihi",
+    "Xıx. Yüzyıl Türk Edebiyatı",
+    "Çağdaş Türk Romanı",
+    "Çağdaş Türk Edebiyatları II",
+    "Eski Türk Edebiyatının Kaynaklarından Şair Tezkireleri",
+    "Eleştiri Kuramları",
+    "Türk Tiyatrosu",
+    "Türk İşaret Dili",
+  ] },
+  { bolum: "Turizm İşletmeciliği", dersler: [
+    "Hukukun Temel Kavramları",
+    "İktisada Giriş",
+    "Konaklama İşletmeciliği",
+    "Genel Muhasebe",
+    "Turizm Tarihi",
+    "Turizm ve Güvenlik",
+    "Kırsal Turizm ve Kalkınma",
+    "Dijital Turizm",
+    "Kat Hizmetleri",
+    "Ön Büro Yönetimi",
+    "Atatürk İlkeleri ve İnkılap Tarihi I",
+    "Genel Turizm Bilgisi",
+    "Türk Dili I",
+    "Turizm Ekonomisi",
+    "Otel Yönetimi",
+    "Konaklama İşletmelerinde Muhasebe Uygulamaları",
+    "Turizm Pazarlaması",
+    "Atatürk İlkeleri ve İnkılap Tarihi II",
+    "Türk Dili II",
+    "Bireyler Arası İletişim",
+    "Hizmet Tasarımı",
+    "Turizm Sosyolojisi",
+    "Turizmde Güncel Yaklaşımlar",
+    "Destinasyon Yönetimi",
+    "Sosyal Davranış ve Protokol",
+    "Konaklama Hizmetlerinde Kalite Yönetimi",
+    "Toplum Temelli Turizm",
+    "Turizm Bilgi Teknolojileri",
+    "Stratejik Yönetim",
+    "İşletmelerde Sosyal Sorumluluk ve Etik",
+    "Kültürel Miras Yönetimi",
+    "Yiyecek İçecek Yönetimi",
+    "Seyahat Acentacılığı ve Tur Operatörlüğü",
+    "İnsan Kaynakları Yönetimi",
+    "Termal ve Spa Hizmetleri",
+    "Kongre ve Etkinlik Yönetimi",
+    "Sürdürülebilir Turizm",
+    "Rekreasyon Yönetimi",
+  ] },
+  { bolum: "Havacılık Yönetimi", dersler: [
+    "Hukukun Temel Kavramları",
+    "İktisada Giriş I",
+    "İşletme İlkeleri",
+    "Genel Muhasebe",
+    "Davranış Bilimleri I",
+    "Havacılığa Giriş",
+    "İktisada Giriş II",
+    "İşletme Fonksiyonları",
+    "Genel Matematik",
+    "Davranış Bilimleri II",
+    "Uçak Bilgisi ve Uçuş İlkeleri",
+    "Meteoroloji",
+    "İstatistik",
+    "İşletme Bilgi Sistemleri",
+    "Atatürk İlkeleri ve İnkılap Tarihi I",
+    "Türk Dili I",
+    "Hava Taşımacılığı",
+    "Yer Hizmetleri Yönetimi",
+    "Yolcu Hizmetleri",
+    "Hava Kargo ve Tehlikeli Maddeler",
+    "Atatürk İlkeleri ve İnkılap Tarihi II",
+    "Türk Dili II",
+    "Finansal Yönetim I",
+    "Havaalanı Sistemi",
+    "Havacılık Güvenliği",
+    "Hava Trafik Kontrol Hizmetleri",
+    "Havayolu Pazarlaması",
+    "Finansal Yönetim II",
+    "Havayolu Yönetimi",
+    "Harekat Performans",
+    "Halkla İlişkiler",
+    "Örgütsel Davranış",
+    "Havaalanı Yönetimi",
+    "Havacılık Emniyeti",
+    "Hava Hukuku",
+    "Ulaştırma Sistemleri",
+    "Havacılık İşletmelerinde Muhasebe Uygulamaları",
+    "Finansal Tablolar Analizi",
+    "Genel Havacılık",
+    "Havayolu İşletmelerinde Operasyonel Planlama",
+    "İnsan Kaynakları Yönetimi",
+    "İşletmelerde Karar Verme Teknikleri",
+  ] },
+];
+
 // ── VEKTÖREL SİMGE BİLEŞENLERİ (UI/UX Pro Max)
 const IconChevronRight = ({ size = 18, style = {} }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={style}><polyline points="9 18 15 12 9 6"/></svg>
@@ -228,14 +1028,6 @@ export default function App() {
   const [vizeInput, setVizeInput] = useState('');
   const [passResult, setPassResult] = useState(null);
 
-  // PDF Not İndir
-  const [pdfCourses, setPdfCourses] = useState([]);
-  const [pdfSelected, setPdfSelected] = useState([]);
-  const [pdfEmail, setPdfEmail] = useState('');
-  const [pdfKvkk, setPdfKvkk] = useState(false);
-  const [pdfSending, setPdfSending] = useState(false);
-  const [pdfResult, setPdfResult] = useState(null); // 'success' | 'error' | null
-
   // Ücretsiz Özet Ders Notu İndir
   const [pdfNotes, setPdfNotes] = useState([]);
   const [notesSelected, setNotesSelected] = useState([]);
@@ -246,24 +1038,31 @@ export default function App() {
 
   const N8N_WEBHOOK = 'BURAYA_N8N_PRODUCTION_URL_GELECEK';
 
-  // Ders isteği
-  const [courseRequestText, setCourseRequestText] = useState('');
-  const [courseRequestSent, setCourseRequestSent] = useState(false);
+  // Bölüm bazlı ders materyali isteği (çoklu seçim)
+  const [crOpenBolum, setCrOpenBolum] = useState('İşletme');
+  const [crSelected, setCrSelected] = useState([]); // [{ name, department }]
+  const [crSending, setCrSending] = useState(false);
+  const [crDone, setCrDone] = useState(false);
 
-  const sendCourseRequest = async () => {
-    if (!courseRequestText.trim()) return;
+  const crToggle = (bolum, ders) => {
+    setCrSelected(prev => prev.some(x => x.name === ders && x.department === bolum)
+      ? prev.filter(x => !(x.name === ders && x.department === bolum))
+      : [...prev, { name: ders, department: bolum }]);
+  };
+
+  const sendMaterialRequest = async () => {
+    if (!crSelected.length || crSending) return;
+    setCrSending(true);
     try {
       await fetch(API + '/api/course-request', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ course_name: courseRequestText.trim() })
+        body: JSON.stringify({ courses: crSelected })
       });
     } catch (e) {}
-    setCourseRequestSent(true);
-    setTimeout(() => {
-      setCourseRequestText('');
-      setCourseRequestSent(false);
-    }, 2000);
+    setCrSending(false);
+    setCrDone(true);
+    setCrSelected([]);
   };
 
   useEffect(() => {
@@ -919,46 +1718,6 @@ export default function App() {
           }
         </div>
 
-        {/* PDF Not İndir Butonu */}
-        <button
-          className="btn-hover"
-          style={{
-            width: '90%',
-            maxWidth: '340px',
-            margin: '0 auto 10px auto',
-            background: theme === 'dark' ? 'rgba(255,255,255,0.06)' : 'rgba(5, 150, 105, 0.05)',
-            border: theme === 'dark' ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(5, 150, 105, 0.15)',
-            borderRadius: 10,
-            padding: '10px 14px',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            cursor: 'pointer',
-            color: s.greeting.color,
-            fontWeight: 500,
-            fontSize: 13,
-            transition: 'all 0.2s'
-          }}
-          onClick={async () => {
-            try {
-              const res = await fetch(API + '/api/pdf-courses');
-              const data = await res.json();
-              setPdfCourses(data);
-              setPdfSelected([]);
-              setPdfEmail('');
-              setPdfKvkk(false);
-              setPdfResult(null);
-              setScreen('pdf-download');
-            } catch (e) { alert('Dersler yüklenemedi'); }
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <IconFileText size={16} style={{ color: theme === 'dark' ? '#10b981' : '#059669' }} />
-            <span>Ücretsiz Ders Kitabı İndir</span>
-          </div>
-          <IconChevronRight size={16} style={{ color: theme === 'dark' ? 'rgba(255,255,255,0.5)' : 'rgba(5, 150, 105, 0.5)' }} />
-        </button>
-
         {/* Özet Ders Notu İndir Butonu */}
         <button
           className="btn-hover"
@@ -995,6 +1754,40 @@ export default function App() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <IconFileText size={16} style={{ color: theme === 'dark' ? '#10b981' : '#059669' }} />
             <span>Ücretsiz Özet Ders Notu İndir</span>
+          </div>
+          <IconChevronRight size={16} style={{ color: theme === 'dark' ? 'rgba(255,255,255,0.5)' : 'rgba(5, 150, 105, 0.5)' }} />
+        </button>
+
+        {/* Ders Materyali İsteği Butonu */}
+        <button
+          className="btn-hover"
+          style={{
+            width: '90%',
+            maxWidth: '340px',
+            margin: '0 auto 10px auto',
+            background: theme === 'dark' ? 'rgba(255,255,255,0.06)' : 'rgba(5, 150, 105, 0.05)',
+            border: theme === 'dark' ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(5, 150, 105, 0.15)',
+            borderRadius: 10,
+            padding: '10px 14px',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            cursor: 'pointer',
+            color: s.greeting.color,
+            fontWeight: 500,
+            fontSize: 13,
+            transition: 'all 0.2s'
+          }}
+          onClick={() => {
+            setCrSelected([]);
+            setCrDone(false);
+            setCrOpenBolum('İşletme');
+            setScreen('course-request');
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <IconEdit size={16} style={{ color: theme === 'dark' ? '#10b981' : '#059669' }} />
+            <span>Ders Materyali İsteği Gönder</span>
           </div>
           <IconChevronRight size={16} style={{ color: theme === 'dark' ? 'rgba(255,255,255,0.5)' : 'rgba(5, 150, 105, 0.5)' }} />
         </button>
@@ -1676,7 +2469,11 @@ export default function App() {
     );
   }
 
-  if (screen === 'pdf-download') {
+  if (screen === 'course-request') {
+    const accent = theme === 'dark' ? '#10b981' : '#059669';
+    const muted = theme === 'dark' ? '#aeb5c1' : '#6b7280';
+    const border = theme === 'dark' ? 'rgba(255,255,255,0.12)' : 'rgba(5,150,105,0.18)';
+
     return (
       <div style={s.bg}>
         <div style={s.container}>
@@ -1685,144 +2482,119 @@ export default function App() {
               <IconChevronLeft size={16} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 4 }} />
               Geri
             </button>
-            <div style={s.greeting}>Ders Kitapları</div>
+            <div style={s.greeting}>Ders Materyali İsteği</div>
             <div style={{ width: 60 }}></div>
           </div>
 
           <div style={s.card}>
-            <IconBookOpen size={48} style={{ color: theme === 'dark' ? '#10b981' : '#059669', marginBottom: 8, display: 'block', margin: '0 auto 8px auto' }} />
-            <div style={s.cardTitle}>Derslerini Seç</div>
-            <div style={{ fontSize: 13, color: theme === 'dark' ? '#aeb5c1' : '#6b7280', marginBottom: 16 }}>
-              Seçtiğin dersleri size e-posta olarak göndereceğiz. En fazla 3 ders seçebilirsin.
+            <IconEdit size={28} style={{ display: 'block', margin: '0 auto 6px auto', color: accent }} />
+            <div style={{ ...s.cardTitle, fontSize: 15 }}>Hangi derslerin materyalini istiyorsun?</div>
+            <div style={{ fontSize: 12, color: muted, marginBottom: 12, lineHeight: 1.5 }}>
+              Bölümüne dokun, dersleri seç. Birden fazla seçebilirsin. En çok istenen dersleri sıraya alıyoruz.
             </div>
 
-            {pdfCourses.length === 0 ? (
-              <div style={s.empty}>Henüz ders notu eklenmemiş.</div>
-            ) : (
-              <div style={{ maxHeight: 300, overflowY: 'auto', marginBottom: 16 }}>
-                {pdfCourses.map(c => (
-                  <label key={c.id} style={{ display: 'flex', alignItems: 'center', padding: '12px 14px', border: theme === 'dark' ? '1.5px solid rgba(255, 255, 255, 0.08)' : '1.5px solid #e5e7eb', borderRadius: 12, marginBottom: 8, cursor: 'pointer', background: pdfSelected.some(p => p.id === c.id) ? (theme === 'dark' ? 'rgba(16, 185, 129, 0.15)' : '#f0faf4') : 'transparent' }}>
-                    <input
-                      type="checkbox"
-                      style={{ width: 18, height: 18, marginRight: 12, accentColor: GREEN }}
-                      checked={pdfSelected.some(p => p.id === c.id)}
-                      onChange={(e) => {
-                        if (e.target.checked) {
-                          if (pdfSelected.length >= 3) return alert('En fazla 3 ders seçebilirsiniz!');
-                          setPdfSelected([...pdfSelected, c]);
-                        } else {
-                          setPdfSelected(pdfSelected.filter(p => p.id !== c.id));
-                        }
-                        setPdfResult(null);
-                      }}
-                    />
-                    <span style={{ fontSize: 14, fontWeight: 600, color: s.qText.color }}>{c.name}</span>
-                  </label>
-                ))}
-              </div>
-            )}
-
-            <div style={{ marginBottom: 16 }}>
-              <label style={{ fontSize: 12, fontWeight: 700, color: theme === 'dark' ? '#aeb5c1' : '#6b7280', display: 'block', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>E-posta Adresin</label>
-              <input
-                type="email"
-                placeholder=""
-                value={pdfEmail}
-                onChange={e => { setPdfEmail(e.target.value); setPdfResult(null); }}
-                style={s.input}
-              />
-            </div>
-
-            <label style={{ display: 'flex', alignItems: 'flex-start', marginBottom: 20, cursor: 'pointer' }}>
-              <input type="checkbox" checked={pdfKvkk} onChange={e => { setPdfKvkk(e.target.checked); setPdfResult(null); }} style={{ width: 16, height: 16, marginRight: 10, marginTop: 2 }} />
-              <span style={{ fontSize: 12, color: theme === 'dark' ? '#aeb5c1' : '#6b7280', lineHeight: 1.4 }}>
-                E-posta adresimin kampanya ve duyurular (YouTube vs.) için kaydedilmesini ve bana e-posta gönderilmesini onaylıyorum.
-              </span>
-            </label>
-
-            {pdfResult === 'success' && (
-              <div style={{ background: 'rgba(16, 185, 129, 0.15)', color: theme === 'dark' ? '#a7f3d0' : '#065f46', border: '1px solid #10b981', padding: '12px', borderRadius: 12, fontSize: 14, fontWeight: 700, textAlign: 'center', marginBottom: 12 }}>
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-                  <IconCheckCircle size={16} />
-                  <span>Notların başarıyla e-postana gönderildi! Lütfen Spam (Gereksiz) kutunu da kontrol et.</span>
-                </span>
-              </div>
-            )}
-            {pdfResult && pdfResult !== 'success' && (
-              <div style={{ background: 'rgba(239, 68, 68, 0.15)', color: theme === 'dark' ? '#fca5a5' : '#991b1b', border: '1px solid #ef4444', padding: '12px', borderRadius: 12, fontSize: 13, fontWeight: 600, textAlign: 'center', marginBottom: 12 }}>
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-                  <IconXCircle size={16} />
-                  <span>{pdfResult}</span>
-                </span>
-              </div>
-            )}
-
-            <button
-              className="btn-hover"
-              style={{ ...s.btn, background: (pdfSending || pdfSelected.length === 0 || !pdfEmail || !pdfKvkk) ? '#e5e7eb' : (theme === 'dark' ? '#10b981' : '#059669'), color: (pdfSending || pdfSelected.length === 0 || !pdfEmail || !pdfKvkk) ? '#9ca3af' : (theme === 'dark' ? '#030806' : '#fff'), cursor: (pdfSending || pdfSelected.length === 0 || !pdfEmail || !pdfKvkk) ? 'not-allowed' : 'pointer', fontSize: 16, padding: '16px', justifyContent: 'center' }}
-              disabled={pdfSending || pdfSelected.length === 0 || !pdfEmail || !pdfKvkk}
-              onClick={async () => {
-                setPdfSending(true);
-                try {
-                  const payload = {
-                    email: pdfEmail.trim(),
-                    dersler: pdfSelected.map(c => ({ ad: c.name, link: c.drive_link }))
-                  };
-                  const res = await fetch(API + '/api/send-pdf', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                  });
-                  if (res.ok) {
-                    setPdfResult('success');
-                    setPdfSelected([]);
-                    setPdfEmail('');
-                    setPdfKvkk(false);
-                  } else {
-                    const err = await res.json().catch(() => null);
-                    setPdfResult(err?.error || 'Bir hata oluştu.');
-                  }
-                } catch (e) {
-                  setPdfResult('Bir hata oluştu. Lütfen tekrar deneyin.');
-                }
-                setPdfSending(false);
-              }}
-            >
-              <span>{pdfSending ? 'Gönderiliyor...' : 'Notları Mailime Gönder'}</span>
-            </button>
-          </div>
-
-          {/* Ders İsteği Diyalog Kutusu */}
-          <div style={s.card}>
-            <IconEdit size={32} style={{ display: 'block', margin: '0 auto 8px auto', color: theme === 'dark' ? '#10b981' : '#059669' }} />
-            <div style={s.cardTitle}>Görmek İstediğiniz Dersi Bize Yazın</div>
-            <div style={{ fontSize: 13, color: theme === 'dark' ? '#aeb5c1' : '#6b7280', marginBottom: 16 }}>
-              Listede olmayan bir ders mi var? Aşağıya yazın, en çok istenen dersleri ekleyelim!
-            </div>
-
-            {courseRequestSent ? (
+            {crDone ? (
               <div style={{ textAlign: 'center', padding: 16 }}>
-                <IconCheckCircle size={40} style={{ color: '#10b981', display: 'block', margin: '0 auto 8px auto' }} />
-                <div style={{ fontWeight: 700, color: theme === 'dark' ? '#a7f3d0' : '#065f46', marginTop: 8 }}>İsteğiniz alındı, teşekkürler!</div>
-              </div>
-            ) : (
-              <>
-                <textarea
-                  placeholder="Ders adını yazın (örn: İşletme Yönetimi)"
-                  value={courseRequestText}
-                  onChange={e => setCourseRequestText(e.target.value)}
-                  style={s.feedbackInput}
-                  rows={2}
-                />
+                <IconCheckCircle size={36} style={{ color: '#10b981', display: 'block', margin: '0 auto 8px auto' }} />
+                <div style={{ fontWeight: 700, fontSize: 14, color: theme === 'dark' ? '#a7f3d0' : '#065f46' }}>İsteğin alındı, teşekkürler!</div>
                 <button
                   className="btn-hover"
-                  style={{ ...s.btn, background: courseRequestText.trim() ? (theme === 'dark' ? '#10b981' : '#059669') : '#e5e7eb', color: courseRequestText.trim() ? (theme === 'dark' ? '#030806' : '#fff') : '#9ca3af', cursor: courseRequestText.trim() ? 'pointer' : 'not-allowed', justifyContent: 'center', marginTop: 12 }}
-                  disabled={!courseRequestText.trim()}
-                  onClick={sendCourseRequest}
+                  style={{ ...s.btn, background: 'transparent', border: '1px solid ' + border, color: s.greeting.color, justifyContent: 'center', marginTop: 12, fontSize: 12, padding: '8px 12px' }}
+                  onClick={() => setCrDone(false)}
                 >
-                  <span>Gönder</span>
+                  <span>Yeni istek gönder</span>
                 </button>
-              </>
+              </div>
+            ) : (
+              <div style={{ textAlign: 'left' }}>
+                {AOF_BOLUMLER.map(b => {
+                  const acik = crOpenBolum === b.bolum;
+                  const secili = crSelected.filter(x => x.department === b.bolum).length;
+                  return (
+                    <div key={b.bolum} style={{ marginBottom: 6, border: '1px solid ' + border, borderRadius: 8, overflow: 'hidden' }}>
+                      <button
+                        type="button"
+                        onClick={() => setCrOpenBolum(acik ? null : b.bolum)}
+                        style={{
+                          width: '100%',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          gap: 6,
+                          padding: '8px 10px',
+                          background: acik
+                            ? (theme === 'dark' ? 'rgba(16,185,129,0.10)' : 'rgba(5,150,105,0.07)')
+                            : 'transparent',
+                          border: 'none',
+                          cursor: 'pointer',
+                          color: s.greeting.color,
+                          fontSize: 12.5,
+                          fontWeight: 600,
+                          textAlign: 'left'
+                        }}
+                      >
+                        <span style={{ flex: 1 }}>{b.bolum}</span>
+                        {secili > 0 && (
+                          <span style={{ fontSize: 10, fontWeight: 700, background: accent, color: theme === 'dark' ? '#03110b' : '#fff', borderRadius: 10, padding: '1px 6px' }}>{secili}</span>
+                        )}
+                        <span style={{ fontSize: 10, color: muted }}>{b.dersler.length}</span>
+                        <IconChevronRight size={13} style={{ color: muted, transform: acik ? 'rotate(90deg)' : 'none', transition: 'transform 0.15s' }} />
+                      </button>
+
+                      {acik && (
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, padding: '6px 8px 8px 8px' }}>
+                          {b.dersler.map(d => {
+                            const sec = crSelected.some(x => x.name === d && x.department === b.bolum);
+                            return (
+                              <button
+                                key={d}
+                                type="button"
+                                onClick={() => crToggle(b.bolum, d)}
+                                style={{
+                                  fontSize: 11,
+                                  lineHeight: 1.3,
+                                  padding: '4px 8px',
+                                  borderRadius: 12,
+                                  cursor: 'pointer',
+                                  border: '1px solid ' + (sec ? accent : border),
+                                  background: sec ? accent : 'transparent',
+                                  color: sec ? (theme === 'dark' ? '#03110b' : '#fff') : s.greeting.color,
+                                  fontWeight: sec ? 600 : 400,
+                                  transition: 'all 0.15s'
+                                }}
+                              >
+                                {sec ? '✓ ' : ''}{d}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+
+                <div style={{ position: 'sticky', bottom: 0, paddingTop: 10, background: 'transparent' }}>
+                  <div style={{ fontSize: 11.5, color: muted, textAlign: 'center', marginBottom: 6 }}>
+                    {crSelected.length > 0 ? crSelected.length + ' ders seçildi' : 'Henüz ders seçmedin'}
+                  </div>
+                  <button
+                    className="btn-hover"
+                    style={{
+                      ...s.btn,
+                      fontSize: 12.5,
+                      padding: '10px 12px',
+                      justifyContent: 'center',
+                      background: crSelected.length ? accent : '#e5e7eb',
+                      color: crSelected.length ? (theme === 'dark' ? '#030806' : '#fff') : '#9ca3af',
+                      cursor: crSelected.length ? 'pointer' : 'not-allowed'
+                    }}
+                    disabled={!crSelected.length || crSending}
+                    onClick={sendMaterialRequest}
+                  >
+                    <span>{crSending ? 'Gönderiliyor...' : 'Seçtiklerimin ders materyallerini görmek isterim'}</span>
+                  </button>
+                </div>
+              </div>
             )}
           </div>
 

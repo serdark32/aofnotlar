@@ -1066,9 +1066,6 @@
       <button class="nav-item" data-page="feedback" onclick="navigate('feedback', this); closeSidebar()">
         <span class="nav-icon">💬</span> Geri Bildirimler
       </button>
-      <button class="nav-item" data-page="pdf-courses" onclick="navigate('pdf-courses', this); closeSidebar()">
-        <span class="nav-icon">📄</span> PDF Arşivi
-      </button>
       <button class="nav-item" data-page="pdf-notes" onclick="navigate('pdf-notes', this); closeSidebar()">
         <span class="nav-icon">📝</span> Özet Notlar
       </button>
@@ -1482,38 +1479,6 @@
         </div>
       </div>
 
-      <!-- PDF ARŞİVİ -->
-      <div class="page" id="page-pdf-courses">
-        <div class="page-header">
-          <div>
-            <div class="page-title">📄 PDF Arşivi</div>
-            <div class="page-subtitle">Özet notları yönet — öğrencilere otomatik mail gönderilir</div>
-          </div>
-          <button class="btn btn-green" onclick="openAddPdfModal()">+ Yeni Ders Ekle</button>
-        </div>
-
-        <div id="pdf-msg-area"></div>
-
-        <div class="card" style="padding:0; overflow:hidden;">
-          <div class="table-wrap">
-            <table class="mobile-card-table">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Ders Adı</th>
-                  <th>Drive Linki</th>
-                  <th>Eklenme</th>
-                  <th>İşlem</th>
-                </tr>
-              </thead>
-              <tbody id="pdf-table-body">
-                <tr><td colspan="5"><div class="empty-state"><div class="empty-icon">⏳</div>Yükleniyor...</div></td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
       <!-- ÖZET NOTLAR -->
       <div class="page" id="page-pdf-notes">
         <div class="page-header">
@@ -1551,7 +1516,7 @@
         <div class="page-header">
           <div>
             <div class="page-title">📝 Ders İstekleri</div>
-            <div class="page-subtitle">Kullanıcıların istediği dersler — sayıya göre sıralı</div>
+            <div class="page-subtitle">Kullanıcıların istediği dersler — bölüme göre gruplu</div>
           </div>
           <button class="btn btn-ghost btn-sm" onclick="loadCourseRequests()">↻ Yenile</button>
         </div>
@@ -1668,29 +1633,6 @@
       <div class="btn-row">
         <button class="btn btn-green" onclick="saveQuestion()">Kaydet</button>
         <button class="btn btn-ghost" onclick="closeQModal()">İptal</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL: PDF Ders Ekle -->
-  <div class="modal-overlay" id="pdf-modal">
-    <div class="modal">
-      <div class="modal-header">
-        <div class="modal-title">📄 Yeni Ders Ekle</div>
-        <button class="modal-close" onclick="closePdfModal()">✕</button>
-      </div>
-      <div id="pdf-modal-msg"></div>
-      <div class="field-group">
-        <label class="field-label">Ders Adı</label>
-        <input type="text" id="pdf-name" placeholder="örn: İş ve Sosyal Güvenlik Hukuku">
-      </div>
-      <div class="field-group">
-        <label class="field-label">Drive Linki</label>
-        <input type="url" id="pdf-link" placeholder="https://drive.google.com/file/d/...">
-      </div>
-      <div class="btn-row" style="margin-top:4px;">
-        <button class="btn btn-green" onclick="savePdfCourse()">Kaydet</button>
-        <button class="btn btn-ghost" onclick="closePdfModal()">İptal</button>
       </div>
     </div>
   </div>
@@ -1894,7 +1836,6 @@
       if (page === 'questions') loadQuestions();
       if (page === 'users') loadUsers();
       if (page === 'feedback') loadFeedback();
-      if (page === 'pdf-courses') loadPdfCourses();
       if (page === 'pdf-notes') loadPdfNotes();
       if (page === 'excel-upload' || page === 'add-question') populateCatSelects();
     }
@@ -2494,68 +2435,6 @@
     }
 
     // ============================================================
-    // PDF ARŞİVİ
-    // ============================================================
-    async function loadPdfCourses() {
-      const tbody = document.getElementById('pdf-table-body');
-      tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="empty-icon">⏳</div>Yükleniyor...</div></td></tr>`;
-      try {
-        const data = await apiFetch('/api/pdf-courses');
-        if (!data.length) {
-          tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="empty-icon">📭</div>Henüz ders eklenmedi</div></td></tr>`;
-          return;
-        }
-        tbody.innerHTML = data.map(d => `<tr>
-          <td data-label="ID" style="color:var(--muted)">${d.id}</td>
-          <td data-label="Ders Adı"><strong>${esc(d.name)}</strong></td>
-          <td data-label="Drive Linki"><a href="${esc(d.drive_link)}" target="_blank" style="color:var(--green-mid);font-size:12px;">🔗 Linki Aç</a></td>
-          <td data-label="Eklenme" style="color:var(--muted);font-size:12px;">${new Date(d.created_at).toLocaleDateString('tr')}</td>
-          <td data-label="İşlem"><button class="btn btn-danger btn-sm" onclick="deletePdfCourse(${d.id}, '${esc(d.name)}')">Sil</button></td>
-        </tr>`).join('');
-      } catch (e) {
-        tbody.innerHTML = `<tr><td colspan="5"><div class="alert alert-error">❌ ${e.message}</div></td></tr>`;
-      }
-    }
-
-    function openAddPdfModal() {
-      document.getElementById('pdf-name').value = '';
-      document.getElementById('pdf-link').value = '';
-      document.getElementById('pdf-modal-msg').innerHTML = '';
-      document.getElementById('pdf-modal').classList.add('open');
-    }
-
-    function closePdfModal() { document.getElementById('pdf-modal').classList.remove('open'); }
-
-    async function savePdfCourse() {
-      const name = document.getElementById('pdf-name').value.trim();
-      const link = document.getElementById('pdf-link').value.trim();
-      if (!name || !link) {
-        document.getElementById('pdf-modal-msg').innerHTML = `<div class="alert alert-error">❌ Ders adı ve link zorunlu</div>`;
-        return;
-      }
-      try {
-        await apiFetch('/api/admin/pdf-courses', {
-          method: 'POST',
-          body: JSON.stringify({ name, drive_link: link })
-        });
-        closePdfModal();
-        loadPdfCourses();
-        showMsg('pdf-msg-area', '✅ Ders eklendi!', 'success');
-      } catch (e) {
-        document.getElementById('pdf-modal-msg').innerHTML = `<div class="alert alert-error">❌ ${e.message}</div>`;
-      }
-    }
-
-    async function deletePdfCourse(id, name) {
-      if (!confirm(`"${name}" dersini silmek istediğine emin misin?`)) return;
-      try {
-        await apiFetch(`/api/admin/pdf-courses/${id}`, { method: 'DELETE' });
-        loadPdfCourses();
-        showMsg('pdf-msg-area', '🗑 Ders silindi', 'success');
-      } catch (e) { alert('❌ ' + e.message); }
-    }
-
-    // ============================================================
     // ÖZET NOTLAR
     // ============================================================
     async function loadPdfNotes() {
@@ -2629,13 +2508,44 @@
           tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="empty-icon">📭</div>Henüz ders isteği yok</div></td></tr>`;
           return;
         }
-        tbody.innerHTML = data.map((r, i) => `<tr>
-          <td data-label="#">${i + 1}</td>
-          <td data-label="Ders Adı"><strong>${esc(r.course_name)}</strong></td>
-          <td data-label="İstenme Sayısı"><span class="badge badge-green">${r.request_count} kez</span></td>
-          <td data-label="Son İstek" style="color:var(--muted);font-size:12px;">${new Date(r.updated_at).toLocaleString('tr')}</td>
-          <td data-label="İşlem"><button class="btn btn-danger btn-sm" onclick="deleteCourseRequest(${r.id}, '${esc(r.course_name)}')">Sil</button></td>
-        </tr>`).join('');
+
+        // Bölüme göre grupla — bölümsüz eski kayıtlar en sona
+        const groups = new Map();
+        data.forEach(r => {
+          const dep = (r.department || '').trim() || 'Diğer / Serbest İstek';
+          if (!groups.has(dep)) groups.set(dep, []);
+          groups.get(dep).push(r);
+        });
+
+        const names = [...groups.keys()];
+        names.sort((a, b) => {
+          if (a === 'Diğer / Serbest İstek') return 1;
+          if (b === 'Diğer / Serbest İstek') return -1;
+          if (a === 'İşletme') return -1;
+          if (b === 'İşletme') return 1;
+          // Bölümü en çok istenen üste
+          const ta = groups.get(a).reduce((x, r) => x + r.request_count, 0);
+          const tb = groups.get(b).reduce((x, r) => x + r.request_count, 0);
+          return tb - ta;
+        });
+
+        let html = '';
+        names.forEach(dep => {
+          const rows = groups.get(dep).sort((a, b) => b.request_count - a.request_count);
+          const toplam = rows.reduce((x, r) => x + r.request_count, 0);
+          html += `<tr style="background:var(--bg-soft, rgba(0,0,0,0.04));">
+            <td colspan="5" style="font-weight:700;padding:10px 12px;">
+              ${esc(dep)} <span style="color:var(--muted);font-weight:400;font-size:12px;">· ${rows.length} ders · ${toplam} istek</span>
+            </td></tr>`;
+          html += rows.map((r, i) => `<tr>
+            <td data-label="#">${i + 1}</td>
+            <td data-label="Ders Adı"><strong>${esc(r.course_name)}</strong></td>
+            <td data-label="İstenme Sayısı"><span class="badge badge-green">${r.request_count} kez</span></td>
+            <td data-label="Son İstek" style="color:var(--muted);font-size:12px;">${new Date(r.updated_at).toLocaleString('tr')}</td>
+            <td data-label="İşlem"><button class="btn btn-danger btn-sm" onclick="deleteCourseRequest(${r.id}, '${esc(r.course_name)}')">Sil</button></td>
+          </tr>`).join('');
+        });
+        tbody.innerHTML = html;
       } catch (e) {
         tbody.innerHTML = `<tr><td colspan="5"><div class="alert alert-error">❌ ${e.message}</div></td></tr>`;
       }
