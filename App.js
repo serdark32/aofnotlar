@@ -1090,7 +1090,7 @@ export default function App() {
       const link = document.createElement('link');
       link.id = fontId;
       link.rel = 'stylesheet';
-      link.href = 'https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&family=Newsreader:opsz,wght@6..72,600;700&display=swap';
+      link.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap';
       document.head.appendChild(link);
     }
 
@@ -1104,13 +1104,13 @@ export default function App() {
     }
     
     const isDark = theme === 'dark';
-    const primary = isDark ? '#7fb59d' : '#235b43';
-    const optHoverBg = isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(35, 91, 67, 0.08)';
-    const optHoverBorder = isDark ? 'rgba(255, 255, 255, 0.15)' : 'rgba(35, 91, 67, 0.25)';
-    const scrollThumb = isDark ? 'rgba(255, 255, 255, 0.15)' : 'rgba(35, 91, 67, 0.15)';
-    const catHoverBg = isDark ? 'rgba(255, 255, 255, 0.08)' : '#ffffff';
-    const catHoverBorder = isDark ? 'rgba(255, 255, 255, 0.15)' : 'rgba(35, 91, 67, 0.25)';
-    const feedbackHoverBg = isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 255, 255, 0.95)';
+    const primary = isDark ? '#30d47e' : '#0a7d55';
+    const optHoverBg = isDark ? '#2c2c2e' : '#f5f5f7';
+    const optHoverBorder = isDark ? '#38383a' : '#d2d2d7';
+    const scrollThumb = isDark ? 'rgba(255, 255, 255, 0.18)' : 'rgba(0, 0, 0, 0.18)';
+    const catHoverBg = isDark ? '#2c2c2e' : '#f5f5f7';
+    const catHoverBorder = isDark ? '#38383a' : '#d2d2d7';
+    const feedbackHoverBg = isDark ? '#2c2c2e' : '#f5f5f7';
 
     styleTag.innerHTML = `
       :root {
@@ -1121,27 +1121,27 @@ export default function App() {
       }
 
       html, body, button, input, textarea, select {
-        font-family: 'DM Sans', sans-serif;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        letter-spacing: -0.011em;
       }
-      
+      html { -webkit-text-size-adjust: 100%; }
+      body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
       .btn-hover {
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1) !important;
       }
       .btn-hover:hover {
-        filter: brightness(1.08);
-        transform: translateY(-1px);
+        filter: brightness(1.04);
       }
       .btn-hover:active {
-        transform: translateY(0);
+        transform: scale(0.985);
       }
-      
+
       .cat-btn-hover {
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1) !important;
       }
       .cat-btn-hover:hover {
         background: ${catHoverBg} !important;
-        border-color: ${catHoverBorder} !important;
-        transform: translateX(2px);
       }
       
       .opt-btn-hover {
@@ -1556,7 +1556,7 @@ export default function App() {
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
               <div
                 onClick={(e) => { e.stopPropagation(); toggleFavorite(e, cat.id); }}
-                style={{ fontSize: 18, cursor: 'pointer', color: isFav ? '#fbbf24' : (theme === 'dark' ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.25)'), transition: '0.2s', paddingRight: 4, transform: isFav ? 'scale(1.1)' : 'scale(1)' }}
+                style={{ fontSize: 18, cursor: 'pointer', color: isFav ? '#ff9f0a' : (theme === 'dark' ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.25)'), transition: '0.2s', paddingRight: 4, transform: isFav ? 'scale(1.1)' : 'scale(1)' }}
               >
                 <IconStar size={18} filled={isFav} />
               </div>
@@ -1577,35 +1577,6 @@ export default function App() {
 
   if (screen === 'home') return (
     <div style={s.bg}>
-      {/* Background Ambient Glows */}
-      {/* position: fixed — sayfa kaydırma yüksekliğine karışmaz, kaydırma sırasında yeniden çizilmez */}
-      <div style={{
-        position: 'fixed',
-        width: 700,
-        height: 700,
-        background: theme === 'dark'
-          ? 'radial-gradient(circle, rgba(143,195,170,0.22) 0%, rgba(143,195,170,0) 70%)'
-          : 'radial-gradient(circle, rgba(35,91,67,0.08) 0%, rgba(35,91,67,0) 70%)',
-        top: -225,
-        left: -225,
-        pointerEvents: 'none',
-        zIndex: 0,
-        transition: 'opacity 0.5s ease'
-      }} />
-      <div style={{
-        position: 'fixed',
-        width: 600,
-        height: 600,
-        background: theme === 'dark'
-          ? 'radial-gradient(circle, rgba(245,158,11,0.16) 0%, rgba(245,158,11,0) 70%)'
-          : 'radial-gradient(circle, rgba(217,119,6,0.06) 0%, rgba(217,119,6,0) 70%)',
-        bottom: -150,
-        right: -200,
-        pointerEvents: 'none',
-        zIndex: 0,
-        transition: 'opacity 0.5s ease'
-      }} />
-
       <div style={s.container}>
         {showHeroBanner && (
           <div style={s.heroBanner} onClick={() => { setPrevScreen('home'); setScreen('product-detail'); }}>
@@ -1639,9 +1610,9 @@ export default function App() {
         {showNicknameModal && (
           <div style={s.modalOverlay} onClick={() => setShowNicknameModal(false)}>
             <div style={{ ...s.modalBox, maxWidth: 380, textAlign: 'center' }} onClick={e => e.stopPropagation()}>
-              <IconUser size={48} style={{ color: theme === 'dark' ? '#8fc3aa' : '#235b43', marginBottom: 8, display: 'block', margin: '0 auto 8px auto' }} />
+              <IconUser size={48} style={{ color: theme === 'dark' ? '#30d47e' : '#0a7d55', marginBottom: 8, display: 'block', margin: '0 auto 8px auto' }} />
               <div style={s.modalTitle}>Kullanıcı Adı Seç</div>
-              <div style={{ fontSize: 13, color: theme === 'dark' ? '#aeb5c1' : '#6b7280', marginBottom: 20 }}>Liderlik tablosunda bu isimle görüneceksin</div>
+              <div style={{ fontSize: 13, color: theme === 'dark' ? '#a1a1a6' : '#6e6e73', marginBottom: 20 }}>Liderlik tablosunda bu isimle görüneceksin</div>
               <input style={s.input}
                 placeholder="Kullanıcı adın (örn: AhmetAOF)"
                 value={anonName} onChange={e => setAnonName(e.target.value.slice(0, 15))}
@@ -1660,12 +1631,12 @@ export default function App() {
           <div style={s.modalOverlay} onClick={() => setShowFeedback(false)}>
             <div style={s.modalBox} onClick={e => e.stopPropagation()}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, ...s.modalTitle }}>
-                <IconMessageSquare size={20} style={{ color: theme === 'dark' ? '#8fc3aa' : '#235b43' }} />
+                <IconMessageSquare size={20} style={{ color: theme === 'dark' ? '#30d47e' : '#0a7d55' }} />
                 <span>Geri Bildirim / Ders İsteği</span>
               </div>
-              <div style={{ fontSize: 13, color: theme === 'dark' ? '#aeb5c1' : '#6b7280', marginBottom: 12 }}>Görüşlerini yaz, ders isteğinde bulun!</div>
+              <div style={{ fontSize: 13, color: theme === 'dark' ? '#a1a1a6' : '#6e6e73', marginBottom: 12 }}>Görüşlerini yaz, ders isteğinde bulun!</div>
               {feedbackSent ? (
-                <IconCheckCircle size={48} style={{ color: '#8fc3aa', display: 'block', margin: '16px auto' }} />
+                <IconCheckCircle size={48} style={{ color: '#30d47e', display: 'block', margin: '16px auto' }} />
               ) : (
                 <>
                   <textarea style={s.feedbackInput} placeholder="Mesajını buraya yaz..."
@@ -1676,12 +1647,12 @@ export default function App() {
               )}
 
               {myFeedbacks.length > 0 && (
-                <div style={{ marginTop: 16, borderTop: `1px solid ${theme === 'dark' ? 'rgba(255, 255, 255, 0.08)' : '#e5e7eb'}`, paddingTop: 14 }}>
-                  <div style={{ fontSize: 12, fontWeight: 700, color: theme === 'dark' ? '#aeb5c1' : '#6b7280', marginBottom: 10 }}>GEÇMİŞ GERİ BİLDİRİMLERİN</div>
+                <div style={{ marginTop: 16, borderTop: `1px solid ${theme === 'dark' ? 'rgba(255, 255, 255, 0.08)' : '#e8e8ed'}`, paddingTop: 14 }}>
+                  <div style={{ fontSize: 12, fontWeight: 600, color: theme === 'dark' ? '#a1a1a6' : '#6e6e73', marginBottom: 10 }}>GEÇMİŞ GERİ BİLDİRİMLERİN</div>
                   {myFeedbacks.map((f, i) => (
-                    <div key={i} style={{ marginBottom: 10, padding: '10px 12px', background: theme === 'dark' ? 'rgba(255,255,255,0.03)' : '#f9fafb', borderRadius: 10, borderLeft: `3px solid ${f.is_read ? '#8fc3aa' : '#527165'}`, borderTop: `1px solid ${theme === 'dark' ? 'rgba(255,255,255,0.04)' : '#e5e7eb'}`, borderRight: `1px solid ${theme === 'dark' ? 'rgba(255,255,255,0.04)' : '#e5e7eb'}`, borderBottom: `1px solid ${theme === 'dark' ? 'rgba(255,255,255,0.04)' : '#e5e7eb'}` }}>
+                    <div key={i} style={{ marginBottom: 10, padding: '10px 12px', background: theme === 'dark' ? 'rgba(255,255,255,0.03)' : '#f5f5f7', borderRadius: 10, borderLeft: `3px solid ${f.is_read ? '#30d47e' : '#6e6e73'}`, borderTop: `1px solid ${theme === 'dark' ? 'rgba(255,255,255,0.04)' : '#e8e8ed'}`, borderRight: `1px solid ${theme === 'dark' ? 'rgba(255,255,255,0.04)' : '#e8e8ed'}`, borderBottom: `1px solid ${theme === 'dark' ? 'rgba(255,255,255,0.04)' : '#e8e8ed'}` }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
-                        <span style={{ fontSize: 11, fontWeight: 700, color: f.is_read ? '#8fc3aa' : '#527165', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                        <span style={{ fontSize: 11, fontWeight: 600, color: f.is_read ? '#30d47e' : '#6e6e73', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
                           {f.is_read ? (
                             <>
                               <IconCheckCircle size={12} />
@@ -1694,11 +1665,11 @@ export default function App() {
                             </>
                           )}
                         </span>
-                        <span style={{ fontSize: 11, color: '#9ca3af' }}>{new Date(f.created_at).toLocaleDateString('tr')}</span>
+                        <span style={{ fontSize: 11, color: '#86868b' }}>{new Date(f.created_at).toLocaleDateString('tr')}</span>
                       </div>
                       <div style={{ fontSize: 13, color: s.qText.color, lineHeight: 1.4 }}>{f.message}</div>
                       {f.admin_reply && (
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 6, padding: '6px 10px', background: '#d1fae5', borderRadius: 8, fontSize: 12, color: '#065f46' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 6, padding: '6px 10px', background: 'rgba(10, 125, 85, 0.08)', borderRadius: 8, fontSize: 12, color: '#0a7d55' }}>
                           <IconBell size={12} />
                           <span>{f.admin_reply}</span>
                         </div>
@@ -1713,19 +1684,19 @@ export default function App() {
 
         <div style={s.card}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, ...s.cardTitle }}>
-            <IconAward size={20} style={{ color: theme === 'dark' ? '#8fc3aa' : '#235b43' }} />
+            <IconAward size={20} style={{ color: theme === 'dark' ? '#30d47e' : '#0a7d55' }} />
             <span>Bugünün Liderleri</span>
           </div>
 
           {/* GÜNÜN ŞAKASI BURAYA EKLENDİ */}
           {top3.length > 0 && (
-            <div style={{ fontWeight: '600', color: theme === 'dark' ? '#d7e3dd' : '#214f3e', marginBottom: 12, textAlign: 'center', background: theme === 'dark' ? 'rgba(143, 195, 170, 0.12)' : '#e4ece7', padding: '10px', borderRadius: 10, fontSize: 13, lineHeight: 1.4, border: theme === 'dark' ? '1px solid rgba(143, 195, 170, 0.22)' : '1px solid #cbd8d1' }}>
+            <div style={{ fontWeight: '600', color: theme === 'dark' ? '#a1a1a6' : '#214f3e', marginBottom: 12, textAlign: 'center', background: theme === 'dark' ? 'rgba(255, 255, 255, 0.08)' : '#e4ece7', padding: '10px', borderRadius: 10, fontSize: 13, lineHeight: 1.4, border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.12)' : '1px solid #cbd8d1' }}>
               <span style={{ display: 'inline-flex', alignItems: 'center', gap: 7 }}><IconAward size={15} />{getDailyJoke(top3[0]?.username)}</span>
             </div>
           )}
 
           {(!top3 || top3.length === 0) ? (
-            <div style={{ color: '#9ca3af', fontSize: 13, textAlign: 'center', padding: '8px 0' }}>Henüz soru çözülmedi. İlk sen ol!</div>
+            <div style={{ color: '#86868b', fontSize: 13, textAlign: 'center', padding: '8px 0' }}>Henüz soru çözülmedi. İlk sen ol!</div>
           ) : top3.map((p, i) => (
             <div key={i} style={s.lbRow}>
               <span style={{ display: 'inline-flex', alignItems: 'center', gap: 7 }}><IconAward size={14} /><strong style={{ color: 'inherit' }}>{i + 1}.</strong> {p.username}</span>
@@ -1733,7 +1704,7 @@ export default function App() {
             </div>
           ))}
           {myRank
-            ? <div style={s.myRankBox}><span><IconTarget size={14} style={{ marginRight: 6, color: theme === 'dark' ? '#8fc3aa' : '#235b43', display: 'inline', verticalAlign: 'middle' }} />Sen bugün <strong>{myRank}. sıradasın</strong></span><span style={s.lbScore}>{myLeaderboardScore} XP</span></div>
+            ? <div style={s.myRankBox}><span><IconTarget size={14} style={{ marginRight: 6, color: theme === 'dark' ? '#30d47e' : '#0a7d55', display: 'inline', verticalAlign: 'middle' }} />Sen bugün <strong>{myRank}. sıradasın</strong></span><span style={s.lbScore}>{myLeaderboardScore} XP</span></div>
             : <div style={s.myRankBoxGray}>Soru çöz, sıralamada görün! <IconTarget size={14} style={{ marginLeft: 4, display: 'inline', verticalAlign: 'middle' }} /></div>
           }
         </div>
@@ -1742,13 +1713,13 @@ export default function App() {
         <button
           className="btn-hover"
           style={{
-            width: '90%',
-            maxWidth: '340px',
-            margin: '0 auto 10px auto',
-            background: theme === 'dark' ? 'rgba(255,255,255,0.06)' : 'rgba(35, 91, 67, 0.05)',
-            border: theme === 'dark' ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(35, 91, 67, 0.15)',
-            borderRadius: 10,
-            padding: '10px 14px',
+            width: '100%',
+            margin: '0 0 8px 0',
+            background: s.card.background,
+            border: s.card.border,
+            borderRadius: 12,
+            padding: '13px 16px',
+            boxShadow: s.card.boxShadow,
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
@@ -1772,23 +1743,23 @@ export default function App() {
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <IconFileText size={16} style={{ color: theme === 'dark' ? '#8fc3aa' : '#235b43' }} />
+            <IconFileText size={16} style={{ color: theme === 'dark' ? '#30d47e' : '#0a7d55' }} />
             <span>Ücretsiz Özet Ders Notu İndir</span>
           </div>
-          <IconChevronRight size={16} style={{ color: theme === 'dark' ? 'rgba(255,255,255,0.5)' : 'rgba(35, 91, 67, 0.5)' }} />
+          <IconChevronRight size={16} style={{ color: theme === 'dark' ? 'rgba(255,255,255,0.5)' : 'rgba(0, 0, 0, 0.35)' }} />
         </button>
 
         {/* Ders Materyali İsteği Butonu */}
         <button
           className="btn-hover"
           style={{
-            width: '90%',
-            maxWidth: '340px',
-            margin: '0 auto 10px auto',
-            background: theme === 'dark' ? 'rgba(255,255,255,0.06)' : 'rgba(35, 91, 67, 0.05)',
-            border: theme === 'dark' ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(35, 91, 67, 0.15)',
-            borderRadius: 10,
-            padding: '10px 14px',
+            width: '100%',
+            margin: '0 0 8px 0',
+            background: s.card.background,
+            border: s.card.border,
+            borderRadius: 12,
+            padding: '13px 16px',
+            boxShadow: s.card.boxShadow,
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
@@ -1806,23 +1777,22 @@ export default function App() {
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <IconEdit size={16} style={{ color: theme === 'dark' ? '#8fc3aa' : '#235b43' }} />
+            <IconEdit size={16} style={{ color: theme === 'dark' ? '#30d47e' : '#0a7d55' }} />
             <span>Ders Materyali İsteği Gönder</span>
           </div>
-          <IconChevronRight size={16} style={{ color: theme === 'dark' ? 'rgba(255,255,255,0.5)' : 'rgba(35, 91, 67, 0.5)' }} />
+          <IconChevronRight size={16} style={{ color: theme === 'dark' ? 'rgba(255,255,255,0.5)' : 'rgba(0, 0, 0, 0.35)' }} />
         </button>
 
         {/* PDF Satış Yönlendirme Butonu */}
         <button
           className="btn-hover"
           style={{
-            width: '90%',
-            maxWidth: '340px',
-            margin: '0 auto 16px auto',
-            background: 'linear-gradient(135deg, #235b43 0%, #173f35 100%)',
+            width: '100%',
+            margin: '0 0 18px 0',
+            background: theme === 'dark' ? '#30d47e' : '#0a7d55',
             border: 'none',
-            borderRadius: 10,
-            padding: '10px 14px',
+            borderRadius: 12,
+            padding: '13px 16px',
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
@@ -1830,7 +1800,7 @@ export default function App() {
             color: '#fff',
             fontWeight: 600,
             fontSize: 13,
-            boxShadow: '0 3px 10px rgba(245, 158, 11, 0.15)',
+            boxShadow: '0 3px 10px rgba(255, 159, 10, 0.14)',
             transition: 'all 0.2s'
           }}
           onClick={() => {
@@ -1918,25 +1888,25 @@ export default function App() {
               if (!vals[i]) return null;
 
               // Dynamic themed defaults
-              let bg = theme === 'dark' ? 'rgba(255, 255, 255, 0.03)' : 'rgba(35, 91, 67, 0.03)';
-              let border = theme === 'dark' ? '1.5px solid rgba(255, 255, 255, 0.06)' : '1.5px solid rgba(35, 91, 67, 0.12)';
-              let color = theme === 'dark' ? '#f9fafb' : '#0c2619';
-              let letterBg = theme === 'dark' ? 'rgba(255, 255, 255, 0.08)' : 'rgba(35, 91, 67, 0.08)';
-              let letterColor = theme === 'dark' ? '#aeb5c1' : '#4b5563';
+              let bg = theme === 'dark' ? 'rgba(255, 255, 255, 0.03)' : 'rgba(0, 0, 0, 0.04)';
+              let border = theme === 'dark' ? '1.5px solid rgba(255, 255, 255, 0.06)' : '1.5px solid rgba(0, 0, 0, 0.08)';
+              let color = theme === 'dark' ? '#f5f5f7' : '#1d1d1f';
+              let letterBg = theme === 'dark' ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.04)';
+              let letterColor = theme === 'dark' ? '#a1a1a6' : '#6e6e73';
               
               if (selected) {
                 if (opt.toLowerCase() === q.correct_option.toLowerCase()) { 
-                  bg = theme === 'dark' ? 'rgba(143, 195, 170, 0.15)' : 'rgba(35, 91, 67, 0.08)';
-                  border = theme === 'dark' ? '1.5px solid #8fc3aa' : '1.5px solid #235b43';
-                  color = theme === 'dark' ? '#a7f3d0' : '#046a4e'; 
-                  letterBg = theme === 'dark' ? '#8fc3aa' : '#235b43';
+                  bg = theme === 'dark' ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.04)';
+                  border = theme === 'dark' ? '1.5px solid #30d47e' : '1.5px solid #0a7d55';
+                  color = theme === 'dark' ? '#30d47e' : '#0a7d55'; 
+                  letterBg = theme === 'dark' ? '#30d47e' : '#0a7d55';
                   letterColor = '#fff'; 
                 }
                 else if (opt === selected) { 
-                  bg = theme === 'dark' ? 'rgba(239, 68, 68, 0.15)' : 'rgba(220, 38, 38, 0.08)'; 
-                  border = theme === 'dark' ? '1.5px solid #ef4444' : '1.5px solid #dc2626'; 
-                  color = theme === 'dark' ? '#fca5a5' : '#b91c1c'; 
-                  letterBg = theme === 'dark' ? '#ef4444' : '#dc2626'; 
+                  bg = theme === 'dark' ? 'rgba(255, 69, 58, 0.14)' : 'rgba(215, 0, 21, 0.07)'; 
+                  border = theme === 'dark' ? '1.5px solid #ff453a' : '1.5px solid #d70015'; 
+                  color = theme === 'dark' ? '#ff453a' : '#d70015'; 
+                  letterBg = theme === 'dark' ? '#ff453a' : '#d70015'; 
                   letterColor = '#fff'; 
                 }
               }
@@ -2012,27 +1982,27 @@ export default function App() {
               <div style={s.modalBox}
                 onClick={e => e.stopPropagation()}>
                 {reportSent ? (
-                  <IconCheckCircle size={48} style={{ color: '#8fc3aa', display: 'block', margin: '16px auto' }} />
+                  <IconCheckCircle size={48} style={{ color: '#30d47e', display: 'block', margin: '16px auto' }} />
                 ) : (
                   <>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, ...s.modalTitle }}>
-                      <IconFlag size={20} style={{ color: theme === 'dark' ? '#ef4444' : '#dc2626' }} />
+                      <IconFlag size={20} style={{ color: theme === 'dark' ? '#ff453a' : '#d70015' }} />
                       <span>Hatalı Soru Bildir</span>
                     </div>
-                    <div style={{ fontSize: 13, color: theme === 'dark' ? '#aeb5c1' : '#6b7280', marginBottom: 18 }}>Sorunun türünü seç, ekibimize iletilsin.</div>
+                    <div style={{ fontSize: 13, color: theme === 'dark' ? '#a1a1a6' : '#6e6e73', marginBottom: 18 }}>Sorunun türünü seç, ekibimize iletilsin.</div>
                     {[
-                      { icon: <IconEdit size={20} style={{ color: theme === 'dark' ? '#8fc3aa' : '#235b43' }} />, label: 'Yazım / imla hatası', desc: 'Soruda veya seçeneklerde yazım yanlışı var' },
-                      { icon: <IconXCircle size={20} style={{ color: theme === 'dark' ? '#ef4444' : '#dc2626' }} />, label: 'Doğru şık yanlış işaretli', desc: 'Cevap anahtarı yanlış görünüyor' },
-                      { icon: <IconHelpCircle size={20} style={{ color: '#527165' }} />, label: 'Mantık / içerik hatası', desc: 'Soru mantıksal olarak hatalı veya eksik' },
+                      { icon: <IconEdit size={20} style={{ color: theme === 'dark' ? '#30d47e' : '#0a7d55' }} />, label: 'Yazım / imla hatası', desc: 'Soruda veya seçeneklerde yazım yanlışı var' },
+                      { icon: <IconXCircle size={20} style={{ color: theme === 'dark' ? '#ff453a' : '#d70015' }} />, label: 'Doğru şık yanlış işaretli', desc: 'Cevap anahtarı yanlış görünüyor' },
+                      { icon: <IconHelpCircle size={20} style={{ color: '#6e6e73' }} />, label: 'Mantık / içerik hatası', desc: 'Soru mantıksal olarak hatalı veya eksik' },
                     ].map(opt => (
                       <button key={opt.label}
                         className="opt-btn-hover"
-                        style={{ width: '100%', padding: '12px 14px', borderRadius: 12, border: theme === 'dark' ? '1.5px solid rgba(255, 255, 255, 0.08)' : '1.5px solid #e5e7eb', background: theme === 'dark' ? 'rgba(255, 255, 255, 0.03)' : '#f9fafb', color: s.qText.color, cursor: 'pointer', textAlign: 'left', marginBottom: 8, display: 'flex', alignItems: 'flex-start', gap: 12 }}
+                        style={{ width: '100%', padding: '12px 14px', borderRadius: 12, border: theme === 'dark' ? '1.5px solid rgba(255, 255, 255, 0.08)' : '1.5px solid #e8e8ed', background: theme === 'dark' ? 'rgba(255, 255, 255, 0.03)' : '#f5f5f7', color: s.qText.color, cursor: 'pointer', textAlign: 'left', marginBottom: 8, display: 'flex', alignItems: 'flex-start', gap: 12 }}
                         onClick={() => sendReport(opt.label)}>
                         <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 24, width: 24 }}>{opt.icon}</span>
                         <div>
-                          <div style={{ fontWeight: 700, fontSize: 14, color: s.qText.color }}>{opt.label}</div>
-                          <div style={{ fontSize: 12, color: '#9ca3af', marginTop: 2 }}>{opt.desc}</div>
+                          <div style={{ fontWeight: 600, fontSize: 14, color: s.qText.color }}>{opt.label}</div>
+                          <div style={{ fontSize: 12, color: '#86868b', marginTop: 2 }}>{opt.desc}</div>
                         </div>
                       </button>
                     ))}
@@ -2052,10 +2022,10 @@ export default function App() {
             <button style={s.stickyClose} onClick={(e) => { e.stopPropagation(); setShowStickyBottom(false); }} aria-label="Kapat">&times;</button>
             <div style={s.stickyContainer}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#fff', fontSize: 12, fontWeight: 700 }}>
-                <IconZap size={16} style={{ color: '#d7e3dd' }} />
+                <IconZap size={16} style={{ color: '#a1a1a6' }} />
                 <span>Sınav Sabahı Bilmen Gereken 25 Terim</span>
               </div>
-              <IconChevronRight size={18} style={{ color: '#d7e3dd' }} />
+              <IconChevronRight size={18} style={{ color: '#a1a1a6' }} />
             </div>
           </div>
         )}
@@ -2076,36 +2046,38 @@ export default function App() {
     return (
       <div style={s.bg}>
         <div style={s.container}>
-          <div style={{ display: 'flex', justifyContent: 'center', margin: '10px 0 20px 0' }}>
-            {r.puan >= 50 ? (
-              <IconAward size={72} style={{ color: '#fbbf24', filter: 'drop-shadow(0 8px 16px rgba(251, 191, 36, 0.2))' }} />
-            ) : (
-              <IconBookOpen size={72} style={{ color: theme === 'dark' ? '#8fc3aa' : '#235b43', filter: 'drop-shadow(0 8px 16px rgba(143, 195, 170, 0.2))' }} />
-            )}
+          {/* Puan kahramanı — sonucun kendisi ekranın en büyük öğesi */}
+          <div style={{ textAlign: 'center', padding: '22px 0 4px' }}>
+            <div style={{ fontSize: 12, fontWeight: 500, letterSpacing: '0.04em', textTransform: 'uppercase', color: s.progress.color }}>
+              {r.type === 'vize' ? 'Vize denemesi' : 'Final denemesi'}
+            </div>
+            <div style={{
+              fontSize: 64,
+              fontWeight: 600,
+              letterSpacing: '-0.03em',
+              lineHeight: 1.05,
+              marginTop: 8,
+              fontVariantNumeric: 'tabular-nums',
+              color: r.puan >= 50 ? (theme === 'dark' ? '#30d47e' : '#0a7d55') : s.greeting.color,
+            }}>{r.puan}</div>
+            <div style={{ fontSize: 13, color: s.progress.color, marginTop: 2 }}>100 üzerinden</div>
           </div>
-          <div style={s.resultTitle}>{r.puan >= 50 ? 'Harika Sonuç!' : 'Çalışmaya Devam Etmelisin!'}</div>
+          <div style={s.resultTitle}>{r.puan >= 50 ? 'Harika sonuç' : 'Çalışmaya devam'}</div>
 
           <div style={s.resultCard}>
             <div style={s.resultRow}>
               <span>
-                <IconCheckCircle size={16} style={{ color: '#8fc3aa', marginRight: 8, display: 'inline', verticalAlign: 'middle' }} />
+                <IconCheckCircle size={16} style={{ color: theme === 'dark' ? '#30d47e' : '#0a7d55', marginRight: 8, display: 'inline', verticalAlign: 'middle' }} />
                 <span>Doğru</span>
               </span>
               <strong>{correct}</strong>
             </div>
             <div style={s.resultRow}>
               <span>
-                <IconXCircle size={16} style={{ color: '#ef4444', marginRight: 8, display: 'inline', verticalAlign: 'middle' }} />
+                <IconXCircle size={16} style={{ color: theme === 'dark' ? '#ff453a' : '#d70015', marginRight: 8, display: 'inline', verticalAlign: 'middle' }} />
                 <span>Yanlış</span>
               </span>
               <strong>{wrong}</strong>
-            </div>
-            <div style={s.resultRow}>
-              <span>
-                <IconBarChart size={16} style={{ color: theme === 'dark' ? '#8fc3aa' : '#235b43', marginRight: 8, display: 'inline', verticalAlign: 'middle' }} />
-                <span>Puanın</span>
-              </span>
-              <strong>{r.puan} / 100</strong>
             </div>
             <div style={s.divider} />
 
@@ -2113,7 +2085,7 @@ export default function App() {
               <>
                 <div style={s.resultRow}>
                   <span>
-                    <IconFileText size={16} style={{ color: theme === 'dark' ? '#8fc3aa' : '#235b43', marginRight: 8, display: 'inline', verticalAlign: 'middle' }} />
+                    <IconFileText size={16} style={{ color: theme === 'dark' ? '#30d47e' : '#0a7d55', marginRight: 8, display: 'inline', verticalAlign: 'middle' }} />
                     <span>Vize Etkisi (%30)</span>
                   </span>
                   <strong>{r.katki} puan</strong>
@@ -2126,7 +2098,7 @@ export default function App() {
               <>
                 <div style={s.resultRow}>
                   <span>
-                    <IconGraduationCap size={16} style={{ color: theme === 'dark' ? '#8fc3aa' : '#235b43', marginRight: 8, display: 'inline', verticalAlign: 'middle' }} />
+                    <IconGraduationCap size={16} style={{ color: theme === 'dark' ? '#30d47e' : '#0a7d55', marginRight: 8, display: 'inline', verticalAlign: 'middle' }} />
                     <span>Final Etkisi (%70)</span>
                   </span>
                   <strong>{r.katki} puan</strong>
@@ -2166,7 +2138,7 @@ export default function App() {
           {r.type === 'final' && (
             <button
               className="btn-hover"
-              style={{ ...s.btn, background: '#8fc3aa', color: isThemeLight(theme) ? '#fff' : '#030806', marginBottom: 8, fontWeight: 800, justifyContent: 'center' }}
+              style={{ ...s.btn, marginBottom: 8, justifyContent: 'center' }}
               onClick={() => { setShowPassCheck(true); setPassResult(null); setVizeInput(''); }}
             >
               <IconCalculator size={18} style={{ marginRight: 8 }} />
@@ -2199,19 +2171,19 @@ export default function App() {
             rel="noreferrer"
             style={{
               display: 'flex', alignItems: 'center', gap: 12,
-              background: theme === 'dark' ? 'rgba(255,255,255,0.04)' : 'rgba(35, 91, 67, 0.05)', borderRadius: 16,
+              background: theme === 'dark' ? 'rgba(255,255,255,0.04)' : 'rgba(0, 0, 0, 0.04)', borderRadius: 16,
               padding: '14px 16px', marginTop: 14, textDecoration: 'none',
-              border: `1.5px solid ${theme === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(35, 91, 67, 0.12)'}`,
+              border: `1.5px solid ${theme === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(0, 0, 0, 0.08)'}`,
             }}
           >
             <div style={{ background: '#ff0000', borderRadius: '50%', width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
               <IconPlay size={16} style={{ color: '#fff', marginLeft: 2 }} />
             </div>
             <div>
-              <div style={{ color: s.greeting.color, fontWeight: 800, fontSize: 14 }}>YouTube'da takip et!</div>
-              <div style={{ color: theme === 'dark' ? 'rgba(255,255,255,0.55)' : '#4b5563', fontSize: 12, marginTop: 2 }}>@aofseslinotlar — sesli anlatımlar, özetler</div>
+              <div style={{ color: s.greeting.color, fontWeight: 600, fontSize: 14 }}>YouTube'da takip et!</div>
+              <div style={{ color: theme === 'dark' ? 'rgba(255,255,255,0.55)' : '#6e6e73', fontSize: 12, marginTop: 2 }}>@aofseslinotlar — sesli anlatımlar, özetler</div>
             </div>
-            <IconChevronRight size={18} style={{ marginLeft: 'auto', color: theme === 'dark' ? 'rgba(255,255,255,0.4)' : '#235b43' }} />
+            <IconChevronRight size={18} style={{ marginLeft: 'auto', color: theme === 'dark' ? 'rgba(255,255,255,0.4)' : '#0a7d55' }} />
           </a>
         </div>
 
@@ -2219,13 +2191,13 @@ export default function App() {
         {showPassCheck && (
           <div style={s.modalOverlay} onClick={() => setShowPassCheck(false)}>
             <div style={{ ...s.modalBox, maxWidth: 360 }} onClick={e => e.stopPropagation()}>
-              <div style={{ fontWeight: 800, fontSize: 18, color: s.qText.color, marginBottom: 4, display: 'flex', alignItems: 'center', gap: 8 }}><IconGraduationCap size={20} /> Başarı Notu Hesapla</div>
-              <div style={{ fontSize: 13, color: theme === 'dark' ? '#aeb5c1' : '#6b7280', marginBottom: 16 }}>
+              <div style={{ fontWeight: 600, fontSize: 18, color: s.qText.color, marginBottom: 4, display: 'flex', alignItems: 'center', gap: 8 }}><IconGraduationCap size={20} /> Başarı Notu Hesapla</div>
+              <div style={{ fontSize: 13, color: theme === 'dark' ? '#a1a1a6' : '#6e6e73', marginBottom: 16 }}>
                 Vize notunu gir, final puanınla birlikte hesaplayalım.<br/>
                 <span style={{ fontSize: 12 }}>Vize %30 + Final %70 ≥ 35 → Geçtin!</span>
               </div>
 
-              <label style={{ fontSize: 13, fontWeight: 700, color: s.qText.color, display: 'block', marginBottom: 6 }}>Vize Notun (0–100)</label>
+              <label style={{ fontSize: 13, fontWeight: 600, color: s.qText.color, display: 'block', marginBottom: 6 }}>Vize Notun (0–100)</label>
               <input
                 type="number" min="0" max="100"
                 placeholder="örn: 60"
@@ -2235,12 +2207,12 @@ export default function App() {
               />
 
               {/* Final puanı bilgi satırı */}
-              <div style={{ fontSize: 13, color: theme === 'dark' ? '#aeb5c1' : '#6b7280', marginBottom: 14, background: theme === 'dark' ? 'rgba(255,255,255,0.03)' : '#f9fafb', borderRadius: 10, padding: '9px 12px', border: theme === 'dark' ? '1px solid rgba(255,255,255,0.04)' : '1px solid #e5e7eb' }}>
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 7 }}><IconBarChart size={15} /> Bu sınavdaki final puanın: <strong style={{ color: theme === 'dark' ? '#8fc3aa' : '#235b43' }}>{r.puan} / 100</strong></span>
+              <div style={{ fontSize: 13, color: theme === 'dark' ? '#a1a1a6' : '#6e6e73', marginBottom: 14, background: theme === 'dark' ? 'rgba(255,255,255,0.03)' : '#f5f5f7', borderRadius: 10, padding: '9px 12px', border: theme === 'dark' ? '1px solid rgba(255,255,255,0.04)' : '1px solid #e8e8ed' }}>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 7 }}><IconBarChart size={15} /> Bu sınavdaki final puanın: <strong style={{ color: theme === 'dark' ? '#30d47e' : '#0a7d55' }}>{r.puan} / 100</strong></span>
               </div>
 
               <button
-                style={{ ...s.btn, background: '#8fc3aa', color: isThemeLight(theme) ? '#fff' : '#030806', marginBottom: 8 }}
+                style={{ ...s.btn, background: '#30d47e', color: isThemeLight(theme) ? '#fff' : '#04140b', marginBottom: 8 }}
                 onClick={() => {
                   const vize = parseFloat(vizeInput);
                   if (isNaN(vize) || vize < 0 || vize > 100) return;
@@ -2254,10 +2226,10 @@ export default function App() {
               {passResult && (
                 <div style={{
                   borderRadius: 14, padding: '14px 16px', textAlign: 'center',
-                  background: passResult.gecti ? 'rgba(143, 195, 170, 0.15)' : 'rgba(239, 68, 68, 0.15)',
-                  border: `1px solid ${passResult.gecti ? '#8fc3aa' : '#ef4444'}`,
-                  color: passResult.gecti ? (theme === 'dark' ? '#a7f3d0' : '#046a4e') : (theme === 'dark' ? '#fca5a5' : '#b91c1c'),
-                  fontWeight: 800, fontSize: 16, marginBottom: 8,
+                  background: passResult.gecti ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 69, 58, 0.14)',
+                  border: `1px solid ${passResult.gecti ? '#30d47e' : '#ff453a'}`,
+                  color: passResult.gecti ? (theme === 'dark' ? '#30d47e' : '#0a7d55') : (theme === 'dark' ? '#ff453a' : '#d70015'),
+                  fontWeight: 600, fontSize: 16, marginBottom: 8,
                 }}>
                   <span style={{ display: 'inline-flex', alignItems: 'center', gap: 7 }}>{passResult.gecti ? <IconCheckCircle size={18} /> : <IconBookOpen size={18} />}{passResult.gecti ? 'Tebrikler, geçtin!' : 'Maalesef geçemedin.'}</span>
                   <div style={{ fontWeight: 600, fontSize: 13, marginTop: 6 }}>
@@ -2308,18 +2280,18 @@ export default function App() {
             </div>
             
             <div style={s.cardTitle}>Tüm Kitabı Okuyacak Vaktin Yok. Sadece Çıkması En Muhtemel Konuları Çalış.</div>
-            <div style={{ fontSize: 13, color: theme === 'dark' ? '#aeb5c1' : '#4b5563', lineHeight: 1.6, marginBottom: 16 }}>
+            <div style={{ fontSize: 13, color: theme === 'dark' ? '#a1a1a6' : '#6e6e73', lineHeight: 1.6, marginBottom: 16 }}>
               Geçmiş 6-7 yılın çıkmış soruları tek tek analiz edildi. Hangi konudan kaç soru geldiği sayıldı, en çok tekrar edenler bu PDF'te toplandı. Sınava 1 gece kala bile fark yaratır.
             </div>
 
             <div style={{
-              background: theme === 'dark' ? 'rgba(255, 255, 255, 0.04)' : '#f9fafb',
-              border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid #e5e7eb',
+              background: theme === 'dark' ? 'rgba(255, 255, 255, 0.04)' : '#f5f5f7',
+              border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid #e8e8ed',
               borderRadius: 12,
               padding: 14,
               marginBottom: 16,
               fontSize: 12.5,
-              color: theme === 'dark' ? '#c9cfd8' : '#4b5563',
+              color: theme === 'dark' ? '#c9cfd8' : '#6e6e73',
               lineHeight: 1.6,
               fontStyle: 'italic',
               textAlign: 'left'
@@ -2331,14 +2303,14 @@ export default function App() {
               display: 'inline-flex',
               alignItems: 'center',
               gap: 6,
-              background: theme === 'dark' ? 'rgba(143, 195, 170, 0.15)' : 'rgba(35, 91, 67, 0.08)',
-              color: theme === 'dark' ? '#a7f3d0' : '#046a4e',
+              background: theme === 'dark' ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.04)',
+              color: theme === 'dark' ? '#30d47e' : '#0a7d55',
               padding: '6px 12px',
               borderRadius: 20,
               fontSize: 12,
-              fontWeight: 700,
+              fontWeight: 600,
               marginBottom: 18,
-              border: `1px solid ${theme === 'dark' ? 'rgba(143, 195, 170, 0.2)' : 'rgba(35, 91, 67, 0.15)'}`
+              border: `1px solid ${theme === 'dark' ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.08)'}`
             }}>
               <IconBookOpen size={14} style={{ marginRight: 2 }} />
               10+ Aktif Ders Seçeneği
@@ -2346,51 +2318,51 @@ export default function App() {
 
             <div style={{ marginBottom: 20 }}>
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 14 }}>
-                <IconTarget size={20} style={{ color: theme === 'dark' ? '#8fc3aa' : '#235b43', flexShrink: 0, marginTop: 2 }} />
+                <IconTarget size={20} style={{ color: theme === 'dark' ? '#30d47e' : '#0a7d55', flexShrink: 0, marginTop: 2 }} />
                 <div style={{ fontSize: 13, color: s.qText.color, textAlign: 'left', lineHeight: 1.4 }}>
                   <strong>Sınav Sabahı Bilmen Gereken 25 Terim:</strong> Sınavdan hemen önce bilmeniz gereken en kritik 25 terim ve tanım elinizin altında.
                 </div>
               </div>
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 14 }}>
-                <IconBarChart size={20} style={{ color: theme === 'dark' ? '#8fc3aa' : '#235b43', flexShrink: 0, marginTop: 2 }} />
+                <IconBarChart size={20} style={{ color: theme === 'dark' ? '#30d47e' : '#0a7d55', flexShrink: 0, marginTop: 2 }} />
                 <div style={{ fontSize: 13, color: s.qText.color, textAlign: 'left', lineHeight: 1.4 }}>
                   <strong>Çıkmış Soru Analizi:</strong> Geçmiş sınav soruları tek tek incelenerek, tekrar tekrar sorulan konular tespit edildi.
                 </div>
               </div>
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 14 }}>
-                <IconZap size={20} style={{ color: theme === 'dark' ? '#8fc3aa' : '#235b43', flexShrink: 0, marginTop: 2 }} />
+                <IconZap size={20} style={{ color: theme === 'dark' ? '#30d47e' : '#0a7d55', flexShrink: 0, marginTop: 2 }} />
                 <div style={{ fontSize: 13, color: s.qText.color, textAlign: 'left', lineHeight: 1.4 }}>
                   <strong>Shopier Güvencesiyle Anında E-posta:</strong> Ödemenizden hemen sonra PDF dosyanız otomatik olarak mail adresinize gönderilir.
                 </div>
               </div>
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
-                <IconPhone size={20} style={{ color: theme === 'dark' ? '#8fc3aa' : '#235b43', flexShrink: 0, marginTop: 2 }} />
+                <IconPhone size={20} style={{ color: theme === 'dark' ? '#30d47e' : '#0a7d55', flexShrink: 0, marginTop: 2 }} />
                 <div style={{ fontSize: 13, color: s.qText.color, textAlign: 'left', lineHeight: 1.4 }}>
                   <strong>Mobil Uyumlu Format:</strong> Telefon, tablet veya bilgisayarınızdan her yerde kolayca çalışabilirsiniz.
                 </div>
               </div>
             </div>
 
-            <div style={{ marginBottom: 24, paddingTop: 20, borderTop: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #e5e7eb' }}>
-              <div style={{ fontSize: 14, fontWeight: 700, color: s.qText.color, marginBottom: 16, textAlign: 'center' }}>
+            <div style={{ marginBottom: 24, paddingTop: 20, borderTop: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #e8e8ed' }}>
+              <div style={{ fontSize: 14, fontWeight: 600, color: s.qText.color, marginBottom: 16, textAlign: 'center' }}>
                 Öğrenciler ne diyor?
               </div>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                 <div style={{
-                  background: theme === 'dark' ? 'rgba(143, 195, 170, 0.08)' : 'rgba(35, 91, 67, 0.05)',
-                  border: `1px solid ${theme === 'dark' ? 'rgba(143, 195, 170, 0.2)' : 'rgba(35, 91, 67, 0.15)'}`,
+                  background: theme === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.04)',
+                  border: `1px solid ${theme === 'dark' ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.08)'}`,
                   borderRadius: 12,
                   padding: 12,
-                  borderLeft: `4px solid ${theme === 'dark' ? '#8fc3aa' : '#235b43'}`
+                  borderLeft: `4px solid ${theme === 'dark' ? '#30d47e' : '#0a7d55'}`
                 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                    <div style={{ width: 32, height: 32, borderRadius: '50%', background: theme === 'dark' ? 'rgba(143, 195, 170, 0.2)' : 'rgba(35, 91, 67, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: theme === 'dark' ? '#8fc3aa' : '#235b43' }}>
+                    <div style={{ width: 32, height: 32, borderRadius: '50%', background: theme === 'dark' ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 600, color: theme === 'dark' ? '#30d47e' : '#0a7d55' }}>
                       Z
                     </div>
                     <div>
-                      <div style={{ fontSize: 12, fontWeight: 700, color: s.qText.color }}>Zeynep</div>
-                      <div style={{ fontSize: 11, color: theme === 'dark' ? '#6b7280' : '#9ca3af' }}>Yeni</div>
+                      <div style={{ fontSize: 12, fontWeight: 600, color: s.qText.color }}>Zeynep</div>
+                      <div style={{ fontSize: 11, color: theme === 'dark' ? '#6e6e73' : '#86868b' }}>Yeni</div>
                     </div>
                   </div>
                   <div style={{ fontSize: 12, color: s.qText.color, lineHeight: 1.5, fontStyle: 'italic' }}>
@@ -2399,19 +2371,19 @@ export default function App() {
                 </div>
 
                 <div style={{
-                  background: theme === 'dark' ? 'rgba(143, 195, 170, 0.08)' : 'rgba(35, 91, 67, 0.05)',
-                  border: `1px solid ${theme === 'dark' ? 'rgba(143, 195, 170, 0.2)' : 'rgba(35, 91, 67, 0.15)'}`,
+                  background: theme === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.04)',
+                  border: `1px solid ${theme === 'dark' ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.08)'}`,
                   borderRadius: 12,
                   padding: 12,
-                  borderLeft: `4px solid ${theme === 'dark' ? '#8fc3aa' : '#235b43'}`
+                  borderLeft: `4px solid ${theme === 'dark' ? '#30d47e' : '#0a7d55'}`
                 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                    <div style={{ width: 32, height: 32, borderRadius: '50%', background: theme === 'dark' ? 'rgba(143, 195, 170, 0.2)' : 'rgba(35, 91, 67, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: theme === 'dark' ? '#8fc3aa' : '#235b43' }}>
+                    <div style={{ width: 32, height: 32, borderRadius: '50%', background: theme === 'dark' ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 600, color: theme === 'dark' ? '#30d47e' : '#0a7d55' }}>
                       A
                     </div>
                     <div>
-                      <div style={{ fontSize: 12, fontWeight: 700, color: s.qText.color }}>Atlas</div>
-                      <div style={{ fontSize: 11, color: theme === 'dark' ? '#6b7280' : '#9ca3af' }}>Yeni</div>
+                      <div style={{ fontSize: 12, fontWeight: 600, color: s.qText.color }}>Atlas</div>
+                      <div style={{ fontSize: 11, color: theme === 'dark' ? '#6e6e73' : '#86868b' }}>Yeni</div>
                     </div>
                   </div>
                   <div style={{ fontSize: 12, color: s.qText.color, lineHeight: 1.5, fontStyle: 'italic' }}>
@@ -2420,19 +2392,19 @@ export default function App() {
                 </div>
 
                 <div style={{
-                  background: theme === 'dark' ? 'rgba(143, 195, 170, 0.08)' : 'rgba(35, 91, 67, 0.05)',
-                  border: `1px solid ${theme === 'dark' ? 'rgba(143, 195, 170, 0.2)' : 'rgba(35, 91, 67, 0.15)'}`,
+                  background: theme === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.04)',
+                  border: `1px solid ${theme === 'dark' ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.08)'}`,
                   borderRadius: 12,
                   padding: 12,
-                  borderLeft: `4px solid ${theme === 'dark' ? '#8fc3aa' : '#235b43'}`
+                  borderLeft: `4px solid ${theme === 'dark' ? '#30d47e' : '#0a7d55'}`
                 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                    <div style={{ width: 32, height: 32, borderRadius: '50%', background: theme === 'dark' ? 'rgba(143, 195, 170, 0.2)' : 'rgba(35, 91, 67, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: theme === 'dark' ? '#8fc3aa' : '#235b43' }}>
+                    <div style={{ width: 32, height: 32, borderRadius: '50%', background: theme === 'dark' ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 600, color: theme === 'dark' ? '#30d47e' : '#0a7d55' }}>
                       Y
                     </div>
                     <div>
-                      <div style={{ fontSize: 12, fontWeight: 700, color: s.qText.color }}>Yyyyy</div>
-                      <div style={{ fontSize: 11, color: theme === 'dark' ? '#6b7280' : '#9ca3af' }}>Yeni</div>
+                      <div style={{ fontSize: 12, fontWeight: 600, color: s.qText.color }}>Yyyyy</div>
+                      <div style={{ fontSize: 11, color: theme === 'dark' ? '#6e6e73' : '#86868b' }}>Yeni</div>
                     </div>
                   </div>
                   <div style={{ fontSize: 12, color: s.qText.color, lineHeight: 1.5, fontStyle: 'italic' }}>
@@ -2441,19 +2413,19 @@ export default function App() {
                 </div>
 
                 <div style={{
-                  background: theme === 'dark' ? 'rgba(143, 195, 170, 0.08)' : 'rgba(35, 91, 67, 0.05)',
-                  border: `1px solid ${theme === 'dark' ? 'rgba(143, 195, 170, 0.2)' : 'rgba(35, 91, 67, 0.15)'}`,
+                  background: theme === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.04)',
+                  border: `1px solid ${theme === 'dark' ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.08)'}`,
                   borderRadius: 12,
                   padding: 12,
-                  borderLeft: `4px solid ${theme === 'dark' ? '#8fc3aa' : '#235b43'}`
+                  borderLeft: `4px solid ${theme === 'dark' ? '#30d47e' : '#0a7d55'}`
                 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                    <div style={{ width: 32, height: 32, borderRadius: '50%', background: theme === 'dark' ? 'rgba(143, 195, 170, 0.2)' : 'rgba(35, 91, 67, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: theme === 'dark' ? '#8fc3aa' : '#235b43' }}>
+                    <div style={{ width: 32, height: 32, borderRadius: '50%', background: theme === 'dark' ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 600, color: theme === 'dark' ? '#30d47e' : '#0a7d55' }}>
                       M
                     </div>
                     <div>
-                      <div style={{ fontSize: 12, fontWeight: 700, color: s.qText.color }}>Merve</div>
-                      <div style={{ fontSize: 11, color: theme === 'dark' ? '#6b7280' : '#9ca3af' }}>Yeni</div>
+                      <div style={{ fontSize: 12, fontWeight: 600, color: s.qText.color }}>Merve</div>
+                      <div style={{ fontSize: 11, color: theme === 'dark' ? '#6e6e73' : '#86868b' }}>Yeni</div>
                     </div>
                   </div>
                   <div style={{ fontSize: 12, color: s.qText.color, lineHeight: 1.5, fontStyle: 'italic' }}>
@@ -2464,21 +2436,21 @@ export default function App() {
             </div>
 
             <div style={{ marginBottom: 24 }}>
-              <div style={{ fontSize: 14, fontWeight: 700, color: s.qText.color, marginBottom: 4, textAlign: 'center' }}>
+              <div style={{ fontSize: 14, fontWeight: 600, color: s.qText.color, marginBottom: 4, textAlign: 'center' }}>
                 <span style={{ display: 'inline-flex', alignItems: 'center', gap: 7 }}><IconCamera size={16} /> Sayfadan Kesitler</span>
               </div>
-              <div style={{ fontSize: 11.5, color: theme === 'dark' ? '#9aa1ab' : '#6b7280', marginBottom: 12, textAlign: 'center' }}>
+              <div style={{ fontSize: 11.5, color: theme === 'dark' ? '#9aa1ab' : '#6e6e73', marginBottom: 12, textAlign: 'center' }}>
                 Aşağıdakiler PDF'in sadece birkaç sayfası — tam doküman 10-15 sayfa dolu içerik barındırıyor.
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                <img src="/pdf-kesit-1.png" alt="PDF sayfa kesiti 1" loading="lazy" decoding="async" width={900} height={774} style={{ width: '100%', height: 'auto', borderRadius: 10, border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #e5e7eb', boxShadow: theme === 'dark' ? '0 4px 14px rgba(0, 0, 0, 0.3)' : '0 4px 14px rgba(0, 0, 0, 0.06)' }} />
-                <img src="/pdf-kesit-2.png" alt="PDF sayfa kesiti 2" loading="lazy" decoding="async" width={900} height={720} style={{ width: '100%', height: 'auto', borderRadius: 10, border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #e5e7eb', boxShadow: theme === 'dark' ? '0 4px 14px rgba(0, 0, 0, 0.3)' : '0 4px 14px rgba(0, 0, 0, 0.06)' }} />
-                <img src="/pdf-kesit-3.png" alt="PDF sayfa kesiti 3" loading="lazy" decoding="async" width={900} height={586} style={{ width: '100%', height: 'auto', borderRadius: 10, border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #e5e7eb', boxShadow: theme === 'dark' ? '0 4px 14px rgba(0, 0, 0, 0.3)' : '0 4px 14px rgba(0, 0, 0, 0.06)' }} />
-                <img src="/pdf-kesit-4.png" alt="PDF sayfa kesiti 4" loading="lazy" decoding="async" width={900} height={529} style={{ width: '100%', height: 'auto', borderRadius: 10, border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #e5e7eb', boxShadow: theme === 'dark' ? '0 4px 14px rgba(0, 0, 0, 0.3)' : '0 4px 14px rgba(0, 0, 0, 0.06)' }} />
+                <img src="/pdf-kesit-1.png" alt="PDF sayfa kesiti 1" loading="lazy" decoding="async" width={900} height={774} style={{ width: '100%', height: 'auto', borderRadius: 10, border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #e8e8ed', boxShadow: theme === 'dark' ? '0 4px 14px rgba(0, 0, 0, 0.3)' : '0 4px 14px rgba(0, 0, 0, 0.06)' }} />
+                <img src="/pdf-kesit-2.png" alt="PDF sayfa kesiti 2" loading="lazy" decoding="async" width={900} height={720} style={{ width: '100%', height: 'auto', borderRadius: 10, border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #e8e8ed', boxShadow: theme === 'dark' ? '0 4px 14px rgba(0, 0, 0, 0.3)' : '0 4px 14px rgba(0, 0, 0, 0.06)' }} />
+                <img src="/pdf-kesit-3.png" alt="PDF sayfa kesiti 3" loading="lazy" decoding="async" width={900} height={586} style={{ width: '100%', height: 'auto', borderRadius: 10, border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #e8e8ed', boxShadow: theme === 'dark' ? '0 4px 14px rgba(0, 0, 0, 0.3)' : '0 4px 14px rgba(0, 0, 0, 0.06)' }} />
+                <img src="/pdf-kesit-4.png" alt="PDF sayfa kesiti 4" loading="lazy" decoding="async" width={900} height={529} style={{ width: '100%', height: 'auto', borderRadius: 10, border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #e8e8ed', boxShadow: theme === 'dark' ? '0 4px 14px rgba(0, 0, 0, 0.3)' : '0 4px 14px rgba(0, 0, 0, 0.06)' }} />
               </div>
             </div>
 
-            <a href={SHOPIER_URL} target="_blank" rel="noopener noreferrer" onClick={trackShopierClick} className="btn-hover" style={{ ...s.btn, background: '#173f35', color: '#fff', textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, fontWeight: 800, padding: '14px', borderRadius: 14, boxShadow: '0 4px 14px rgba(23, 63, 53, 0.18)' }}>
+            <a href={SHOPIER_URL} target="_blank" rel="noopener noreferrer" onClick={trackShopierClick} className="btn-hover" style={{ ...s.btn, background: '#09694a', color: '#fff', textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, fontWeight: 600, padding: '14px', borderRadius: 14, boxShadow: '0 4px 14px rgba(23, 63, 53, 0.18)' }}>
               <span>Shopier ile Hemen Al & İndir</span>
               <IconChevronRight size={18} />
             </a>
@@ -2490,9 +2462,9 @@ export default function App() {
   }
 
   if (screen === 'course-request') {
-    const accent = theme === 'dark' ? '#8fc3aa' : '#235b43';
-    const muted = theme === 'dark' ? '#aeb5c1' : '#6b7280';
-    const border = theme === 'dark' ? 'rgba(255,255,255,0.12)' : 'rgba(35,91,67,0.18)';
+    const accent = theme === 'dark' ? '#30d47e' : '#0a7d55';
+    const muted = theme === 'dark' ? '#a1a1a6' : '#6e6e73';
+    const border = theme === 'dark' ? 'rgba(255,255,255,0.12)' : 'rgba(0, 0, 0, 0.08)';
 
     return (
       <div style={s.bg}>
@@ -2515,8 +2487,8 @@ export default function App() {
 
             {crDone ? (
               <div style={{ textAlign: 'center', padding: 16 }}>
-                <IconCheckCircle size={36} style={{ color: '#8fc3aa', display: 'block', margin: '0 auto 8px auto' }} />
-                <div style={{ fontWeight: 700, fontSize: 14, color: theme === 'dark' ? '#a7f3d0' : '#065f46' }}>İsteğin alındı, teşekkürler!</div>
+                <IconCheckCircle size={36} style={{ color: '#30d47e', display: 'block', margin: '0 auto 8px auto' }} />
+                <div style={{ fontWeight: 600, fontSize: 14, color: theme === 'dark' ? '#30d47e' : '#0a7d55' }}>İsteğin alındı, teşekkürler!</div>
                 <button
                   className="btn-hover"
                   style={{ ...s.btn, background: 'transparent', border: '1px solid ' + border, color: s.greeting.color, justifyContent: 'center', marginTop: 12, fontSize: 12, padding: '8px 12px' }}
@@ -2543,7 +2515,7 @@ export default function App() {
                           gap: 6,
                           padding: '8px 10px',
                           background: acik
-                            ? (theme === 'dark' ? 'rgba(143,195,170,0.10)' : 'rgba(35,91,67,0.07)')
+                            ? (theme === 'dark' ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.04)')
                             : 'transparent',
                           border: 'none',
                           cursor: 'pointer',
@@ -2555,7 +2527,7 @@ export default function App() {
                       >
                         <span style={{ flex: 1 }}>{b.bolum}</span>
                         {secili > 0 && (
-                          <span style={{ fontSize: 10, fontWeight: 700, background: accent, color: theme === 'dark' ? '#03110b' : '#fff', borderRadius: 10, padding: '1px 6px' }}>{secili}</span>
+                          <span style={{ fontSize: 10, fontWeight: 600, background: accent, color: theme === 'dark' ? '#03110b' : '#fff', borderRadius: 10, padding: '1px 6px' }}>{secili}</span>
                         )}
                         <span style={{ fontSize: 10, color: muted }}>{b.dersler.length}</span>
                         <IconChevronRight size={13} style={{ color: muted, transform: acik ? 'rotate(90deg)' : 'none', transition: 'transform 0.15s' }} />
@@ -2604,8 +2576,8 @@ export default function App() {
                       fontSize: 12.5,
                       padding: '10px 12px',
                       justifyContent: 'center',
-                      background: crSelected.length ? accent : '#e5e7eb',
-                      color: crSelected.length ? (theme === 'dark' ? '#030806' : '#fff') : '#9ca3af',
+                      background: crSelected.length ? accent : '#e8e8ed',
+                      color: crSelected.length ? (theme === 'dark' ? '#04140b' : '#fff') : '#86868b',
                       cursor: crSelected.length ? 'pointer' : 'not-allowed'
                     }}
                     disabled={!crSelected.length || crSending}
@@ -2637,9 +2609,9 @@ export default function App() {
           </div>
 
           <div style={s.card}>
-            <IconBookOpen size={48} style={{ color: theme === 'dark' ? '#8fc3aa' : '#235b43', marginBottom: 8, display: 'block', margin: '0 auto 8px auto' }} />
+            <IconBookOpen size={48} style={{ color: theme === 'dark' ? '#30d47e' : '#0a7d55', marginBottom: 8, display: 'block', margin: '0 auto 8px auto' }} />
             <div style={s.cardTitle}>Derslerini Seç</div>
-            <div style={{ fontSize: 13, color: theme === 'dark' ? '#aeb5c1' : '#6b7280', marginBottom: 16 }}>
+            <div style={{ fontSize: 13, color: theme === 'dark' ? '#a1a1a6' : '#6e6e73', marginBottom: 16 }}>
               Seçtiğin derslerin özet notlarını e-posta olarak göndereceğiz. En fazla 3 ders seçebilirsin.
             </div>
 
@@ -2648,7 +2620,7 @@ export default function App() {
             ) : (
               <div style={{ maxHeight: 300, overflowY: 'auto', marginBottom: 16 }}>
                 {pdfNotes.map(c => (
-                  <label key={c.id} style={{ display: 'flex', alignItems: 'center', padding: '12px 14px', border: theme === 'dark' ? '1.5px solid rgba(255, 255, 255, 0.08)' : '1.5px solid #e5e7eb', borderRadius: 12, marginBottom: 8, cursor: 'pointer', background: notesSelected.some(p => p.id === c.id) ? (theme === 'dark' ? 'rgba(143, 195, 170, 0.15)' : '#f0faf4') : 'transparent' }}>
+                  <label key={c.id} style={{ display: 'flex', alignItems: 'center', padding: '12px 14px', border: theme === 'dark' ? '1.5px solid rgba(255, 255, 255, 0.08)' : '1.5px solid #e8e8ed', borderRadius: 12, marginBottom: 8, cursor: 'pointer', background: notesSelected.some(p => p.id === c.id) ? (theme === 'dark' ? 'rgba(255, 255, 255, 0.08)' : '#f0faf4') : 'transparent' }}>
                     <input
                       type="checkbox"
                       style={{ width: 18, height: 18, marginRight: 12, accentColor: GREEN }}
@@ -2670,7 +2642,7 @@ export default function App() {
             )}
 
             <div style={{ marginBottom: 16 }}>
-              <label style={{ fontSize: 12, fontWeight: 700, color: theme === 'dark' ? '#aeb5c1' : '#6b7280', display: 'block', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>E-posta Adresin</label>
+              <label style={{ fontSize: 12, fontWeight: 600, color: theme === 'dark' ? '#a1a1a6' : '#6e6e73', display: 'block', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>E-posta Adresin</label>
               <input
                 type="email"
                 placeholder=""
@@ -2682,13 +2654,13 @@ export default function App() {
 
             <label style={{ display: 'flex', alignItems: 'flex-start', marginBottom: 20, cursor: 'pointer' }}>
               <input type="checkbox" checked={notesKvkk} onChange={e => { setNotesKvkk(e.target.checked); setNotesResult(null); }} style={{ width: 16, height: 16, marginRight: 10, marginTop: 2 }} />
-              <span style={{ fontSize: 12, color: theme === 'dark' ? '#aeb5c1' : '#6b7280', lineHeight: 1.4 }}>
+              <span style={{ fontSize: 12, color: theme === 'dark' ? '#a1a1a6' : '#6e6e73', lineHeight: 1.4 }}>
                 E-posta adresimin kampanya ve duyurular (YouTube vs.) için kaydedilmesini ve bana e-posta gönderilmesini onaylıyorum.
               </span>
             </label>
 
             {notesResult === 'success' && (
-              <div style={{ background: 'rgba(143, 195, 170, 0.15)', color: theme === 'dark' ? '#a7f3d0' : '#065f46', border: '1px solid #8fc3aa', padding: '12px', borderRadius: 12, fontSize: 14, fontWeight: 700, textAlign: 'center', marginBottom: 12 }}>
+              <div style={{ background: 'rgba(255, 255, 255, 0.08)', color: theme === 'dark' ? '#30d47e' : '#0a7d55', border: '1px solid #30d47e', padding: '12px', borderRadius: 12, fontSize: 14, fontWeight: 600, textAlign: 'center', marginBottom: 12 }}>
                 <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
                   <IconCheckCircle size={16} />
                   <span>Notların başarıyla e-postana gönderildi! Lütfen Spam (Gereksiz) kutunu da kontrol et.</span>
@@ -2696,7 +2668,7 @@ export default function App() {
               </div>
             )}
             {notesResult && notesResult !== 'success' && (
-              <div style={{ background: 'rgba(239, 68, 68, 0.15)', color: theme === 'dark' ? '#fca5a5' : '#991b1b', border: '1px solid #ef4444', padding: '12px', borderRadius: 12, fontSize: 13, fontWeight: 600, textAlign: 'center', marginBottom: 12 }}>
+              <div style={{ background: 'rgba(255, 69, 58, 0.14)', color: theme === 'dark' ? '#ff453a' : '#991b1b', border: '1px solid #ff453a', padding: '12px', borderRadius: 12, fontSize: 13, fontWeight: 600, textAlign: 'center', marginBottom: 12 }}>
                 <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
                   <IconXCircle size={16} />
                   <span>{notesResult}</span>
@@ -2706,7 +2678,7 @@ export default function App() {
 
             <button
               className="btn-hover"
-              style={{ ...s.btn, background: (notesSending || notesSelected.length === 0 || !notesEmail || !notesKvkk) ? '#e5e7eb' : (theme === 'dark' ? '#8fc3aa' : '#235b43'), color: (notesSending || notesSelected.length === 0 || !notesEmail || !notesKvkk) ? '#9ca3af' : (theme === 'dark' ? '#030806' : '#fff'), cursor: (notesSending || notesSelected.length === 0 || !notesEmail || !notesKvkk) ? 'not-allowed' : 'pointer', fontSize: 16, padding: '16px', justifyContent: 'center' }}
+              style={{ ...s.btn, background: (notesSending || notesSelected.length === 0 || !notesEmail || !notesKvkk) ? '#e8e8ed' : (theme === 'dark' ? '#30d47e' : '#0a7d55'), color: (notesSending || notesSelected.length === 0 || !notesEmail || !notesKvkk) ? '#86868b' : (theme === 'dark' ? '#04140b' : '#fff'), cursor: (notesSending || notesSelected.length === 0 || !notesEmail || !notesKvkk) ? 'not-allowed' : 'pointer', fontSize: 16, padding: '16px', justifyContent: 'center' }}
               disabled={notesSending || notesSelected.length === 0 || !notesEmail || !notesKvkk}
               onClick={async () => {
                 setNotesSending(true);
@@ -2750,49 +2722,58 @@ function isThemeLight(theme) {
   return theme === 'light';
 }
 
-const GREEN = '#235b43';
-const GREEN_DARK = '#173f35';
-const GREEN_LIGHT = '#7fb59d';
+const GREEN = '#0a7d55';
+const GREEN_DARK = '#09694a';
+const GREEN_LIGHT = '#30d47e';
 
 const getStyles = (theme) => {
   const isDark = theme === 'dark';
   
+  // Apple-clean sistem: serin nötr griler, tek yeşil aksan, semantik kırmızı/amber.
   const colors = {
-    bgDark: isDark ? '#10241e' : '#f7f4ec',
-    bgGradient: isDark 
-      ? 'linear-gradient(180deg, #173f35 0%, #10241e 38%, #0d1d18 100%)'
-      : 'linear-gradient(180deg, #f8f6ef 0%, #f3f0e8 55%, #eeebe2 100%)',
-    primary: isDark ? '#8fc3aa' : '#235b43',
-    primaryHover: isDark ? '#a6d2bc' : '#173f35',
-    primaryGlow: isDark ? 'rgba(143, 195, 170, 0.18)' : 'rgba(35, 91, 67, 0.13)',
-    accent: isDark ? '#a9c8ba' : '#355f50',
-    accentHover: isDark ? '#c2dbcf' : '#214f3e',
-    danger: isDark ? '#ef4444' : '#dc2626',
-    dangerBg: isDark ? 'rgba(239, 68, 68, 0.15)' : 'rgba(220, 38, 38, 0.08)',
-    successBg: isDark ? 'rgba(143, 195, 170, 0.15)' : 'rgba(35, 91, 67, 0.08)',
-    cardBg: isDark ? 'rgba(26, 55, 46, 0.92)' : '#fffdf8',
-    cardBorder: isDark ? 'rgba(223, 235, 229, 0.12)' : '#dcd7cb',
-    textMain: isDark ? '#f3f1ea' : '#1d312a',
-    textMuted: isDark ? '#aebdb6' : '#66756f',
-    
-    vizeActiveBg: isDark ? '#f3f1ea' : '#173f35',
-    vizeActiveText: isDark ? '#173f35' : '#ffffff',
-    correctText: isDark ? '#a7f3d0' : '#046a4e',
-    wrongText: isDark ? '#fca5a5' : '#b91c1c',
-    activeYearBg: isDark ? '#f3f1ea' : '#173f35',
-    activeYearText: isDark ? '#173f35' : '#ffffff',
-    badgeYearText: isDark ? '#d7e3dd' : '#355f50',
-    badgeYearBg: isDark ? 'rgba(143, 195, 170, 0.12)' : '#e7ece8',
-    badgeYearBorder: isDark ? 'rgba(143, 195, 170, 0.22)' : '#cedbd4',
-    badgeFreqText: isDark ? '#fde68a' : '#b45309',
-    badgeFreqBg: isDark ? 'rgba(245, 158, 11, 0.15)' : 'rgba(245, 158, 11, 0.08)',
-    badgeFreqBorder: isDark ? 'rgba(245, 158, 11, 0.2)' : 'rgba(245, 158, 11, 0.25)',
-    warningText: isDark ? '#fde68a' : '#b45309',
-    warningBorder: isDark ? 'rgba(245, 158, 11, 0.2)' : 'rgba(245, 158, 11, 0.3)',
-    warningBg: isDark ? 'rgba(245, 158, 11, 0.1)' : 'rgba(245, 158, 11, 0.08)',
-    successText: isDark ? '#a7f3d0' : '#046a4e',
-    successBorder: isDark ? 'rgba(143, 195, 170, 0.2)' : 'rgba(143, 195, 170, 0.3)',
-    successTextBg: isDark ? 'rgba(143, 195, 170, 0.1)' : 'rgba(143, 195, 170, 0.08)',
+    bgDark: isDark ? '#000000' : '#fbfbfd',
+    bgGradient: 'none',
+    primary: isDark ? '#30d47e' : '#0a7d55',
+    primaryHover: isDark ? '#28bd6f' : '#09694a',
+    primaryGlow: isDark ? 'rgba(48, 212, 126, 0.20)' : 'rgba(10, 125, 85, 0.16)',
+    accent: isDark ? '#30d47e' : '#0a7d55',
+    accentHover: isDark ? '#28bd6f' : '#09694a',
+    danger: isDark ? '#ff453a' : '#d70015',
+    dangerBg: isDark ? 'rgba(255, 69, 58, 0.14)' : 'rgba(215, 0, 21, 0.07)',
+    successBg: isDark ? 'rgba(48, 212, 126, 0.14)' : 'rgba(10, 125, 85, 0.07)',
+    cardBg: isDark ? '#1c1c1e' : '#ffffff',
+    cardBorder: isDark ? '#2a2a2c' : '#e8e8ed',
+    textMain: isDark ? '#f5f5f7' : '#1d1d1f',
+    textMuted: isDark ? '#a1a1a6' : '#6e6e73',
+    textFaint: isDark ? '#8d8d93' : '#86868b',
+    surface2: isDark ? '#2c2c2e' : '#f5f5f7',
+    line: isDark ? '#38383a' : '#d2d2d7',
+    elev: isDark
+      ? '0 1px 2px rgba(0,0,0,0.5), 0 8px 24px rgba(0,0,0,0.5)'
+      : '0 1px 2px rgba(0,0,0,0.05), 0 8px 24px rgba(0,0,0,0.06)',
+    elevSm: isDark
+      ? '0 1px 2px rgba(0,0,0,0.5), 0 2px 8px rgba(0,0,0,0.45)'
+      : '0 1px 2px rgba(0,0,0,0.06), 0 2px 6px rgba(0,0,0,0.05)',
+
+    // Segmented control: seçili segment yüzey rengi + ince gölge (macOS)
+    vizeActiveBg: isDark ? '#1c1c1e' : '#ffffff',
+    vizeActiveText: isDark ? '#f5f5f7' : '#1d1d1f',
+    correctText: isDark ? '#30d47e' : '#0a7d55',
+    wrongText: isDark ? '#ff453a' : '#d70015',
+    activeYearBg: isDark ? '#f5f5f7' : '#1d1d1f',
+    activeYearText: isDark ? '#1d1d1f' : '#ffffff',
+    badgeYearText: isDark ? '#a1a1a6' : '#6e6e73',
+    badgeYearBg: isDark ? '#2c2c2e' : '#f5f5f7',
+    badgeYearBorder: 'transparent',
+    badgeFreqText: isDark ? '#ff9f0a' : '#b25e00',
+    badgeFreqBg: isDark ? 'rgba(255, 159, 10, 0.14)' : 'rgba(178, 94, 0, 0.08)',
+    badgeFreqBorder: 'transparent',
+    warningText: isDark ? '#ff9f0a' : '#b25e00',
+    warningBorder: isDark ? 'rgba(255, 159, 10, 0.24)' : 'rgba(178, 94, 0, 0.20)',
+    warningBg: isDark ? 'rgba(255, 159, 10, 0.12)' : 'rgba(178, 94, 0, 0.07)',
+    successText: isDark ? '#30d47e' : '#0a7d55',
+    successBorder: isDark ? 'rgba(48, 212, 126, 0.28)' : 'rgba(10, 125, 85, 0.24)',
+    successTextBg: isDark ? 'rgba(48, 212, 126, 0.12)' : 'rgba(10, 125, 85, 0.07)',
   };
 
   return {
@@ -2805,7 +2786,7 @@ const getStyles = (theme) => {
       justifyContent: 'center',
       alignItems: 'flex-start',
       padding: '20px 16px',
-      fontFamily: "'DM Sans', sans-serif",
+      fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
       color: colors.textMain,
       position: 'relative',
       overflowX: 'hidden',
@@ -2819,9 +2800,7 @@ const getStyles = (theme) => {
       maxWidth: 400,
       textAlign: 'center',
       marginTop: 60,
-      backdropFilter: 'blur(10px)',
-      WebkitBackdropFilter: 'blur(10px)',
-      boxShadow: '0 12px 32px rgba(39, 50, 45, 0.10)',
+      boxShadow: colors.elev,
     },
     logo: {
       width: 80,
@@ -2833,7 +2812,7 @@ const getStyles = (theme) => {
       fontSize: 22,
       fontWeight: 600,
       color: colors.textMain,
-      fontFamily: "'Manrope', sans-serif",
+      fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
       marginBottom: 6,
     },
     logoSub: {
@@ -2844,43 +2823,43 @@ const getStyles = (theme) => {
     tabRow: {
       display: 'flex',
       marginBottom: 16,
-      borderRadius: 12,
+      borderRadius: 980,
       overflow: 'hidden',
-      border: `1px solid ${colors.cardBorder}`,
-      background: isDark ? 'rgba(255, 255, 255, 0.04)' : 'rgba(35, 91, 67, 0.05)',
-      padding: 4,
+      border: 'none',
+      background: colors.surface2,
+      padding: 3,
     },
     tab: {
       flex: 1,
-      padding: '10px 0',
+      padding: '9px 0',
       border: 'none',
       background: 'transparent',
       color: colors.textMuted,
       fontWeight: 500,
-      fontSize: 14,
+      fontSize: 13.5,
       cursor: 'pointer',
-      borderRadius: 10,
-      transition: 'all 0.3s',
+      borderRadius: 980,
+      transition: 'all 0.18s',
     },
     tabActive: {
       flex: 1,
-      padding: '10px 0',
+      padding: '9px 0',
       border: 'none',
-      background: colors.primary,
-      color: isDark ? '#030806' : '#fff',
+      background: colors.cardBg,
+      color: colors.textMain,
       fontWeight: 600,
-      fontSize: 14,
+      fontSize: 13.5,
       cursor: 'pointer',
-      borderRadius: 10,
-      boxShadow: `0 4px 12px ${colors.primaryGlow}`,
-      transition: 'all 0.3s',
+      borderRadius: 980,
+      boxShadow: colors.elevSm,
+      transition: 'all 0.18s',
     },
     input: {
       width: '100%',
       padding: '13px 16px',
       borderRadius: 12,
-      border: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(35, 91, 67, 0.15)',
-      background: isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 0.85)',
+      border: `1px solid ${colors.line}`,
+      background: colors.cardBg,
       color: colors.textMain,
       fontSize: 15,
       marginBottom: 10,
@@ -2892,10 +2871,10 @@ const getStyles = (theme) => {
     btn: {
       width: '100%',
       padding: '12px 20px',
-      borderRadius: 14,
+      borderRadius: 980,
       border: 'none',
       background: colors.primary,
-      color: isDark ? '#030806' : '#fff',
+      color: isDark ? '#04140b' : '#fff',
       fontWeight: 600,
       fontSize: 14,
       cursor: 'pointer',
@@ -2903,7 +2882,7 @@ const getStyles = (theme) => {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      fontFamily: "'Manrope', sans-serif",
+      fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
       boxShadow: 'none',
       transition: 'all 0.3s',
       minHeight: 44,
@@ -2911,9 +2890,9 @@ const getStyles = (theme) => {
     btnOutline: {
       width: '100%',
       padding: '12px 20px',
-      borderRadius: 14,
-      border: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(35, 91, 67, 0.15)',
-      background: isDark ? 'rgba(255, 255, 255, 0.04)' : 'rgba(35, 91, 67, 0.05)',
+      borderRadius: 980,
+      border: `1px solid ${colors.line}`,
+      background: 'transparent',
       color: colors.textMain,
       fontWeight: 500,
       fontSize: 14,
@@ -2922,13 +2901,13 @@ const getStyles = (theme) => {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      fontFamily: "'Manrope', sans-serif",
+      fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
       transition: 'all 0.3s',
       minHeight: 44,
     },
     errMsg: {
       background: colors.dangerBg,
-      border: `1px solid ${isDark ? 'rgba(239, 68, 68, 0.25)' : 'rgba(220, 38, 38, 0.2)'}`,
+      border: `1px solid ${isDark ? 'rgba(255, 69, 58, 0.14)' : 'rgba(215, 0, 21, 0.07)'}`,
       color: colors.wrongText,
       borderRadius: 14,
       padding: '12px 16px',
@@ -2952,15 +2931,16 @@ const getStyles = (theme) => {
       paddingTop: 8,
     },
     greeting: {
-      fontSize: 18,
+      fontSize: 20,
       fontWeight: 600,
+      letterSpacing: '-0.02em',
       color: colors.textMain,
-      fontFamily: "'Manrope', sans-serif",
+      fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
     },
     feedbackIconBtn: {
-      background: isDark ? 'rgba(255, 255, 255, 0.04)' : 'rgba(255, 255, 255, 0.8)',
-      border: isDark ? '1.5px solid rgba(255, 255, 255, 0.06)' : '1.5px solid rgba(35, 91, 67, 0.12)',
-      borderRadius: 12,
+      background: 'transparent',
+      border: `1px solid ${colors.cardBorder}`,
+      borderRadius: 10,
       padding: '7px 10px',
       color: colors.textMain,
       fontSize: 14,
@@ -2973,19 +2953,19 @@ const getStyles = (theme) => {
       transition: 'all 0.3s',
     },
     logoutBtn: {
-      background: isDark ? 'rgba(255, 255, 255, 0.04)' : 'rgba(255, 255, 255, 0.8)',
-      border: isDark ? '1.5px solid rgba(255, 255, 255, 0.06)' : '1.5px solid rgba(35, 91, 67, 0.12)',
-      borderRadius: 12,
+      background: 'transparent',
+      border: `1px solid ${colors.cardBorder}`,
+      borderRadius: 980,
       padding: '7px 12px',
       color: colors.textMain,
-      fontWeight: 700,
+      fontWeight: 600,
       fontSize: 12,
       cursor: 'pointer',
       height: 44,
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      fontFamily: "'Manrope', sans-serif",
+      fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
       transition: 'all 0.3s',
     },
     headerLogo: {
@@ -3008,27 +2988,27 @@ const getStyles = (theme) => {
       padding: 20,
     },
     modalBox: {
-      background: colors.bgDark,
+      background: colors.cardBg,
       border: `1px solid ${colors.cardBorder}`,
       borderRadius: 16,
       padding: 24,
       width: '100%',
       maxWidth: 400,
-      boxShadow: '0 18px 48px rgba(18, 31, 26, 0.22)',
+      boxShadow: colors.elev,
     },
     modalTitle: {
       fontWeight: 600,
       fontSize: 17,
       color: colors.textMain,
       marginBottom: 6,
-      fontFamily: "'Manrope', sans-serif",
+      fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
     },
     feedbackInput: {
       width: '100%',
       padding: '12px 14px',
       borderRadius: 12,
-      border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(35, 91, 67, 0.15)',
-      background: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.85)',
+      border: `1px solid ${colors.line}`,
+      background: colors.cardBg,
       color: colors.textMain,
       fontSize: 15,
       fontFamily: 'inherit',
@@ -3042,56 +3022,58 @@ const getStyles = (theme) => {
       borderRadius: 16,
       padding: 16,
       marginBottom: 16,
-      boxShadow: '0 8px 22px rgba(39, 50, 45, 0.08)',
+      boxShadow: colors.elevSm,
     },
     cardTitle: {
       fontWeight: 600,
       fontSize: 15,
+      letterSpacing: '-0.01em',
       marginBottom: 12,
       color: colors.textMain,
-      fontFamily: "'Manrope', sans-serif",
+      fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
     },
     cardTitle2: {
       fontWeight: 600,
       fontSize: 14,
       marginBottom: 10,
       color: colors.textMain,
-      fontFamily: "'Manrope', sans-serif",
+      fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
     },
     lbRow: {
       display: 'flex',
       justifyContent: 'space-between',
-      padding: '10px 14px',
-      background: 'rgba(255, 255, 255, 0.03)',
-      borderRadius: 14,
-      marginBottom: 8,
+      alignItems: 'center',
+      padding: '10px 0',
+      borderBottom: `1px solid ${colors.cardBorder}`,
       fontSize: 14,
       color: colors.textMain,
+      fontVariantNumeric: 'tabular-nums',
     },
     lbScore: {
       fontWeight: 600,
       color: colors.primary,
-      fontFamily: "'Manrope', sans-serif",
+      fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
     },
     myRankBox: {
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
-      marginTop: 14,
-      background: isDark ? 'rgba(143, 195, 170, 0.1)' : 'rgba(35, 91, 67, 0.08)',
-      border: `1px solid ${isDark ? 'rgba(143, 195, 170, 0.2)' : 'rgba(35, 91, 67, 0.2)'}`,
-      borderRadius: 16,
-      padding: '12px 16px',
+      marginTop: 10,
+      background: colors.surface2,
+      border: 'none',
+      borderRadius: 12,
+      padding: '11px 14px',
       fontSize: 13.5,
       color: colors.primary,
       fontWeight: 600,
+      fontVariantNumeric: 'tabular-nums',
     },
     myRankBoxGray: {
-      marginTop: 14,
-      background: isDark ? 'rgba(255, 255, 255, 0.02)' : 'rgba(35, 91, 67, 0.02)',
-      border: `1px dashed ${colors.cardBorder}`,
-      borderRadius: 16,
-      padding: '12px 16px',
+      marginTop: 10,
+      background: colors.surface2,
+      border: 'none',
+      borderRadius: 12,
+      padding: '11px 14px',
       fontSize: 13,
       color: colors.textMuted,
       textAlign: 'center',
@@ -3106,8 +3088,8 @@ const getStyles = (theme) => {
       width: '100%',
       background: colors.cardBg,
       border: `1px solid ${colors.cardBorder}`,
-      borderRadius: 10,
-      padding: '11px 14px',
+      borderRadius: 12,
+      padding: '13px 16px',
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
@@ -3120,15 +3102,16 @@ const getStyles = (theme) => {
       minHeight: 44,
     },
     catArrow: {
-      color: colors.primary,
+      color: colors.textFaint,
       fontWeight: 500,
       fontSize: 18,
       display: 'flex',
       alignItems: 'center',
     },
     yearBar: {
-      background: isDark ? 'rgba(0,0,0,0.16)' : '#e6e2d9',
-      padding: '6px 10px',
+      background: colors.bgDark,
+      borderBottom: `1px solid ${colors.cardBorder}`,
+      padding: '8px 12px',
       display: 'flex',
       gap: 5,
       overflowX: 'auto',
@@ -3137,9 +3120,9 @@ const getStyles = (theme) => {
     },
     yearBtn: {
       padding: '4px 12px',
-      borderRadius: 12,
-      border: isDark ? '1px solid rgba(255, 255, 255, 0.06)' : '1px solid rgba(35, 91, 67, 0.1)',
-      background: isDark ? 'rgba(255, 255, 255, 0.04)' : 'rgba(35, 91, 67, 0.05)',
+      borderRadius: 980,
+      border: 'none',
+      background: colors.surface2,
       color: colors.textMuted,
       fontSize: 11,
       fontWeight: 600,
@@ -3152,7 +3135,7 @@ const getStyles = (theme) => {
     yearBtnActive: {
       background: colors.activeYearBg,
       color: colors.activeYearText,
-      border: `1px solid ${colors.activeYearBg}`,
+      border: 'none',
     },
     quizBg: {
       position: 'fixed',
@@ -3177,34 +3160,37 @@ const getStyles = (theme) => {
       width: '100%',
     },
     backBtn: {
-      background: isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 0.85)',
-      border: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(35, 91, 67, 0.15)'}`,
-      color: colors.textMain,
-      borderRadius: 10,
-      padding: '7px 12px',
+      background: 'transparent',
+      border: 'none',
+      color: colors.textMuted,
+      borderRadius: 8,
+      padding: '7px 4px',
       cursor: 'pointer',
-      fontWeight: 700,
+      fontWeight: 500,
       fontSize: 13,
-      fontFamily: "'Manrope', sans-serif",
+      fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
       transition: 'all 0.3s',
       display: 'inline-flex',
       alignItems: 'center',
       minHeight: 36,
     },
     progress: {
-      color: colors.textMuted,
-      fontWeight: 700,
-      fontSize: 14,
-      fontFamily: "'Manrope', sans-serif",
+      color: colors.textFaint,
+      fontWeight: 600,
+      fontSize: 12,
+      fontVariantNumeric: 'tabular-nums',
+      letterSpacing: '0.01em',
+      fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
     },
     rankBadge: {
-      background: isDark ? 'rgba(255,255,255,0.08)' : '#e5e9e5',
-      borderRadius: 20,
-      padding: '5px 11px',
-      color: colors.textMain,
-      fontWeight: 800,
-      fontSize: 11,
-      fontFamily: "'Manrope', sans-serif",
+      background: 'transparent',
+      borderRadius: 980,
+      padding: '5px 0',
+      color: colors.textMuted,
+      fontWeight: 500,
+      fontSize: 11.5,
+      fontVariantNumeric: 'tabular-nums',
+      fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
       boxShadow: 'none',
     },
     quizScroll: {
@@ -3226,34 +3212,34 @@ const getStyles = (theme) => {
       width: '100%',
       maxWidth: 600,
       boxSizing: 'border-box',
-      boxShadow: '0 8px 22px rgba(39, 50, 45, 0.08)',
+      boxShadow: colors.elevSm,
     },
     catLabel: {
-      fontSize: 10,
-      fontWeight: 700,
-      color: colors.primary,
-      textTransform: 'uppercase',
-      letterSpacing: 1,
+      fontSize: 13,
+      fontWeight: 600,
+      color: colors.textMain,
+      letterSpacing: '-0.01em',
     },
     qText: {
       fontSize: 15,
       color: colors.textMain,
       lineHeight: 1.55,
-      fontWeight: 500,
-      fontFamily: "'Newsreader', serif",
+      fontWeight: 400,
+      letterSpacing: '-0.006em',
+      fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
     },
     divider: {
       height: 1,
-      background: isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(35, 91, 67, 0.08)',
-      margin: '12px 0',
+      background: colors.cardBorder,
+      margin: '14px 0',
     },
     optBtn: {
       width: '100%',
-      padding: '9px 12px',
-      borderRadius: 10,
+      padding: '12px 14px',
+      borderRadius: 12,
       cursor: 'pointer',
       fontWeight: 400,
-      fontSize: 13,
+      fontSize: 14,
       textAlign: 'left',
       marginBottom: 5,
       display: 'flex',
@@ -3263,16 +3249,16 @@ const getStyles = (theme) => {
       minHeight: 40,
     },
     optLetter: {
-      borderRadius: 7,
-      width: 24,
-      height: 24,
+      borderRadius: 8,
+      width: 26,
+      height: 26,
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      fontWeight: 700,
-      fontSize: 11,
+      fontWeight: 600,
+      fontSize: 12,
       flexShrink: 0,
-      transition: 'all 0.2s',
+      transition: 'all 0.18s',
     },
     optText: {
       flex: 1,
@@ -3287,20 +3273,20 @@ const getStyles = (theme) => {
     },
     freqBadge: {
       background: colors.badgeFreqBg,
-      border: `1px solid ${colors.badgeFreqBorder}`,
-      borderRadius: 8,
-      padding: '3px 8px',
-      fontSize: 10,
-      fontWeight: 700,
+      border: 'none',
+      borderRadius: 980,
+      padding: '3px 9px',
+      fontSize: 10.5,
+      fontWeight: 500,
       color: colors.badgeFreqText,
     },
     yearBadge: {
       background: colors.badgeYearBg,
-      border: `1px solid ${colors.badgeYearBorder}`,
-      borderRadius: 8,
-      padding: '3px 8px',
-      fontSize: 10,
-      fontWeight: 700,
+      border: 'none',
+      borderRadius: 980,
+      padding: '3px 9px',
+      fontSize: 10.5,
+      fontWeight: 500,
       color: colors.badgeYearText,
     },
     resultEmoji: {
@@ -3311,34 +3297,37 @@ const getStyles = (theme) => {
     },
     resultTitle: {
       textAlign: 'center',
-      fontSize: 20,
-      fontWeight: 800,
+      fontSize: 24,
+      fontWeight: 600,
+      letterSpacing: '-0.021em',
       color: colors.textMain,
       marginTop: 4,
-      marginBottom: 20,
-      fontFamily: "'Manrope', sans-serif",
+      marginBottom: 22,
+      fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
     },
     resultCard: {
       background: colors.cardBg,
       border: `1px solid ${colors.cardBorder}`,
       borderRadius: 16,
-      padding: 14,
+      padding: 16,
       marginBottom: 12,
       marginTop: 8,
-      boxShadow: '0 10px 30px rgba(0, 0, 0, 0.15)',
+      boxShadow: colors.elevSm,
     },
     resultRow: {
       display: 'flex',
       justifyContent: 'space-between',
-      padding: '6px 0',
-      borderBottom: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(35, 91, 67, 0.05)'}`,
+      alignItems: 'center',
+      padding: '11px 0',
+      borderBottom: `1px solid ${colors.cardBorder}`,
       fontSize: 14,
       color: colors.textMain,
+      fontVariantNumeric: 'tabular-nums',
     },
     gectiBox: {
       background: colors.successTextBg,
-      border: `1px solid ${colors.successBorder}`,
-      borderRadius: 16,
+      border: 'none',
+      borderRadius: 14,
       padding: '14px 16px',
       color: colors.successText,
       fontWeight: 500,
@@ -3348,8 +3337,8 @@ const getStyles = (theme) => {
     },
     kaldiBox: {
       background: colors.warningBg,
-      border: `1px solid ${colors.warningBorder}`,
-      borderRadius: 16,
+      border: 'none',
+      borderRadius: 14,
       padding: '14px 16px',
       color: colors.warningText,
       fontWeight: 500,
@@ -3358,36 +3347,37 @@ const getStyles = (theme) => {
       marginTop: 14,
     },
     rankResult: {
-      background: isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 0.85)',
-      border: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(35, 91, 67, 0.12)'}`,
-      borderRadius: 16,
-      padding: 12,
+      background: colors.surface2,
+      border: 'none',
+      borderRadius: 12,
+      padding: '12px 14px',
       textAlign: 'center',
       color: colors.primary,
       fontWeight: 600,
       fontSize: 14,
       marginBottom: 20,
+      fontVariantNumeric: 'tabular-nums',
     },
     examTabRow: {
       display: 'flex',
-      gap: 4,
-      margin: '16px 0',
-      background: isDark ? 'rgba(255, 255, 255, 0.03)' : '#dfdcd3',
-      border: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(35, 91, 67, 0.1)'}`,
-      padding: 4,
-      borderRadius: 12,
+      gap: 3,
+      margin: '14px 0 16px',
+      background: colors.surface2,
+      border: 'none',
+      padding: 3,
+      borderRadius: 980,
     },
     examTab: {
       flex: 1,
-      padding: '10px 8px',
-      borderRadius: 10,
+      padding: '9px 8px',
+      borderRadius: 980,
       border: 'none',
       background: 'transparent',
       color: colors.textMuted,
       fontWeight: 500,
-      fontSize: 13,
+      fontSize: 12.5,
       cursor: 'pointer',
-      transition: 'all 0.25s',
+      transition: 'all 0.18s',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
@@ -3395,16 +3385,16 @@ const getStyles = (theme) => {
     },
     examTabActiveVize: {
       flex: 1,
-      padding: '10px 8px',
-      borderRadius: 10,
+      padding: '9px 8px',
+      borderRadius: 980,
       border: 'none',
       background: colors.vizeActiveBg,
       color: colors.vizeActiveText,
       fontWeight: 600,
-      fontSize: 13,
+      fontSize: 12.5,
       cursor: 'pointer',
-      boxShadow: 'none',
-      transition: 'all 0.25s',
+      boxShadow: colors.elevSm,
+      transition: 'all 0.18s',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
@@ -3412,16 +3402,16 @@ const getStyles = (theme) => {
     },
     examTabActiveFinal: {
       flex: 1,
-      padding: '10px 8px',
-      borderRadius: 10,
+      padding: '9px 8px',
+      borderRadius: 980,
       border: 'none',
-      background: colors.primary,
-      color: isDark ? '#10241e' : '#fff',
+      background: colors.vizeActiveBg,
+      color: colors.vizeActiveText,
       fontWeight: 600,
-      fontSize: 13,
+      fontSize: 12.5,
       cursor: 'pointer',
-      boxShadow: 'none',
-      transition: 'all 0.25s',
+      boxShadow: colors.elevSm,
+      transition: 'all 0.18s',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
@@ -3429,16 +3419,16 @@ const getStyles = (theme) => {
     },
     examTabActiveYazOkulu: {
       flex: 1,
-      padding: '10px 8px',
-      borderRadius: 10,
+      padding: '9px 8px',
+      borderRadius: 980,
       border: 'none',
-      background: colors.primary,
-      color: '#fff',
+      background: colors.vizeActiveBg,
+      color: colors.vizeActiveText,
       fontWeight: 600,
-      fontSize: 13,
+      fontSize: 12.5,
       cursor: 'pointer',
-      boxShadow: 'none',
-      transition: 'all 0.25s',
+      boxShadow: colors.elevSm,
+      transition: 'all 0.18s',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
@@ -3449,24 +3439,23 @@ const getStyles = (theme) => {
       color: colors.textMuted,
       marginBottom: 20,
       textAlign: 'center',
-      fontStyle: 'italic',
-      lineHeight: 1.4,
+      lineHeight: 1.45,
     },
     
     // Shopier Promo Modülleri
     heroBanner: {
-      fontFamily: "'Manrope', sans-serif",
-      background: isDark ? '#244c40' : '#173f35',
-      color: '#f3f1ea',
-      padding: '8px 12px',
+      fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+      background: colors.surface2,
+      color: colors.textMain,
+      padding: '10px 14px',
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
       gap: 8,
-      borderRadius: 10,
+      borderRadius: 12,
       boxShadow: 'none',
-      marginBottom: 10,
+      marginBottom: 12,
       boxSizing: 'border-box',
       position: 'relative',
       width: '100%',
@@ -3474,17 +3463,17 @@ const getStyles = (theme) => {
     },
     heroText: {
       margin: 0,
-      fontSize: 11,
-      fontWeight: 600,
+      fontSize: 12,
+      fontWeight: 500,
       lineHeight: 1.4,
-      color: '#f3f1ea',
+      color: colors.textMain,
       textAlign: 'left',
       flexGrow: 1,
     },
     heroClose: {
       background: 'none',
       border: 'none',
-      color: 'rgba(255,255,255,0.72)',
+      color: colors.textFaint,
       fontSize: 18,
       cursor: 'pointer',
       lineHeight: 1,
@@ -3503,11 +3492,11 @@ const getStyles = (theme) => {
       boxSizing: 'border-box',
       marginBottom: 12,
       width: '100%',
-      boxShadow: '0 10px 30px rgba(0, 0, 0, 0.15)',
+      boxShadow: colors.elevSm,
     },
     promoCardAccent: {
-      height: 3,
-      background: colors.primary,
+      height: 0,
+      background: 'transparent',
       width: '100%',
     },
     promoCardBody: {
@@ -3518,10 +3507,10 @@ const getStyles = (theme) => {
       textAlign: 'left',
     },
     promoCardIconBox: {
-      background: isDark ? 'rgba(143, 195, 170, 0.14)' : '#e4ece7',
+      background: colors.surface2,
       borderRadius: 12,
-      width: 48,
-      height: 48,
+      width: 44,
+      height: 44,
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
@@ -3537,9 +3526,10 @@ const getStyles = (theme) => {
     },
     promoCardTitle: {
       margin: '0 0 3px 0',
-      fontSize: 14,
+      fontSize: 14.5,
       fontWeight: 600,
-      color: colors.accent,
+      letterSpacing: '-0.01em',
+      color: colors.textMain,
     },
     promoCardText: {
       margin: 0,
@@ -3549,15 +3539,15 @@ const getStyles = (theme) => {
     },
     
     stickyBottom: {
-      fontFamily: "'DM Sans', sans-serif",
+      fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
       position: 'fixed',
       bottom: 0,
       left: 0,
       right: 0,
-      background: 'rgba(23, 63, 53, 0.98)',
-      borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-      boxShadow: '0 -4px 12px rgba(0, 0, 0, 0.25)',
-      padding: '8px 12px',
+      background: colors.cardBg,
+      borderTop: `1px solid ${colors.cardBorder}`,
+      boxShadow: colors.elev,
+      padding: '10px 14px',
       zIndex: 9999,
       display: 'flex',
       justifyContent: 'center',
@@ -3574,17 +3564,17 @@ const getStyles = (theme) => {
     },
     stickyText: {
       margin: 0,
-      fontSize: 11,
-      fontWeight: 600,
+      fontSize: 12,
+      fontWeight: 500,
       lineHeight: 1.3,
-      color: '#ffffff',
+      color: colors.textMain,
       textAlign: 'left',
       flexGrow: 1,
     },
     stickyClose: {
       background: 'none',
       border: 'none',
-      color: 'rgba(255, 255, 255, 0.5)',
+      color: colors.textFaint,
       fontSize: 16,
       cursor: 'pointer',
       padding: '2px 4px',
