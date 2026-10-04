@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 
 // Varsa kendi API sunucunu buraya yaz, şu an boş bırakıldığı için bağlantı hatası veriyordu:
 const API = 'https://aofnotlar.com';
-const SHOPIER_URL = 'https://www.shopier.com/aofseslinotlar';
+const SKOOL_URL = 'https://www.skool.com/anadolu-universitesi-aof-9482';
 
 // Satış sayfası takibi. Ateşle-unut: hata olsa bile kullanıcının akışını engellemez.
 const track = (event) => {
@@ -2310,7 +2310,7 @@ export default function App() {
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 14 }}>
                 <IconZap size={20} style={{ color: theme === 'dark' ? '#30d47e' : '#0a7d55', flexShrink: 0, marginTop: 2 }} />
                 <div style={{ fontSize: 13, color: s.qText.color, textAlign: 'left', lineHeight: 1.4 }}>
-                  <strong>Shopier Güvencesiyle Anında E-posta:</strong> Ödemenizden hemen sonra PDF dosyanız otomatik olarak mail adresinize gönderilir.
+                  <strong>Soru-Cevap ve Yardımlaşma:</strong> Takıldığın konuyu Skool topluluğunda sor, hızlıca cevap al; aynı dersi alan arkadaşlarınla birlikte çalış.
                 </div>
               </div>
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
@@ -2428,8 +2428,8 @@ export default function App() {
               </div>
             </div>
 
-            <a href={SHOPIER_URL} target="_blank" rel="noopener noreferrer" onClick={trackShopierClick} className="btn-hover" style={{ ...s.btn, textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, fontWeight: 600, padding: '14px', borderRadius: 980, boxShadow: 'none' }}>
-              <span>Shopier ile Hemen Al & İndir</span>
+            <a href={SKOOL_URL} target="_blank" rel="noopener noreferrer" onClick={trackShopierClick} className="btn-hover" style={{ ...s.btn, textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, fontWeight: 600, padding: '14px', borderRadius: 980, boxShadow: 'none' }}>
+              <span>Topluluğa Katıl: Tüm Materyaller ve Soru-Cevap</span>
               <IconChevronRight size={18} />
             </a>
 
