@@ -1108,11 +1108,11 @@ export default function App() {
     }
     
     const isDark = theme === 'dark';
-    const primary = isDark ? '#157a3c' : '#0047bb';
-    const optHoverBg = '#eef3fc';
+    const primary = isDark ? '#157a3c' : '#16794a';
+    const optHoverBg = '#eef6f1';
     const optHoverBorder = '#e4e7ec';
     const scrollThumb = isDark ? 'rgba(255, 255, 255, 0.18)' : 'rgba(0, 0, 0, 0.18)';
-    const catHoverBg = '#eef3fc';
+    const catHoverBg = '#eef6f1';
     const catHoverBorder = isDark ? '#38383a' : '#d2d2d7';
     const feedbackHoverBg = isDark ? '#2c2c2e' : '#f5f5f7';
 
@@ -1181,7 +1181,7 @@ export default function App() {
         background: #f4f6f9;
         border-bottom: 1px solid #d5dae1;
       }
-      .d-top > .d-blue { padding: 18px; background: #0047bb; color: #ffffff; cursor: pointer; min-width: 0; }
+      .d-top > .d-blue { padding: 18px; background: #16794a; color: #ffffff; cursor: pointer; min-width: 0; }
       .d-courses {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1590,7 +1590,7 @@ export default function App() {
             </span>
             <span
               onClick={(e) => { e.stopPropagation(); toggleFavorite(e, cat.id); }}
-              style={{ display: 'flex', cursor: 'pointer', color: isFav ? '#0047bb' : 'rgba(0,0,0,0.22)', transition: '0.2s', flexShrink: 0 }}
+              style={{ display: 'flex', cursor: 'pointer', color: isFav ? '#16794a' : 'rgba(0,0,0,0.22)', transition: '0.2s', flexShrink: 0 }}
               aria-label={isFav ? 'Favorilerden çıkar' : 'Favorilere ekle'}
             >
               <IconStar size={17} filled={isFav} />
@@ -1609,7 +1609,7 @@ export default function App() {
     <div style={s.bg}>
       <div style={s.wide}>
         <div style={s.topBar}>
-          <div style={s.brandLogo}>AÖF<span style={{ color: '#0047bb' }}>notlar</span></div>
+          <div style={s.brandLogo}>AÖF<span style={{ color: '#16794a' }}>notlar</span></div>
           <div style={{ display: 'flex', gap: 18, alignItems: 'center' }}>
             <a href={SKOOL_URL} target="_blank" rel="noopener noreferrer" onClick={trackSkoolClick} style={s.topLink}><IconUsers size={15} /><span>Skool</span></a>
             <button style={s.topLink} onClick={() => { setShowFeedback(true); loadMyFeedbacks(); }}><IconMessageSquare size={15} /><span>Geri bildirim</span></button>
@@ -1629,7 +1629,7 @@ export default function App() {
         {showNicknameModal && (
           <div style={s.modalOverlay} onClick={() => setShowNicknameModal(false)}>
             <div style={{ ...s.modalBox, maxWidth: 380, textAlign: 'center' }} onClick={e => e.stopPropagation()}>
-              <IconUser size={48} style={{ color: theme === 'dark' ? '#157a3c' : '#0047bb', marginBottom: 8, display: 'block', margin: '0 auto 8px auto' }} />
+              <IconUser size={48} style={{ color: theme === 'dark' ? '#157a3c' : '#16794a', marginBottom: 8, display: 'block', margin: '0 auto 8px auto' }} />
               <div style={s.modalTitle}>Kullanıcı Adı Seç</div>
               <div style={{ fontSize: 13, color: theme === 'dark' ? '#a1a1a6' : '#6e6e73', marginBottom: 20 }}>Liderlik tablosunda bu isimle görüneceksin</div>
               <input style={s.input}
@@ -1650,7 +1650,7 @@ export default function App() {
           <div style={s.modalOverlay} onClick={() => setShowFeedback(false)}>
             <div style={s.modalBox} onClick={e => e.stopPropagation()}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, ...s.modalTitle }}>
-                <IconMessageSquare size={20} style={{ color: theme === 'dark' ? '#157a3c' : '#0047bb' }} />
+                <IconMessageSquare size={20} style={{ color: theme === 'dark' ? '#157a3c' : '#16794a' }} />
                 <span>Geri Bildirim / Ders İsteği</span>
               </div>
               <div style={{ fontSize: 13, color: theme === 'dark' ? '#a1a1a6' : '#6e6e73', marginBottom: 12 }}>Görüşlerini yaz, ders isteğinde bulun!</div>
@@ -1688,7 +1688,7 @@ export default function App() {
                       </div>
                       <div style={{ fontSize: 13, color: s.qText.color, lineHeight: 1.4 }}>{f.message}</div>
                       {f.admin_reply && (
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 6, padding: '6px 10px', background: 'rgba(0, 71, 187, 0.08)', borderRadius: 0, fontSize: 12, color: '#0047bb' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 6, padding: '6px 10px', background: 'rgba(22, 121, 74, 0.08)', borderRadius: 0, fontSize: 12, color: '#16794a' }}>
                           <IconBell size={12} />
                           <span>{f.admin_reply}</span>
                         </div>
@@ -1704,7 +1704,7 @@ export default function App() {
         {/* Üst satır: liderler, kaynaklar, Skool */}
         <div className="d-top">
           <div className="d-cell">
-            <div className="d-head" style={{ ...s.label, ...s.headIcon }}><IconAward size={15} style={{ color: '#0047bb' }} />Bugünün liderleri</div>
+            <div className="d-head" style={{ ...s.label, ...s.headIcon }}><IconAward size={15} style={{ color: '#16794a' }} />Bugünün liderleri</div>
             {top3.length > 0 && <div style={{ ...s.joke, marginTop: 8 }}>{getDailyJoke(top3[0]?.username)}</div>}
             {(!top3 || top3.length === 0) ? (
               <div style={s.mutedText}>Henüz soru çözülmedi. İlk sen ol!</div>
@@ -1718,13 +1718,13 @@ export default function App() {
               </div>
             ))}
             {myRank
-              ? <div style={s.myRankBox}><span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}><IconTarget size={15} style={{ color: '#0047bb' }} />Sen bugün <strong>{myRank}. sıradasın</strong></span><span style={s.lbScore}>{myLeaderboardScore} XP</span></div>
+              ? <div style={s.myRankBox}><span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}><IconTarget size={15} style={{ color: '#16794a' }} />Sen bugün <strong>{myRank}. sıradasın</strong></span><span style={s.lbScore}>{myLeaderboardScore} XP</span></div>
               : <div style={{ ...s.myRankBoxGray, display: 'flex', alignItems: 'center', gap: 8 }}><IconTarget size={15} />Soru çöz, sıralamada görün.</div>
             }
           </div>
 
           <div className="d-cell">
-            <div className="d-head" style={{ ...s.label, ...s.headIcon }}><IconBookOpen size={15} style={{ color: '#0047bb' }} />Kaynaklar</div>
+            <div className="d-head" style={{ ...s.label, ...s.headIcon }}><IconBookOpen size={15} style={{ color: '#16794a' }} />Kaynaklar</div>
             <button
               className="cat-btn-hover"
               style={s.resBtn}
@@ -1746,7 +1746,7 @@ export default function App() {
                 <span style={s.resTitle}>Ücretsiz özet ders notu</span>
                 <span style={s.resSub}>Dersini seç, PDF e-postana gelsin</span>
               </span>
-              <IconChevronRight size={16} style={{ color: '#0047bb', flexShrink: 0 }} />
+              <IconChevronRight size={16} style={{ color: '#16794a', flexShrink: 0 }} />
             </button>
             <button
               className="cat-btn-hover"
@@ -1763,7 +1763,7 @@ export default function App() {
                 <span style={s.resTitle}>Ders materyali iste</span>
                 <span style={s.resSub}>Listede olmayan dersi yaz</span>
               </span>
-              <IconChevronRight size={16} style={{ color: '#0047bb', flexShrink: 0 }} />
+              <IconChevronRight size={16} style={{ color: '#16794a', flexShrink: 0 }} />
             </button>
           </div>
 
@@ -1781,7 +1781,7 @@ export default function App() {
         </div>
 
         <div style={s.pratikHead} id="pratik-yap">
-          <h2 style={{ ...s.h2, display: 'flex', alignItems: 'center', gap: 10 }}><IconTarget size={22} style={{ color: '#0047bb' }} />Pratik yap</h2>
+          <h2 style={{ ...s.h2, display: 'flex', alignItems: 'center', gap: 10 }}><IconTarget size={22} style={{ color: '#16794a' }} />Pratik yap</h2>
           <div style={s.examTabRow}>
             <button type="button" style={examType === 'vize' ? s.examTabActiveVize : s.examTab} onClick={(e) => { e.preventDefault(); setExamType('vize'); }}><IconFileText size={14} />Vize</button>
             <button type="button" style={examType === 'final' ? s.examTabActiveFinal : s.examTab} onClick={(e) => { e.preventDefault(); setExamType('final'); }}><IconGraduationCap size={14} />Final</button>
@@ -1847,7 +1847,7 @@ export default function App() {
 
               // Sade ızgara: satır arka planı yok; durum renk ve etiketle gösterilir
               let color = '#101318';
-              let letterColor = '#0047bb';
+              let letterColor = '#16794a';
               let fontWeight = 400;
               let textDecoration = 'none';
               let tag = null;
@@ -1944,7 +1944,7 @@ export default function App() {
                     </div>
                     <div style={{ fontSize: 13, color: theme === 'dark' ? '#a1a1a6' : '#6e6e73', marginBottom: 18 }}>Sorunun türünü seç, ekibimize iletilsin.</div>
                     {[
-                      { icon: <IconEdit size={20} style={{ color: theme === 'dark' ? '#157a3c' : '#0047bb' }} />, label: 'Yazım / imla hatası', desc: 'Soruda veya seçeneklerde yazım yanlışı var' },
+                      { icon: <IconEdit size={20} style={{ color: theme === 'dark' ? '#157a3c' : '#16794a' }} />, label: 'Yazım / imla hatası', desc: 'Soruda veya seçeneklerde yazım yanlışı var' },
                       { icon: <IconXCircle size={20} style={{ color: theme === 'dark' ? '#ff453a' : '#d70015' }} />, label: 'Doğru şık yanlış işaretli', desc: 'Cevap anahtarı yanlış görünüyor' },
                       { icon: <IconHelpCircle size={20} style={{ color: '#6e6e73' }} />, label: 'Mantık / içerik hatası', desc: 'Soru mantıksal olarak hatalı veya eksik' },
                     ].map(opt => (
@@ -1975,7 +1975,7 @@ export default function App() {
             <button style={s.stickyClose} onClick={(e) => { e.stopPropagation(); setShowStickyBottom(false); }} aria-label="Kapat">&times;</button>
             <div style={s.stickyContainer}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: s.greeting.color, fontSize: 12, fontWeight: 600 }}>
-                <IconZap size={16} style={{ color: theme === 'dark' ? '#157a3c' : '#0047bb' }} />
+                <IconZap size={16} style={{ color: theme === 'dark' ? '#157a3c' : '#16794a' }} />
                 <span>Sınav Sabahı Bilmen Gereken 25 Terim</span>
               </div>
               <IconChevronRight size={18} style={{ color: s.progress.color }} />
@@ -2011,7 +2011,7 @@ export default function App() {
               lineHeight: 1.05,
               marginTop: 8,
               fontVariantNumeric: 'tabular-nums',
-              color: r.puan >= 50 ? (theme === 'dark' ? '#157a3c' : '#0047bb') : s.greeting.color,
+              color: r.puan >= 50 ? (theme === 'dark' ? '#157a3c' : '#16794a') : s.greeting.color,
             }}>{r.puan}</div>
             <div style={{ fontSize: 13, color: s.progress.color, marginTop: 2 }}>100 üzerinden</div>
           </div>
@@ -2020,7 +2020,7 @@ export default function App() {
           <div style={s.resultCard}>
             <div style={s.resultRow}>
               <span>
-                <IconCheckCircle size={16} style={{ color: theme === 'dark' ? '#157a3c' : '#0047bb', marginRight: 8, display: 'inline', verticalAlign: 'middle' }} />
+                <IconCheckCircle size={16} style={{ color: theme === 'dark' ? '#157a3c' : '#16794a', marginRight: 8, display: 'inline', verticalAlign: 'middle' }} />
                 <span>Doğru</span>
               </span>
               <strong>{correct}</strong>
@@ -2038,7 +2038,7 @@ export default function App() {
               <>
                 <div style={s.resultRow}>
                   <span>
-                    <IconFileText size={16} style={{ color: theme === 'dark' ? '#157a3c' : '#0047bb', marginRight: 8, display: 'inline', verticalAlign: 'middle' }} />
+                    <IconFileText size={16} style={{ color: theme === 'dark' ? '#157a3c' : '#16794a', marginRight: 8, display: 'inline', verticalAlign: 'middle' }} />
                     <span>Vize Etkisi (%30)</span>
                   </span>
                   <strong>{r.katki} puan</strong>
@@ -2051,7 +2051,7 @@ export default function App() {
               <>
                 <div style={s.resultRow}>
                   <span>
-                    <IconGraduationCap size={16} style={{ color: theme === 'dark' ? '#157a3c' : '#0047bb', marginRight: 8, display: 'inline', verticalAlign: 'middle' }} />
+                    <IconGraduationCap size={16} style={{ color: theme === 'dark' ? '#157a3c' : '#16794a', marginRight: 8, display: 'inline', verticalAlign: 'middle' }} />
                     <span>Final Etkisi (%70)</span>
                   </span>
                   <strong>{r.katki} puan</strong>
@@ -2136,7 +2136,7 @@ export default function App() {
               <div style={{ color: s.greeting.color, fontWeight: 600, fontSize: 14 }}>YouTube'da takip et!</div>
               <div style={{ color: theme === 'dark' ? 'rgba(255,255,255,0.55)' : '#6e6e73', fontSize: 12, marginTop: 2 }}>@aofseslinotlar — sesli anlatımlar, özetler</div>
             </div>
-            <IconChevronRight size={18} style={{ marginLeft: 'auto', color: theme === 'dark' ? 'rgba(255,255,255,0.4)' : '#0047bb' }} />
+            <IconChevronRight size={18} style={{ marginLeft: 'auto', color: theme === 'dark' ? 'rgba(255,255,255,0.4)' : '#16794a' }} />
           </a>
         </div>
 
@@ -2161,7 +2161,7 @@ export default function App() {
 
               {/* Final puanı bilgi satırı */}
               <div style={{ fontSize: 13, color: theme === 'dark' ? '#a1a1a6' : '#6e6e73', marginBottom: 14, background: theme === 'dark' ? 'rgba(255,255,255,0.03)' : '#f5f5f7', borderRadius: 0, padding: '9px 12px', border: theme === 'dark' ? '1px solid rgba(255,255,255,0.04)' : '1px solid #e8e8ed' }}>
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 7 }}><IconBarChart size={15} /> Bu sınavdaki final puanın: <strong style={{ color: theme === 'dark' ? '#157a3c' : '#0047bb' }}>{r.puan} / 100</strong></span>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 7 }}><IconBarChart size={15} /> Bu sınavdaki final puanın: <strong style={{ color: theme === 'dark' ? '#157a3c' : '#16794a' }}>{r.puan} / 100</strong></span>
               </div>
 
               <button
@@ -2181,7 +2181,7 @@ export default function App() {
                   borderRadius: 0, padding: '14px 16px', textAlign: 'center',
                   background: passResult.gecti ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 69, 58, 0.14)',
                   border: `1px solid ${passResult.gecti ? '#157a3c' : '#ff453a'}`,
-                  color: passResult.gecti ? (theme === 'dark' ? '#157a3c' : '#0047bb') : (theme === 'dark' ? '#ff453a' : '#d70015'),
+                  color: passResult.gecti ? (theme === 'dark' ? '#157a3c' : '#16794a') : (theme === 'dark' ? '#ff453a' : '#d70015'),
                   fontWeight: 600, fontSize: 16, marginBottom: 8,
                 }}>
                   <span style={{ display: 'inline-flex', alignItems: 'center', gap: 7 }}>{passResult.gecti ? <IconCheckCircle size={18} /> : <IconBookOpen size={18} />}{passResult.gecti ? 'Tebrikler, geçtin!' : 'Maalesef geçemedin.'}</span>
@@ -2242,7 +2242,7 @@ export default function App() {
               alignItems: 'center',
               gap: 6,
               background: theme === 'dark' ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.04)',
-              color: theme === 'dark' ? '#157a3c' : '#0047bb',
+              color: theme === 'dark' ? '#157a3c' : '#16794a',
               padding: '6px 12px',
               borderRadius: 0,
               fontSize: 12,
@@ -2256,25 +2256,25 @@ export default function App() {
 
             <div style={{ marginBottom: 20 }}>
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 14 }}>
-                <IconTarget size={20} style={{ color: theme === 'dark' ? '#157a3c' : '#0047bb', flexShrink: 0, marginTop: 2 }} />
+                <IconTarget size={20} style={{ color: theme === 'dark' ? '#157a3c' : '#16794a', flexShrink: 0, marginTop: 2 }} />
                 <div style={{ fontSize: 13, color: s.qText.color, textAlign: 'left', lineHeight: 1.4 }}>
                   <strong>Sınav Sabahı Bilmen Gereken 25 Terim:</strong> Sınavdan hemen önce bilmeniz gereken en kritik 25 terim ve tanım elinizin altında.
                 </div>
               </div>
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 14 }}>
-                <IconBarChart size={20} style={{ color: theme === 'dark' ? '#157a3c' : '#0047bb', flexShrink: 0, marginTop: 2 }} />
+                <IconBarChart size={20} style={{ color: theme === 'dark' ? '#157a3c' : '#16794a', flexShrink: 0, marginTop: 2 }} />
                 <div style={{ fontSize: 13, color: s.qText.color, textAlign: 'left', lineHeight: 1.4 }}>
                   <strong>Çıkmış Soru Analizi:</strong> Geçmiş sınav soruları tek tek incelenerek, tekrar tekrar sorulan konular tespit edildi.
                 </div>
               </div>
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 14 }}>
-                <IconZap size={20} style={{ color: theme === 'dark' ? '#157a3c' : '#0047bb', flexShrink: 0, marginTop: 2 }} />
+                <IconZap size={20} style={{ color: theme === 'dark' ? '#157a3c' : '#16794a', flexShrink: 0, marginTop: 2 }} />
                 <div style={{ fontSize: 13, color: s.qText.color, textAlign: 'left', lineHeight: 1.4 }}>
                   <strong>Soru-Cevap ve Yardımlaşma:</strong> Takıldığın konuyu Skool topluluğunda sor, hızlıca cevap al; aynı dersi alan arkadaşlarınla birlikte çalış.
                 </div>
               </div>
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
-                <IconPhone size={20} style={{ color: theme === 'dark' ? '#157a3c' : '#0047bb', flexShrink: 0, marginTop: 2 }} />
+                <IconPhone size={20} style={{ color: theme === 'dark' ? '#157a3c' : '#16794a', flexShrink: 0, marginTop: 2 }} />
                 <div style={{ fontSize: 13, color: s.qText.color, textAlign: 'left', lineHeight: 1.4 }}>
                   <strong>Mobil Uyumlu Format:</strong> Telefon, tablet veya bilgisayarınızdan her yerde kolayca çalışabilirsiniz.
                 </div>
@@ -2295,7 +2295,7 @@ export default function App() {
                   borderTop: '2px solid #101318'
                 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                    <div style={{ width: 32, height: 32, borderRadius: '50%', background: theme === 'dark' ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 600, color: theme === 'dark' ? '#157a3c' : '#0047bb' }}>
+                    <div style={{ width: 32, height: 32, borderRadius: '50%', background: theme === 'dark' ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 600, color: theme === 'dark' ? '#157a3c' : '#16794a' }}>
                       Z
                     </div>
                     <div>
@@ -2316,7 +2316,7 @@ export default function App() {
                   borderTop: '2px solid #101318'
                 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                    <div style={{ width: 32, height: 32, borderRadius: '50%', background: theme === 'dark' ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 600, color: theme === 'dark' ? '#157a3c' : '#0047bb' }}>
+                    <div style={{ width: 32, height: 32, borderRadius: '50%', background: theme === 'dark' ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 600, color: theme === 'dark' ? '#157a3c' : '#16794a' }}>
                       A
                     </div>
                     <div>
@@ -2337,7 +2337,7 @@ export default function App() {
                   borderTop: '2px solid #101318'
                 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                    <div style={{ width: 32, height: 32, borderRadius: '50%', background: theme === 'dark' ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 600, color: theme === 'dark' ? '#157a3c' : '#0047bb' }}>
+                    <div style={{ width: 32, height: 32, borderRadius: '50%', background: theme === 'dark' ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 600, color: theme === 'dark' ? '#157a3c' : '#16794a' }}>
                       Y
                     </div>
                     <div>
@@ -2358,7 +2358,7 @@ export default function App() {
                   borderTop: '2px solid #101318'
                 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                    <div style={{ width: 32, height: 32, borderRadius: '50%', background: theme === 'dark' ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 600, color: theme === 'dark' ? '#157a3c' : '#0047bb' }}>
+                    <div style={{ width: 32, height: 32, borderRadius: '50%', background: theme === 'dark' ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 600, color: theme === 'dark' ? '#157a3c' : '#16794a' }}>
                       M
                     </div>
                     <div>
@@ -2400,7 +2400,7 @@ export default function App() {
   }
 
   if (screen === 'course-request') {
-    const accent = theme === 'dark' ? '#157a3c' : '#0047bb';
+    const accent = theme === 'dark' ? '#157a3c' : '#16794a';
     const muted = theme === 'dark' ? '#a1a1a6' : '#6e6e73';
     const border = theme === 'dark' ? 'rgba(255,255,255,0.12)' : 'rgba(0, 0, 0, 0.08)';
 
@@ -2426,7 +2426,7 @@ export default function App() {
             {crDone ? (
               <div style={{ textAlign: 'center', padding: 16 }}>
                 <IconCheckCircle size={36} style={{ color: '#157a3c', display: 'block', margin: '0 auto 8px auto' }} />
-                <div style={{ fontWeight: 600, fontSize: 14, color: theme === 'dark' ? '#157a3c' : '#0047bb' }}>İsteğin alındı, teşekkürler!</div>
+                <div style={{ fontWeight: 600, fontSize: 14, color: theme === 'dark' ? '#157a3c' : '#16794a' }}>İsteğin alındı, teşekkürler!</div>
                 <button
                   className="btn-hover"
                   style={{ ...s.btn, background: 'transparent', border: '1px solid ' + border, color: s.greeting.color, justifyContent: 'center', marginTop: 12, fontSize: 12, padding: '8px 12px' }}
@@ -2547,7 +2547,7 @@ export default function App() {
           </div>
 
           <div style={s.card}>
-            <IconBookOpen size={48} style={{ color: theme === 'dark' ? '#157a3c' : '#0047bb', marginBottom: 8, display: 'block', margin: '0 auto 8px auto' }} />
+            <IconBookOpen size={48} style={{ color: theme === 'dark' ? '#157a3c' : '#16794a', marginBottom: 8, display: 'block', margin: '0 auto 8px auto' }} />
             <div style={s.cardTitle}>Derslerini Seç</div>
             <div style={{ fontSize: 13, color: theme === 'dark' ? '#a1a1a6' : '#6e6e73', marginBottom: 16 }}>
               Seçtiğin derslerin özet notlarını e-posta olarak göndereceğiz. En fazla 3 ders seçebilirsin.
@@ -2558,7 +2558,7 @@ export default function App() {
             ) : (
               <div style={{ maxHeight: 300, overflowY: 'auto', marginBottom: 16 }}>
                 {pdfNotes.map(c => (
-                  <label key={c.id} style={{ display: 'flex', alignItems: 'center', padding: '12px 14px', border: theme === 'dark' ? '1.5px solid rgba(255, 255, 255, 0.08)' : '1.5px solid #e8e8ed', borderRadius: 0, marginBottom: 8, cursor: 'pointer', background: notesSelected.some(p => p.id === c.id) ? (theme === 'dark' ? 'rgba(255, 255, 255, 0.08)' : '#eef3fc') : 'transparent' }}>
+                  <label key={c.id} style={{ display: 'flex', alignItems: 'center', padding: '12px 14px', border: theme === 'dark' ? '1.5px solid rgba(255, 255, 255, 0.08)' : '1.5px solid #e8e8ed', borderRadius: 0, marginBottom: 8, cursor: 'pointer', background: notesSelected.some(p => p.id === c.id) ? (theme === 'dark' ? 'rgba(255, 255, 255, 0.08)' : '#eef6f1') : 'transparent' }}>
                     <input
                       type="checkbox"
                       style={{ width: 18, height: 18, marginRight: 12, accentColor: GREEN }}
@@ -2598,7 +2598,7 @@ export default function App() {
             </label>
 
             {notesResult === 'success' && (
-              <div style={{ background: 'rgba(255, 255, 255, 0.08)', color: theme === 'dark' ? '#157a3c' : '#0047bb', border: '1px solid #30d47e', padding: '12px', borderRadius: 0, fontSize: 14, fontWeight: 600, textAlign: 'center', marginBottom: 12 }}>
+              <div style={{ background: 'rgba(255, 255, 255, 0.08)', color: theme === 'dark' ? '#157a3c' : '#16794a', border: '1px solid #30d47e', padding: '12px', borderRadius: 0, fontSize: 14, fontWeight: 600, textAlign: 'center', marginBottom: 12 }}>
                 <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
                   <IconCheckCircle size={16} />
                   <span>Notların başarıyla e-postana gönderildi! Lütfen Spam (Gereksiz) kutunu da kontrol et.</span>
@@ -2616,7 +2616,7 @@ export default function App() {
 
             <button
               className="btn-hover"
-              style={{ ...s.btn, background: (notesSending || notesSelected.length === 0 || !notesEmail || !notesKvkk) ? '#e8e8ed' : (theme === 'dark' ? '#157a3c' : '#0047bb'), color: (notesSending || notesSelected.length === 0 || !notesEmail || !notesKvkk) ? '#86868b' : (theme === 'dark' ? '#04140b' : '#fff'), cursor: (notesSending || notesSelected.length === 0 || !notesEmail || !notesKvkk) ? 'not-allowed' : 'pointer', fontSize: 16, padding: '16px', justifyContent: 'center' }}
+              style={{ ...s.btn, background: (notesSending || notesSelected.length === 0 || !notesEmail || !notesKvkk) ? '#e8e8ed' : (theme === 'dark' ? '#157a3c' : '#16794a'), color: (notesSending || notesSelected.length === 0 || !notesEmail || !notesKvkk) ? '#86868b' : (theme === 'dark' ? '#04140b' : '#fff'), cursor: (notesSending || notesSelected.length === 0 || !notesEmail || !notesKvkk) ? 'not-allowed' : 'pointer', fontSize: 16, padding: '16px', justifyContent: 'center' }}
               disabled={notesSending || notesSelected.length === 0 || !notesEmail || !notesKvkk}
               onClick={async () => {
                 setNotesSending(true);
@@ -2660,8 +2660,8 @@ function isThemeLight(theme) {
   return theme === 'light';
 }
 
-const GREEN = '#0047bb'; // marka laciverti (adı geçmişten kalma)
-const GREEN_DARK = '#003a99';
+const GREEN = '#16794a'; // marka laciverti (adı geçmişten kalma)
+const GREEN_DARK = '#0f6039';
 const GREEN_LIGHT = '#157a3c';
 
 // "İşletme Yönetimi" → "İY", "İstatistik" → "İS"
@@ -2679,11 +2679,11 @@ const getStyles = (theme) => {
   const colors = {
     bgDark: '#ffffff',
     bgGradient: 'none',
-    primary: '#0047bb',
-    primaryHover: '#003a99',
-    primaryGlow: 'rgba(0, 71, 187, 0.16)',
-    accent: '#0047bb',
-    accentHover: '#003a99',
+    primary: '#16794a',
+    primaryHover: '#0f6039',
+    primaryGlow: 'rgba(22, 121, 74, 0.16)',
+    accent: '#16794a',
+    accentHover: '#0f6039',
     danger: '#c62828',
     dangerBg: 'rgba(198, 40, 40, 0.07)',
     successBg: 'rgba(21, 122, 60, 0.07)',
@@ -2696,17 +2696,17 @@ const getStyles = (theme) => {
     line: '#d5dae1',
     separator: '#e4e7ec',
     segTrack: 'transparent',
-    accentFill: '#0047bb',
+    accentFill: '#16794a',
     accentFillText: '#ffffff',
-    accentFillHover: '#003a99',
+    accentFillHover: '#0f6039',
     elev: '0 1px 2px rgba(16,19,24,0.06), 0 12px 32px rgba(16,19,24,0.12)',
     elevSm: 'none',
     vizeActiveBg: 'transparent',
-    vizeActiveText: '#0047bb',
+    vizeActiveText: '#16794a',
     correctText: '#157a3c',
     wrongText: '#c62828',
     activeYearBg: 'transparent',
-    activeYearText: '#0047bb',
+    activeYearText: '#16794a',
     badgeYearText: '#6a717d',
     badgeYearBg: '#f4f6f9',
     badgeYearBorder: 'transparent',
@@ -3063,7 +3063,7 @@ const getStyles = (theme) => {
       alignItems: 'center',
       gap: 10,
       marginTop: 12,
-      background: '#eef3fc',
+      background: '#eef6f1',
       borderRadius: 0,
       padding: '10px 12px',
       fontSize: 14,
@@ -3326,7 +3326,7 @@ const getStyles = (theme) => {
       marginTop: 14,
     },
     rankResult: {
-      background: '#eef3fc',
+      background: '#eef6f1',
       padding: '12px 14px',
       textAlign: 'center',
       color: colors.primary,
@@ -3362,7 +3362,7 @@ const getStyles = (theme) => {
     
     // Skool Tanıtım Modülleri
     heroBanner: {
-      background: '#eef3fc',
+      background: '#eef6f1',
       color: colors.primary,
       padding: '10px 14px',
       display: 'flex',
@@ -3677,7 +3677,7 @@ const getStyles = (theme) => {
       display: 'inline-flex',
       alignItems: 'center',
       justifyContent: 'center',
-      background: '#eef3fc',
+      background: '#eef6f1',
       color: colors.primary,
     },
   };
