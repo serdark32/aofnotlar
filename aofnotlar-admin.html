@@ -1123,7 +1123,7 @@
             </div>
             <div class="stat-card">
               <div class="stat-num" id="stat-sales-clicks">—</div>
-              <div class="stat-label">Shopier'e Gidiş (Toplam)</div>
+              <div class="stat-label">Skool'a Gidiş (Toplam)</div>
             </div>
             <div class="stat-card">
               <div class="stat-num" id="stat-sales-rate">—</div>
@@ -1881,7 +1881,7 @@
         const salesEl = document.getElementById('sales-daily-stats');
         if (f.daily && f.daily.length) {
           salesEl.innerHTML = `<div class="table-wrap"><table>
-        <thead><tr><th>Tarih</th><th>Sayfa Açılışı</th><th>Shopier'e Gidiş</th><th>Oran</th></tr></thead>
+        <thead><tr><th>Tarih</th><th>Sayfa Açılışı</th><th>Skool'a Gidiş</th><th>Oran</th></tr></thead>
         <tbody>${f.daily.map(r => `<tr><td>${r.date}</td><td><span class="badge badge-blue">${r.views}</span></td><td><span class="badge badge-green">${r.clicks}</span></td><td>${r.rate === null ? '—' : r.rate + '%'}</td></tr>`).join('')}</tbody>
       </table></div>`;
         } else {

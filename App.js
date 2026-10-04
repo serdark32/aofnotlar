@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 const API = 'https://aofnotlar.com';
 const SKOOL_URL = 'https://www.skool.com/anadolu-universitesi-aof-9482';
 
-// Satış sayfası takibi. Ateşle-unut: hata olsa bile kullanıcının akışını engellemez.
+// Skool tanıtım sayfası takibi. Ateşle-unut: hata olsa bile kullanıcının akışını engellemez.
 const track = (event) => {
   try {
     const url = API + '/api/track/' + event;
@@ -13,7 +13,7 @@ const track = (event) => {
   } catch (e) { /* takip başarısız olsa da kullanıcı akışı devam etsin */ }
 };
 
-const trackShopierClick = () => track('shopier-click');
+const trackSkoolClick = () => track('skool-click');
 
 // Sınav türü adı regex — her seferinde yeni instance (global /g regex stateful, lastIndex sorununu önler)
 const getExamTypeRegex = () => /\s*\(\s*(Vize|Final|Yaz okulu|[Vv]ize|[Ff]inal|[Yy]az [Oo]kulu)\s*\)\s*/g;
@@ -1014,7 +1014,7 @@ export default function App() {
   // Hızlı ardışık yıl/kategori tıklamalarında geç gelen eski cevabın yenisini ezmesini önler
   const fetchSeqRef = useRef(0);
 
-  // Satış sayfası her açıldığında bir görüntülenme say (aynı açılışta tekrar sayma)
+  // Skool tanıtım sayfası her açıldığında bir görüntülenme say (aynı açılışta tekrar sayma)
   const salesViewSentRef = useRef(false);
   useEffect(() => {
     if (screen !== 'product-detail') {
@@ -1590,7 +1590,7 @@ export default function App() {
       <div style={s.container}>
         {showHeroBanner && (
           <div style={s.heroBanner} onClick={() => { setPrevScreen('home'); setScreen('product-detail'); }}>
-            <span style={{ ...s.heroText, display: 'inline-flex', alignItems: 'center', gap: 7 }}><IconFileText size={14} /> Vakti Olmayanlara Özet Çalışma Sayfaları →</span>
+            <span style={{ ...s.heroText, display: 'inline-flex', alignItems: 'center', gap: 7 }}><IconFileText size={14} /> Özetler ve soru-cevap Skool topluluğunda →</span>
             <button style={s.heroClose} onClick={(e) => { e.stopPropagation(); setShowHeroBanner(false); }} aria-label="Kapat">&times;</button>
           </div>
         )}
@@ -1774,12 +1774,12 @@ export default function App() {
           </button>
         </div>
 
-        {/* Ücretli özet — ayrı kart, tek dolu buton */}
+        {/* Skool topluluğu — ayrı kart, tek dolu buton */}
         <div style={{ ...s.card, marginBottom: 18, cursor: 'pointer' }} className="btn-hover"
           onClick={() => { setPrevScreen('home'); setScreen('product-detail'); }}>
-          <div style={{ fontSize: 15, fontWeight: 600, letterSpacing: '-0.02em' }}>AÖF'ü Geçiren Pratik Özetler</div>
+          <div style={{ fontSize: 15, fontWeight: 600, letterSpacing: '-0.02em' }}>AÖF Skool Topluluğu</div>
           <div style={{ fontSize: 12.5, color: s.progress.color, margin: '4px 0 12px' }}>
-            Sınavda çıkması en muhtemel konular, 20 sayfada.
+            Tüm derslerin sınav özetleri ve soru-cevap tek yerde.
           </div>
           <span style={{
             display: 'inline-flex', alignItems: 'center', gap: 6,
@@ -1787,7 +1787,7 @@ export default function App() {
             fontWeight: 600, fontSize: 13, borderRadius: 980, padding: '8px 18px',
           }}>
             <IconBookOpen size={15} />
-            <span>İncele</span>
+            <span>Katıl</span>
           </span>
         </div>
 
@@ -2106,7 +2106,7 @@ export default function App() {
               <div style={s.promoCardContent}>
                 <h3 style={s.promoCardTitle}>Sınavı Şansa Bırakma!</h3>
                 <p style={s.promoCardText}>
-                  Netlerini artırmak için Sınav Algoritmasına Göre Hazırlanmış Özet PDF'leri İncele ›
+                  Netlerini artırmak için sınav özetlerini ve soru-cevabı Skool topluluğunda incele ›
                 </p>
               </div>
             </div>
@@ -2234,7 +2234,7 @@ export default function App() {
               <IconChevronLeft size={16} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 4 }} />
               Geri Dön
             </button>
-            <div style={s.greeting}>Özel Özet PDF</div>
+            <div style={s.greeting}>Skool Topluluğu</div>
             <div style={{ width: 60 }}></div>
           </div>
 
@@ -2242,7 +2242,7 @@ export default function App() {
             <div style={{ textAlign: 'center', marginBottom: 16 }}>
               <img
                 src="/ozet-pdf-gorsel.jpg"
-                alt="Özet PDF Görseli"
+                alt="Skool topluluğu sınav özetleri"
                 width={720}
                 height={432}
                 style={{
@@ -2257,9 +2257,9 @@ export default function App() {
               />
             </div>
             
-            <div style={s.cardTitle}>Tüm Kitabı Okuyacak Vaktin Yok. Sadece Çıkması En Muhtemel Konuları Çalış.</div>
+            <div style={s.cardTitle}>Tüm Kitabı Okuyacak Vaktin Yok. Çıkması En Muhtemel Konuları Toplulukla Birlikte Çalış.</div>
             <div style={{ fontSize: 13, color: theme === 'dark' ? '#a1a1a6' : '#6e6e73', lineHeight: 1.6, marginBottom: 16 }}>
-              Geçmiş 6-7 yılın çıkmış soruları tek tek analiz edildi. Hangi konudan kaç soru geldiği sayıldı, en çok tekrar edenler bu PDF'te toplandı. Sınava 1 gece kala bile fark yaratır.
+              Geçmiş 6-7 yılın çıkmış soruları tek tek analiz edildi; hangi konudan kaç soru geldiği sayıldı, en çok tekrar edenler sınav özetlerinde toplandı. Bu materyallerin tamamı Skool topluluğumuzda. Takıldığın yeri sorabilir, aynı dersi alan arkadaşlarınla birlikte çalışabilirsin.
             </div>
 
             <div style={{
@@ -2418,7 +2418,7 @@ export default function App() {
                 <span style={{ display: 'inline-flex', alignItems: 'center', gap: 7 }}><IconCamera size={16} /> Sayfadan Kesitler</span>
               </div>
               <div style={{ fontSize: 11.5, color: theme === 'dark' ? '#9aa1ab' : '#6e6e73', marginBottom: 12, textAlign: 'center' }}>
-                Aşağıdakiler PDF'in sadece birkaç sayfası — tam doküman 10-15 sayfa dolu içerik barındırıyor.
+                Toplulukta paylaşılan sınav özetlerinden örnek sayfalar.
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 <img src="/pdf-kesit-1.png" alt="PDF sayfa kesiti 1" loading="lazy" decoding="async" width={900} height={774} style={{ width: '100%', height: 'auto', borderRadius: 10, border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #e8e8ed', boxShadow: theme === 'dark' ? '0 4px 14px rgba(0, 0, 0, 0.3)' : '0 4px 14px rgba(0, 0, 0, 0.06)' }} />
@@ -2428,7 +2428,7 @@ export default function App() {
               </div>
             </div>
 
-            <a href={SKOOL_URL} target="_blank" rel="noopener noreferrer" onClick={trackShopierClick} className="btn-hover" style={{ ...s.btn, textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, fontWeight: 600, padding: '14px', borderRadius: 980, boxShadow: 'none' }}>
+            <a href={SKOOL_URL} target="_blank" rel="noopener noreferrer" onClick={trackSkoolClick} className="btn-hover" style={{ ...s.btn, textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, fontWeight: 600, padding: '14px', borderRadius: 980, boxShadow: 'none' }}>
               <span>Topluluğa Katıl: Tüm Materyaller ve Soru-Cevap</span>
               <IconChevronRight size={18} />
             </a>
@@ -3494,7 +3494,7 @@ const getStyles = (theme) => {
       lineHeight: 1.45,
     },
     
-    // Shopier Promo Modülleri
+    // Skool Tanıtım Modülleri
     heroBanner: {
       fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
       background: colors.surface2,

@@ -349,7 +349,7 @@ app.get('/api/leaderboard/:category_id', authMiddleware, async (req, res) => {
 // Sayfa açılışında 0 — operatör NAT'ı yüzünden aynı IP'den gelen farklı
 // kullanıcıları eksik saymamak için; tekrarı istemci tarafı zaten engelliyor.
 const TRACK_EVENTS = {
-  'shopier-click': { type: 'shopier_click', dedupeMs: 5000 },
+  'skool-click': { type: 'skool_click', dedupeMs: 5000 },
   'sales-page-view': { type: 'sales_page_view', dedupeMs: 0 },
 };
 
@@ -421,15 +421,15 @@ app.get('/api/admin/stats', adminAuth, async (req, res) => {
           SELECT
             COUNT(*) FILTER (WHERE event_type = 'sales_page_view')::int AS views_total,
             COUNT(*) FILTER (WHERE event_type = 'sales_page_view' AND created_at >= CURRENT_DATE)::int AS views_today,
-            COUNT(*) FILTER (WHERE event_type = 'shopier_click')::int AS clicks_total,
-            COUNT(*) FILTER (WHERE event_type = 'shopier_click' AND created_at >= CURRENT_DATE)::int AS clicks_today
+            COUNT(*) FILTER (WHERE event_type IN ('shopier_click', 'skool_click'))::int AS clicks_total,
+            COUNT(*) FILTER (WHERE event_type IN ('shopier_click', 'skool_click') AND created_at >= CURRENT_DATE)::int AS clicks_today
           FROM click_events
         `),
         pool.query(`
           SELECT
             DATE(created_at) AS date,
             COUNT(*) FILTER (WHERE event_type = 'sales_page_view')::int AS views,
-            COUNT(*) FILTER (WHERE event_type = 'shopier_click')::int AS clicks
+            COUNT(*) FILTER (WHERE event_type IN ('shopier_click', 'skool_click'))::int AS clicks
           FROM click_events
           WHERE created_at >= NOW() - INTERVAL '30 days'
           GROUP BY DATE(created_at)
