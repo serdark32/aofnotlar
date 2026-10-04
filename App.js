@@ -28,6 +28,26 @@ const finalGereken = (vize) => {
   return null;
 };
 
+// Tek sınavın puanı (md. 4): 20 soruda (doğru − yanlış/4) × 5; sıfırın altı 0 sayılır.
+// Boş girişte null, hatalı girişte { hata } döner.
+const sinavPuani = (mod, d, y, p) => {
+  if (mod === 'puan') {
+    if (p === '') return null;
+    const v = parseFloat(String(p).replace(',', '.'));
+    if (isNaN(v) || v < 0 || v > 100) return { hata: '0 ile 100 arasında bir puan yaz.' };
+    return { puan: v };
+  }
+  if (d === '' && y === '') return null;
+  const dd = d === '' ? 0 : Number(d);
+  const yy = y === '' ? 0 : Number(y);
+  if (!Number.isInteger(dd) || !Number.isInteger(yy) || dd < 0 || yy < 0) return { hata: 'Doğru ve yanlış sayısı tam sayı olmalı.' };
+  if (dd + yy > 20) return { hata: 'Doğru + yanlış en fazla 20 olabilir.' };
+  return { puan: Math.max(0, (dd - yy / 4) * 5), bos: 20 - dd - yy };
+};
+
+// Başarı notu virgülden sonra iki basamak, yuvarlanmadan gösterilir (md. 8).
+const notYaz = (x) => (Math.floor(x * 100 + 1e-9) / 100).toLocaleString('tr-TR', { maximumFractionDigits: 2 });
+
 // Sınav türü adı regex — her seferinde yeni instance (global /g regex stateful, lastIndex sorununu önler)
 const getExamTypeRegex = () => /\s*\(\s*(Vize|Final|Yaz okulu|[Vv]ize|[Ff]inal|[Yy]az [Oo]kulu)\s*\)\s*/g;
 
@@ -1060,8 +1080,11 @@ export default function App() {
   const [vizeInput, setVizeInput] = useState('');
   const [passResult, setPassResult] = useState(null);
 
-  // ── FİNALDEN KAÇ ALMALIYIM? (/final-hesaplama)
-  const [fhVize, setFhVize] = useState('');
+  // ── NOT HESAPLAYICI (/not-hesaplama)
+  const [nhTur, setNhTur] = useState('vize'); // 'vize' | 'final' | 'yaz'
+  const [nhMod, setNhMod] = useState('dy');   // 'dy' (doğru/yanlış) | 'puan'
+  const [nhVD, setNhVD] = useState(''); const [nhVY, setNhVY] = useState(''); const [nhVP, setNhVP] = useState('');
+  const [nhFD, setNhFD] = useState(''); const [nhFY, setNhFY] = useState(''); const [nhFP, setNhFP] = useState('');
 
   // Ücretsiz Özet Ders Notu İndir
   const [pdfNotes, setPdfNotes] = useState([]);
@@ -1289,11 +1312,12 @@ export default function App() {
     }
     // Kategoriler public endpoint (auth gerekmez), her zaman yüklenir
     fetchCategories();
-    setScreen(window.location.pathname === '/final-hesaplama' ? 'final-hesap' : 'home');
+    const yol = window.location.pathname;
+    setScreen(yol === '/not-hesaplama' || yol === '/final-hesaplama' ? 'not-hesap' : 'home');
   }, []);
 
   useEffect(() => {
-    if (screen === 'final-hesap') track('final-hesap');
+    if (screen === 'not-hesap') track('not-hesap');
   }, [screen]);
 
   // Ana sayfaya her dönüşte liderlik tablosunu yenile (token olsa da olmasa da)
@@ -1632,6 +1656,7 @@ export default function App() {
           <div style={s.brandLogo}>AÖF<span style={{ color: '#16794a' }}>notlar</span></div>
           <div style={{ display: 'flex', gap: 18, alignItems: 'center' }}>
             <a href={SKOOL_URL} target="_blank" rel="noopener noreferrer" onClick={trackSkoolClick} style={s.topLink}><IconUsers size={15} /><span>Skool</span></a>
+            <button style={s.topLink} onClick={() => setScreen('not-hesap')}><IconCalculator size={15} /><span>Hesaplayıcı</span></button>
             <button style={s.topLink} onClick={() => { setShowFeedback(true); loadMyFeedbacks(); }}><IconMessageSquare size={15} /><span>Geri bildirim</span></button>
             {user && <button style={s.topLink} onClick={logout}>Çıkış</button>}
           </div>
@@ -1788,12 +1813,12 @@ export default function App() {
             <button
               className="cat-btn-hover"
               style={s.resBtn}
-              onClick={() => setScreen('final-hesap')}
+              onClick={() => setScreen('not-hesap')}
             >
               <span style={s.resIcon}><IconCalculator size={17} /></span>
               <span style={{ minWidth: 0, flex: 1 }}>
-                <span style={s.resTitle}>Finalden kaç almalıyım?</span>
-                <span style={s.resSub}>Vize notunu yaz, gereken doğru sayısını gör</span>
+                <span style={s.resTitle}>Not hesaplayıcı</span>
+                <span style={s.resSub}>Vize, final, yaz okulu: geçmek için kaç net lazım?</span>
               </span>
               <IconChevronRight size={16} style={{ color: '#16794a', flexShrink: 0 }} />
             </button>
@@ -2431,74 +2456,149 @@ export default function App() {
     );
   }
 
-  if (screen === 'final-hesap') {
+  if (screen === 'not-hesap') {
     const accent = theme === 'dark' ? '#157a3c' : '#16794a';
+    const red = theme === 'dark' ? '#ff453a' : '#d70015';
     const muted = theme === 'dark' ? '#a1a1a6' : '#6e6e73';
-    const vize = parseFloat(String(fhVize).replace(',', '.'));
-    const gecerli = fhVize !== '' && !isNaN(vize) && vize >= 0 && vize <= 100;
-    const g = gecerli ? finalGereken(vize) : null;
-    const tr = (x) => x.toLocaleString('tr-TR', { maximumFractionDigits: 2 });
-    const infoBox = { fontSize: 12, color: muted, lineHeight: 1.6, background: '#f5f5f7', border: '1px solid #e8e8ed', padding: '10px 12px', marginTop: 12 };
+    const vize = sinavPuani(nhMod, nhVD, nhVY, nhVP);
+    const fin = sinavPuani(nhMod, nhFD, nhFY, nhFP);
+    const ok = (r) => r && r.hata === undefined;
+    const boxBase = { padding: '14px 16px', marginTop: 8, lineHeight: 1.6 };
+    const satir = { display: 'flex', justifyContent: 'space-between', gap: 12, fontSize: 14, color: s.qText.color };
+    const segBtn = (aktif) => ({ flex: 1, padding: '9px 8px', fontSize: 13, fontWeight: 600, cursor: 'pointer', border: '1px solid ' + accent, background: aktif ? accent : 'transparent', color: aktif ? '#fff' : accent });
+    const netNotu = <div style={{ fontSize: 12, color: muted, marginTop: 6 }}>Her 4 yanlış 1 doğruyu götürür. Yanlış yaparsan daha fazla doğru gerekir.</div>;
+
+    // Bir sınavın giriş alanı: doğru/yanlış ya da doğrudan puan
+    const giris = (etiket, d, setD, y, setY, p, setP, r) => (
+      <div style={{ marginBottom: 14 }}>
+        <label style={{ fontSize: 13, fontWeight: 600, color: s.qText.color, display: 'block', marginBottom: 6 }}>{etiket}</label>
+        {nhMod === 'dy' ? (
+          <div style={{ display: 'flex', gap: 8 }}>
+            <label style={{ flex: 1, minWidth: 0 }}>
+              <span style={{ display: 'block', fontSize: 11, color: muted, marginBottom: 3 }}>Doğru</span>
+              <input type="number" min="0" max="20" inputMode="numeric" placeholder="0" value={d} onChange={e => setD(e.target.value)} style={{ ...s.input, marginBottom: 0 }} />
+            </label>
+            <label style={{ flex: 1, minWidth: 0 }}>
+              <span style={{ display: 'block', fontSize: 11, color: muted, marginBottom: 3 }}>Yanlış</span>
+              <input type="number" min="0" max="20" inputMode="numeric" placeholder="0" value={y} onChange={e => setY(e.target.value)} style={{ ...s.input, marginBottom: 0 }} />
+            </label>
+          </div>
+        ) : (
+          <input type="number" min="0" max="100" step="any" inputMode="decimal" placeholder="Puan (0–100)" value={p} onChange={e => setP(e.target.value)} style={{ ...s.input, marginBottom: 0 }} />
+        )}
+        {r && r.hata && <div style={{ fontSize: 12, color: red, marginTop: 4 }}>{r.hata}</div>}
+        {ok(r) && nhMod === 'dy' && (
+          <div style={{ fontSize: 12, color: muted, marginTop: 4 }}>Boş: {r.bos} · Puanın: <strong style={{ color: accent }}>{notYaz(r.puan)}</strong></div>
+        )}
+      </div>
+    );
+
+    // Finalde gereken net cümlesi
+    const gerekenFinal = (vizePuan, gecmis) => {
+      const g = finalGereken(vizePuan);
+      return (
+        <div style={{ fontSize: 14, color: s.qText.color, marginTop: 6 }}>
+          Geçmek için finalde en az <strong style={{ color: accent }}>{notYaz(g.final)} puan</strong> = <strong>{notYaz(g.net)} net</strong> · yanlışsız <strong>{g.dogru} doğru</strong> {gecmis ? 'gerekiyordu.' : 'yaparsan geçersin.'}
+        </div>
+      );
+    };
+
+    const sonucKutusu = (gecti, baslik, icerik) => (
+      <div style={{ ...boxBase, border: '1px solid ' + (gecti ? accent : red), background: gecti ? 'rgba(22, 121, 74, 0.06)' : 'rgba(255, 69, 58, 0.06)' }}>
+        <div style={{ fontWeight: 700, fontSize: 18, color: gecti ? accent : red, display: 'flex', alignItems: 'center', gap: 7 }}>
+          {gecti ? <IconCheckCircle size={18} /> : <IconXCircle size={18} />}{baslik}
+        </div>
+        {icerik}
+      </div>
+    );
 
     return (
       <div style={s.bg}>
         <div style={s.container}>
           <div style={s.header}>
             <button style={s.backBtn} className="btn-hover" onClick={() => {
-              if (window.location.pathname === '/final-hesaplama') window.history.replaceState(null, '', '/');
+              if (['/not-hesaplama', '/final-hesaplama'].includes(window.location.pathname)) window.history.replaceState(null, '', '/');
               setScreen('home');
             }}>
               <IconChevronLeft size={16} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 4 }} />
               Geri
             </button>
-            <div style={s.greeting}>Finalden Kaç Almalıyım?</div>
+            <div style={s.greeting}>Not Hesaplayıcı</div>
             <div style={{ width: 60 }}></div>
           </div>
 
           <div style={s.card}>
             <IconCalculator size={28} style={{ display: 'block', margin: '0 auto 6px auto', color: accent }} />
-            <div style={{ ...s.cardTitle, fontSize: 15 }}>Vize notunu yaz</div>
-            <div style={{ fontSize: 12, color: muted, marginBottom: 12, lineHeight: 1.5 }}>
-              Anadolu AÖF'te başarı notu = vize %30 + final %70. Dersi geçmek için başarı notunun en az 35 olması gerekir.
+            <div style={{ ...s.cardTitle, fontSize: 15 }}>Hangi sınavı hesaplıyorsun?</div>
+
+            <div style={{ ...s.examTabRow, justifyContent: 'center', margin: '8px 0 14px' }}>
+              <button type="button" style={nhTur === 'vize' ? s.examTabActiveVize : s.examTab} onClick={() => setNhTur('vize')}><IconFileText size={14} />Vize</button>
+              <button type="button" style={nhTur === 'final' ? s.examTabActiveFinal : s.examTab} onClick={() => setNhTur('final')}><IconGraduationCap size={14} />Final</button>
+              <button type="button" style={nhTur === 'yaz' ? s.examTabActiveYazOkulu : s.examTab} onClick={() => setNhTur('yaz')}><IconSun size={14} />Yaz Okulu</button>
             </div>
 
-            <label style={{ fontSize: 13, fontWeight: 600, color: s.qText.color, display: 'block', marginBottom: 6 }}>Vize notun (0–100)</label>
-            <input
-              type="number" min="0" max="100" step="any" inputMode="decimal"
-              placeholder="örn: 45"
-              value={fhVize}
-              onChange={e => setFhVize(e.target.value)}
-              style={s.input}
-            />
-
-            {fhVize !== '' && !gecerli && (
-              <div style={{ fontSize: 12, color: '#d70015', marginTop: 4 }}>0 ile 100 arasında bir not yaz.</div>
-            )}
-
-            {g && (
-              <div style={{ border: '1px solid ' + accent, background: 'rgba(22, 121, 74, 0.06)', padding: '14px 16px', textAlign: 'center', marginTop: 8 }}>
-                <div style={{ fontSize: 13, color: muted }}>Geçmek için finalde en az</div>
-                <div style={{ fontSize: 30, fontWeight: 700, color: accent, lineHeight: 1.3 }}>{tr(g.final)} puan</div>
-                <div style={{ fontSize: 14, color: s.qText.color, marginTop: 4 }}>
-                  = <strong>{tr(g.net)} net</strong> · yanlışsız <strong>{g.dogru} doğru</strong> (20 soruda)
-                </div>
-                <div style={{ fontSize: 12, color: muted, marginTop: 8, lineHeight: 1.5 }}>
-                  Her 4 yanlış 1 doğruyu götürür. Yanlış yaparsan daha fazla doğru gerekir.
-                </div>
-              </div>
-            )}
-
-            <div style={infoBox}>
-              <strong>Yaz okulu:</strong> tek sınav yapılır ve notun tamamı sayılır. Geçmek için 35 puan, yani en az 7 net gerekir.
+            <div style={{ display: 'flex', marginBottom: 16 }}>
+              <button type="button" style={segBtn(nhMod === 'dy')} onClick={() => setNhMod('dy')}>Doğru / Yanlış</button>
+              <button type="button" style={segBtn(nhMod === 'puan')} onClick={() => setNhMod('puan')}>Puan</button>
             </div>
-            <div style={{ fontSize: 11, color: muted, marginTop: 10, lineHeight: 1.5 }}>
+
+            {nhTur === 'vize' && (
+              <>
+                {giris('Vize (20 soru)', nhVD, setNhVD, nhVY, setNhVY, nhVP, setNhVP, vize)}
+                {ok(vize) && (
+                  <div style={{ ...boxBase, border: '1px solid ' + accent, background: 'rgba(22, 121, 74, 0.06)' }}>
+                    <div style={satir}><span>Vize puanın</span><strong>{notYaz(vize.puan)}</strong></div>
+                    <div style={satir}><span>Başarı notuna katkısı (%30)</span><strong>{notYaz(vize.puan * 0.3)}</strong></div>
+                    {gerekenFinal(vize.puan, false)}
+                    {netNotu}
+                  </div>
+                )}
+              </>
+            )}
+
+            {nhTur === 'final' && (
+              <>
+                {giris('Vize (20 soru)', nhVD, setNhVD, nhVY, setNhVY, nhVP, setNhVP, vize)}
+                {giris('Final (20 soru)', nhFD, setNhFD, nhFY, setNhFY, nhFP, setNhFP, fin)}
+                {ok(vize) && ok(fin) && (() => {
+                  const basari = vize.puan * 0.3 + fin.puan * 0.7;
+                  const gecti = basari >= 35 - 1e-9;
+                  return sonucKutusu(gecti, gecti ? 'Geçtin!' : 'Kaldın', (
+                    <div style={{ marginTop: 6 }}>
+                      <div style={satir}><span>Vize %30</span><strong>{notYaz(vize.puan * 0.3)}</strong></div>
+                      <div style={satir}><span>Final %70</span><strong>{notYaz(fin.puan * 0.7)}</strong></div>
+                      <div style={{ ...satir, borderTop: '1px solid #e8e8ed', paddingTop: 6, marginTop: 4 }}><span>Başarı notun</span><strong>{notYaz(basari)}</strong></div>
+                      {!gecti && gerekenFinal(vize.puan, true)}
+                    </div>
+                  ));
+                })()}
+              </>
+            )}
+
+            {nhTur === 'yaz' && (
+              <>
+                {giris('Yaz okulu sınavı (20 soru)', nhFD, setNhFD, nhFY, setNhFY, nhFP, setNhFP, fin)}
+                {ok(fin) && (() => {
+                  const gecti = fin.puan >= 35 - 1e-9;
+                  return sonucKutusu(gecti, gecti ? 'Geçtin!' : 'Kaldın', (
+                    <div style={{ marginTop: 6 }}>
+                      <div style={satir}><span>Başarı notun (tek sınav, %100)</span><strong>{notYaz(fin.puan)}</strong></div>
+                      {!gecti && <div style={{ fontSize: 14, color: s.qText.color, marginTop: 6 }}>Geçmek için en az <strong>35 puan</strong> = <strong>7 net</strong> gerekiyordu.</div>}
+                    </div>
+                  ));
+                })()}
+              </>
+            )}
+
+            <div style={{ fontSize: 11, color: muted, marginTop: 14, lineHeight: 1.5 }}>
+              Başarı notu = vize %30 + final %70; yaz okulunda tek sınav %100. Geçmek için en az 35.
               Kaynak: Anadolu Üniversitesi Açıköğretim, İktisat ve İşletme Fakülteleri Öğrenci Değerlendirme Sistemi Esasları (md. 4, 6, 9).
               Laboratuvar, uygulama ve İngilizce Öğretmenliği derslerinde alt sınır farklıdır.
             </div>
           </div>
 
           <a href={SKOOL_URL} target="_blank" rel="noopener noreferrer" onClick={trackSkoolClick} className="btn-hover" style={{ ...s.btn, textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, fontWeight: 600, padding: '14px', borderRadius: 0, boxShadow: 'none', marginTop: 12 }}>
-            <IconUsers size={16} />Finale Skool topluluğunda hazırlan →
+            <IconUsers size={16} />Sınava Skool topluluğunda hazırlan →
           </a>
         </div>
       </div>
