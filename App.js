@@ -2462,6 +2462,7 @@ export default function App() {
     const muted = theme === 'dark' ? '#a1a1a6' : '#6e6e73';
     const vize = sinavPuani(nhMod, nhVD, nhVY, nhVP);
     const fin = sinavPuani(nhMod, nhFD, nhFY, nhFP);
+    const vizeP = sinavPuani('puan', '', '', nhVP); // final sekmesinde vize yalnız puanla girilir
     const ok = (r) => r && r.hata === undefined;
     const boxBase = { padding: '14px 16px', marginTop: 8, lineHeight: 1.6 };
     const satir = { display: 'flex', justifyContent: 'space-between', gap: 12, fontSize: 14, color: s.qText.color };
@@ -2469,10 +2470,10 @@ export default function App() {
     const netNotu = <div style={{ fontSize: 12, color: muted, marginTop: 6 }}>Her 4 yanlış 1 doğruyu götürür. Yanlış yaparsan daha fazla doğru gerekir.</div>;
 
     // Bir sınavın giriş alanı: doğru/yanlış ya da doğrudan puan
-    const giris = (etiket, d, setD, y, setY, p, setP, r) => (
+    const giris = (etiket, d, setD, y, setY, p, setP, r, mod = nhMod) => (
       <div style={{ marginBottom: 14 }}>
         <label style={{ fontSize: 13, fontWeight: 600, color: s.qText.color, display: 'block', marginBottom: 6 }}>{etiket}</label>
-        {nhMod === 'dy' ? (
+        {mod === 'dy' ? (
           <div style={{ display: 'flex', gap: 8 }}>
             <label style={{ flex: 1, minWidth: 0 }}>
               <span style={{ display: 'block', fontSize: 11, color: muted, marginBottom: 3 }}>Doğru</span>
@@ -2487,7 +2488,7 @@ export default function App() {
           <input type="number" min="0" max="100" step="any" inputMode="decimal" placeholder="Puan (0–100)" value={p} onChange={e => setP(e.target.value)} style={{ ...s.input, marginBottom: 0 }} />
         )}
         {r && r.hata && <div style={{ fontSize: 12, color: red, marginTop: 4 }}>{r.hata}</div>}
-        {ok(r) && nhMod === 'dy' && (
+        {ok(r) && mod === 'dy' && (
           <div style={{ fontSize: 12, color: muted, marginTop: 4 }}>Boş: {r.bos} · Puanın: <strong style={{ color: accent }}>{notYaz(r.puan)}</strong></div>
         )}
       </div>
@@ -2533,7 +2534,7 @@ export default function App() {
 
             <div style={{ ...s.examTabRow, justifyContent: 'center', margin: '8px 0 14px' }}>
               <button type="button" style={nhTur === 'vize' ? s.examTabActiveVize : s.examTab} onClick={() => setNhTur('vize')}><IconFileText size={14} />Vize</button>
-              <button type="button" style={nhTur === 'final' ? s.examTabActiveFinal : s.examTab} onClick={() => setNhTur('final')}><IconGraduationCap size={14} />Final</button>
+              <button type="button" style={nhTur === 'final' ? s.examTabActiveFinal : s.examTab} onClick={() => { if (nhTur === 'vize' && nhMod === 'dy' && ok(vize)) setNhVP(String(vize.puan)); setNhTur('final'); }}><IconGraduationCap size={14} />Final</button>
               <button type="button" style={nhTur === 'yaz' ? s.examTabActiveYazOkulu : s.examTab} onClick={() => setNhTur('yaz')}><IconSun size={14} />Yaz Okulu</button>
             </div>
 
@@ -2558,9 +2559,13 @@ export default function App() {
 
             {nhTur === 'final' && (
               <>
-                {giris('Vize (20 soru)', nhVD, setNhVD, nhVY, setNhVY, nhVP, setNhVP, vize)}
+                {giris('Vize puanın', nhVD, setNhVD, nhVY, setNhVY, nhVP, setNhVP, vizeP, 'puan')}
+                <button type="button" onClick={() => setNhTur('vize')} style={{ background: 'none', border: 'none', padding: 0, margin: '-6px 0 14px', fontSize: 12, color: accent, cursor: 'pointer', textAlign: 'left' }}>
+                  Vize puanını bilmiyor musun? Vize sekmesinde hesapla →
+                </button>
                 {giris('Final (20 soru)', nhFD, setNhFD, nhFY, setNhFY, nhFP, setNhFP, fin)}
-                {ok(vize) && ok(fin) && (() => {
+                {ok(vizeP) && ok(fin) && (() => {
+                  const vize = vizeP;
                   const basari = vize.puan * 0.3 + fin.puan * 0.7;
                   const gecti = basari >= 35 - 1e-9;
                   return sonucKutusu(gecti, gecti ? 'Geçtin!' : 'Kaldın', (
@@ -2590,10 +2595,15 @@ export default function App() {
               </>
             )}
 
-            <div style={{ fontSize: 11, color: muted, marginTop: 14, lineHeight: 1.5 }}>
-              Başarı notu = vize %30 + final %70; yaz okulunda tek sınav %100. Geçmek için en az 35.
-              Kaynak: Anadolu Üniversitesi Açıköğretim, İktisat ve İşletme Fakülteleri Öğrenci Değerlendirme Sistemi Esasları (md. 4, 6, 9).
-              Laboratuvar, uygulama ve İngilizce Öğretmenliği derslerinde alt sınır farklıdır.
+            <div style={{ marginTop: 16, padding: '12px 14px', background: '#f5f5f7', border: '1px solid #e8e8ed' }}>
+              <div style={{ ...s.label, fontSize: 11, marginBottom: 6 }}>Nasıl hesaplanır?</div>
+              <ul style={{ margin: 0, paddingLeft: 18, fontSize: 13, color: s.qText.color, lineHeight: 1.7 }}>
+                <li>Başarı notu = Vize × %30 + Final × %70</li>
+                <li>Yaz okulu: tek sınav, notun %100'ü</li>
+                <li>Geçme sınırı: <strong>35</strong></li>
+                <li>Net = Doğru − Yanlış ÷ 4 (her net 5 puan)</li>
+              </ul>
+              <div style={{ fontSize: 11, color: muted, marginTop: 8 }}>Kaynak: AÖF Öğrenci Değerlendirme Sistemi Esasları (md. 4, 6, 9)</div>
             </div>
           </div>
 
