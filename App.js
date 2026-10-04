@@ -931,6 +931,10 @@ const IconCamera = ({ size = 18, style = {} }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><path d="M4 7h3l2-3h6l2 3h3a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2z"/><circle cx="12" cy="13" r="4"/></svg>
 );
 
+const IconUsers = ({ size = 18, style = {} }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+);
+
 const IconStar = ({ size = 18, filled = false, style = {} }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill={filled ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
 );
@@ -1607,8 +1611,8 @@ export default function App() {
         <div style={s.topBar}>
           <div style={s.brandLogo}>AÖF<span style={{ color: '#0047bb' }}>notlar</span></div>
           <div style={{ display: 'flex', gap: 18, alignItems: 'center' }}>
-            <a href="https://t.me/+whse8tbDgac0OTU0" target="_blank" rel="noopener noreferrer" style={s.topLink}>Telegram</a>
-            <button style={s.topLink} onClick={() => { setShowFeedback(true); loadMyFeedbacks(); }}>Geri bildirim</button>
+            <a href="https://t.me/+whse8tbDgac0OTU0" target="_blank" rel="noopener noreferrer" style={s.topLink}><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true"><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.287 5.906c-.778.324-2.334.994-4.666 2.01-.378.15-.577.298-.595.442-.03.243.275.339.69.47l.175.055c.408.133.958.288 1.243.294.26.006.549-.1.868-.32 2.179-1.471 3.304-2.214 3.374-2.23.05-.012.12-.026.166.016.047.041.042.12.037.141-.03.129-1.227 1.241-1.846 1.817-.193.18-.33.307-.358.336a8.154 8.154 0 0 1-.188.186c-.38.366-.664.64.015 1.088.327.216.589.393.85.571.284.194.568.387.936.629.093.06.183.125.27.187.331.236.63.448.997.414.214-.02.435-.22.547-.82.265-1.417.786-4.486.906-5.751a1.426 1.426 0 0 0-.013-.315.337.337 0 0 0-.114-.217.526.526 0 0 0-.31-.093c-.3.005-.763.166-2.984 1.09z"/></svg><span>Telegram</span></a>
+            <button style={s.topLink} onClick={() => { setShowFeedback(true); loadMyFeedbacks(); }}><IconMessageSquare size={15} /><span>Geri bildirim</span></button>
             {user && <button style={s.topLink} onClick={logout}>Çıkış</button>}
           </div>
         </div>
@@ -1700,24 +1704,27 @@ export default function App() {
         {/* Üst satır: liderler, kaynaklar, Skool */}
         <div className="d-top">
           <div className="d-cell">
-            <div className="d-head" style={{ ...s.label, marginBottom: 4 }}>Bugünün liderleri</div>
+            <div className="d-head" style={{ ...s.label, ...s.headIcon }}><IconAward size={15} style={{ color: '#0047bb' }} />Bugünün liderleri</div>
             {top3.length > 0 && <div style={{ ...s.joke, marginTop: 8 }}>{getDailyJoke(top3[0]?.username)}</div>}
             {(!top3 || top3.length === 0) ? (
               <div style={s.mutedText}>Henüz soru çözülmedi. İlk sen ol!</div>
             ) : top3.map((p, i) => (
               <div key={i} style={s.lbRow}>
-                <span><strong>{i + 1}.</strong> {p.username}</span>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
+                  <span style={{ ...s.rankBadge2, ...(i === 0 ? s.rankBadgeFirst : {}) }}>{i + 1}</span>
+                  <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.username}</span>
+                </span>
                 <span style={s.lbScore}>{p.total_score} XP</span>
               </div>
             ))}
             {myRank
-              ? <div style={s.myRankBox}><span>Sen bugün <strong>{myRank}. sıradasın</strong></span><span style={s.lbScore}>{myLeaderboardScore} XP</span></div>
-              : <div style={s.myRankBoxGray}>Soru çöz, sıralamada görün.</div>
+              ? <div style={s.myRankBox}><span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}><IconTarget size={15} style={{ color: '#0047bb' }} />Sen bugün <strong>{myRank}. sıradasın</strong></span><span style={s.lbScore}>{myLeaderboardScore} XP</span></div>
+              : <div style={{ ...s.myRankBoxGray, display: 'flex', alignItems: 'center', gap: 8 }}><IconTarget size={15} />Soru çöz, sıralamada görün.</div>
             }
           </div>
 
           <div className="d-cell">
-            <div className="d-head" style={{ ...s.label, marginBottom: 4 }}>Kaynaklar</div>
+            <div className="d-head" style={{ ...s.label, ...s.headIcon }}><IconBookOpen size={15} style={{ color: '#0047bb' }} />Kaynaklar</div>
             <button
               className="cat-btn-hover"
               style={s.resBtn}
@@ -1734,7 +1741,8 @@ export default function App() {
                 } catch (e) { alert('Özet notlar yüklenemedi'); }
               }}
             >
-              <span style={{ minWidth: 0 }}>
+              <span style={s.resIcon}><IconFileText size={17} /></span>
+              <span style={{ minWidth: 0, flex: 1 }}>
                 <span style={s.resTitle}>Ücretsiz özet ders notu</span>
                 <span style={s.resSub}>Dersini seç, PDF e-postana gelsin</span>
               </span>
@@ -1750,7 +1758,8 @@ export default function App() {
                 setScreen('course-request');
               }}
             >
-              <span style={{ minWidth: 0 }}>
+              <span style={s.resIcon}><IconEdit size={17} /></span>
+              <span style={{ minWidth: 0, flex: 1 }}>
                 <span style={s.resTitle}>Ders materyali iste</span>
                 <span style={s.resSub}>Listede olmayan dersi yaz</span>
               </span>
@@ -1761,7 +1770,10 @@ export default function App() {
           <div className="d-blue btn-hover" role="button" tabIndex={0}
             onClick={() => { setPrevScreen('home'); setScreen('product-detail'); }}
             onKeyDown={e => { if (e.key === 'Enter') { setPrevScreen('home'); setScreen('product-detail'); } }}>
-            <div style={{ ...s.label, color: '#c9d8f5' }}>AÖF Skool topluluğu</div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12 }}>
+              <div style={{ ...s.label, color: '#c9d8f5' }}>AÖF Skool topluluğu</div>
+              <IconUsers size={30} style={{ color: '#ffffff', opacity: 0.9, flexShrink: 0 }} />
+            </div>
             <div style={s.blueTitle}>Tüm derslerin sınav özetleri tek yerde</div>
             <div style={s.blueText}>Özetler ve soru-cevap Skool topluluğunda.</div>
             <span style={s.blueLink}>Katıl →</span>
@@ -1769,11 +1781,11 @@ export default function App() {
         </div>
 
         <div style={s.pratikHead} id="pratik-yap">
-          <h2 style={s.h2}>Pratik yap</h2>
+          <h2 style={{ ...s.h2, display: 'flex', alignItems: 'center', gap: 10 }}><IconTarget size={22} style={{ color: '#0047bb' }} />Pratik yap</h2>
           <div style={s.examTabRow}>
-            <button type="button" style={examType === 'vize' ? s.examTabActiveVize : s.examTab} onClick={(e) => { e.preventDefault(); setExamType('vize'); }}>Vize</button>
-            <button type="button" style={examType === 'final' ? s.examTabActiveFinal : s.examTab} onClick={(e) => { e.preventDefault(); setExamType('final'); }}>Final</button>
-            <button type="button" style={examType === 'yazokulu' ? s.examTabActiveYazOkulu : s.examTab} onClick={(e) => { e.preventDefault(); setExamType('yazokulu'); }}>Yaz Okulu</button>
+            <button type="button" style={examType === 'vize' ? s.examTabActiveVize : s.examTab} onClick={(e) => { e.preventDefault(); setExamType('vize'); }}><IconFileText size={14} />Vize</button>
+            <button type="button" style={examType === 'final' ? s.examTabActiveFinal : s.examTab} onClick={(e) => { e.preventDefault(); setExamType('final'); }}><IconGraduationCap size={14} />Final</button>
+            <button type="button" style={examType === 'yazokulu' ? s.examTabActiveYazOkulu : s.examTab} onClick={(e) => { e.preventDefault(); setExamType('yazokulu'); }}><IconSun size={14} />Yaz Okulu</button>
           </div>
         </div>
 
@@ -2725,6 +2737,9 @@ const getStyles = (theme) => {
   };
   const NARROW = "'Archivo Narrow', 'Arial Narrow', sans-serif";
   const tabBase = {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: 6,
     padding: '6px 0',
     border: 'none',
     borderBottom: '2px solid transparent',
@@ -3509,6 +3524,9 @@ const getStyles = (theme) => {
       color: colors.textMain,
     },
     topLink: {
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: 6,
       background: 'none',
       border: 'none',
       padding: '8px 0',
@@ -3641,6 +3659,41 @@ const getStyles = (theme) => {
       color: '#157a3c',
       textDecoration: 'none',
       flexShrink: 0,
+    },
+    headIcon: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 8,
+      marginBottom: 4,
+    },
+    rankBadge2: {
+      width: 24,
+      height: 24,
+      flexShrink: 0,
+      display: 'inline-flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontFamily: NARROW,
+      fontWeight: 700,
+      fontSize: 13,
+      background: '#f4f6f9',
+      border: `1px solid ${colors.line}`,
+      color: colors.textMain,
+    },
+    rankBadgeFirst: {
+      background: colors.primary,
+      border: `1px solid ${colors.primary}`,
+      color: '#ffffff',
+    },
+    resIcon: {
+      width: 36,
+      height: 36,
+      flexShrink: 0,
+      display: 'inline-flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      background: '#eef3fc',
+      color: colors.primary,
     },
   };
 };
