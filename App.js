@@ -15,6 +15,19 @@ const track = (event) => {
 
 const trackSkoolClick = () => track('skool-click');
 
+// Finalden kaç almalıyım? — AÖF Öğrenci Değerlendirme Sistemi Esasları md. 4, 6, 9:
+// başarı notu = vize %30 + final %70, alt sınır 35. 20 soruluk sınavda her net 5 puan,
+// 4 yanlış 1 doğruyu götürdüğü için final puanı 1,25'in katıdır (çeyrek net).
+const finalGereken = (vize) => {
+  for (let ceyrekNet = 0; ceyrekNet <= 80; ceyrekNet++) {
+    const final = ceyrekNet * 1.25;
+    if (vize * 0.3 + final * 0.7 >= 35 - 1e-9) {
+      return { final, net: ceyrekNet / 4, dogru: Math.ceil(ceyrekNet / 4) };
+    }
+  }
+  return null;
+};
+
 // Sınav türü adı regex — her seferinde yeni instance (global /g regex stateful, lastIndex sorununu önler)
 const getExamTypeRegex = () => /\s*\(\s*(Vize|Final|Yaz okulu|[Vv]ize|[Ff]inal|[Yy]az [Oo]kulu)\s*\)\s*/g;
 
@@ -1047,6 +1060,9 @@ export default function App() {
   const [vizeInput, setVizeInput] = useState('');
   const [passResult, setPassResult] = useState(null);
 
+  // ── FİNALDEN KAÇ ALMALIYIM? (/final-hesaplama)
+  const [fhVize, setFhVize] = useState('');
+
   // Ücretsiz Özet Ders Notu İndir
   const [pdfNotes, setPdfNotes] = useState([]);
   const [notesSelected, setNotesSelected] = useState([]);
@@ -1273,8 +1289,12 @@ export default function App() {
     }
     // Kategoriler public endpoint (auth gerekmez), her zaman yüklenir
     fetchCategories();
-    setScreen('home');
+    setScreen(window.location.pathname === '/final-hesaplama' ? 'final-hesap' : 'home');
   }, []);
+
+  useEffect(() => {
+    if (screen === 'final-hesap') track('final-hesap');
+  }, [screen]);
 
   // Ana sayfaya her dönüşte liderlik tablosunu yenile (token olsa da olmasa da)
   useEffect(() => {
@@ -1762,6 +1782,18 @@ export default function App() {
               <span style={{ minWidth: 0, flex: 1 }}>
                 <span style={s.resTitle}>Ders materyali iste</span>
                 <span style={s.resSub}>Listede olmayan dersi yaz</span>
+              </span>
+              <IconChevronRight size={16} style={{ color: '#16794a', flexShrink: 0 }} />
+            </button>
+            <button
+              className="cat-btn-hover"
+              style={s.resBtn}
+              onClick={() => setScreen('final-hesap')}
+            >
+              <span style={s.resIcon}><IconCalculator size={17} /></span>
+              <span style={{ minWidth: 0, flex: 1 }}>
+                <span style={s.resTitle}>Finalden kaç almalıyım?</span>
+                <span style={s.resSub}>Vize notunu yaz, gereken doğru sayısını gör</span>
               </span>
               <IconChevronRight size={16} style={{ color: '#16794a', flexShrink: 0 }} />
             </button>
@@ -2394,6 +2426,80 @@ export default function App() {
             </a>
 
           </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (screen === 'final-hesap') {
+    const accent = theme === 'dark' ? '#157a3c' : '#16794a';
+    const muted = theme === 'dark' ? '#a1a1a6' : '#6e6e73';
+    const vize = parseFloat(String(fhVize).replace(',', '.'));
+    const gecerli = fhVize !== '' && !isNaN(vize) && vize >= 0 && vize <= 100;
+    const g = gecerli ? finalGereken(vize) : null;
+    const tr = (x) => x.toLocaleString('tr-TR', { maximumFractionDigits: 2 });
+    const infoBox = { fontSize: 12, color: muted, lineHeight: 1.6, background: '#f5f5f7', border: '1px solid #e8e8ed', padding: '10px 12px', marginTop: 12 };
+
+    return (
+      <div style={s.bg}>
+        <div style={s.container}>
+          <div style={s.header}>
+            <button style={s.backBtn} className="btn-hover" onClick={() => {
+              if (window.location.pathname === '/final-hesaplama') window.history.replaceState(null, '', '/');
+              setScreen('home');
+            }}>
+              <IconChevronLeft size={16} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 4 }} />
+              Geri
+            </button>
+            <div style={s.greeting}>Finalden Kaç Almalıyım?</div>
+            <div style={{ width: 60 }}></div>
+          </div>
+
+          <div style={s.card}>
+            <IconCalculator size={28} style={{ display: 'block', margin: '0 auto 6px auto', color: accent }} />
+            <div style={{ ...s.cardTitle, fontSize: 15 }}>Vize notunu yaz</div>
+            <div style={{ fontSize: 12, color: muted, marginBottom: 12, lineHeight: 1.5 }}>
+              Anadolu AÖF'te başarı notu = vize %30 + final %70. Dersi geçmek için başarı notunun en az 35 olması gerekir.
+            </div>
+
+            <label style={{ fontSize: 13, fontWeight: 600, color: s.qText.color, display: 'block', marginBottom: 6 }}>Vize notun (0–100)</label>
+            <input
+              type="number" min="0" max="100" step="any" inputMode="decimal"
+              placeholder="örn: 45"
+              value={fhVize}
+              onChange={e => setFhVize(e.target.value)}
+              style={s.input}
+            />
+
+            {fhVize !== '' && !gecerli && (
+              <div style={{ fontSize: 12, color: '#d70015', marginTop: 4 }}>0 ile 100 arasında bir not yaz.</div>
+            )}
+
+            {g && (
+              <div style={{ border: '1px solid ' + accent, background: 'rgba(22, 121, 74, 0.06)', padding: '14px 16px', textAlign: 'center', marginTop: 8 }}>
+                <div style={{ fontSize: 13, color: muted }}>Geçmek için finalde en az</div>
+                <div style={{ fontSize: 30, fontWeight: 700, color: accent, lineHeight: 1.3 }}>{tr(g.final)} puan</div>
+                <div style={{ fontSize: 14, color: s.qText.color, marginTop: 4 }}>
+                  = <strong>{tr(g.net)} net</strong> · yanlışsız <strong>{g.dogru} doğru</strong> (20 soruda)
+                </div>
+                <div style={{ fontSize: 12, color: muted, marginTop: 8, lineHeight: 1.5 }}>
+                  Her 4 yanlış 1 doğruyu götürür. Yanlış yaparsan daha fazla doğru gerekir.
+                </div>
+              </div>
+            )}
+
+            <div style={infoBox}>
+              <strong>Yaz okulu:</strong> tek sınav yapılır ve notun tamamı sayılır. Geçmek için 35 puan, yani en az 7 net gerekir.
+            </div>
+            <div style={{ fontSize: 11, color: muted, marginTop: 10, lineHeight: 1.5 }}>
+              Kaynak: Anadolu Üniversitesi Açıköğretim, İktisat ve İşletme Fakülteleri Öğrenci Değerlendirme Sistemi Esasları (md. 4, 6, 9).
+              Laboratuvar, uygulama ve İngilizce Öğretmenliği derslerinde alt sınır farklıdır.
+            </div>
+          </div>
+
+          <a href={SKOOL_URL} target="_blank" rel="noopener noreferrer" onClick={trackSkoolClick} className="btn-hover" style={{ ...s.btn, textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, fontWeight: 600, padding: '14px', borderRadius: 0, boxShadow: 'none', marginTop: 12 }}>
+            <IconUsers size={16} />Finale Skool topluluğunda hazırlan →
+          </a>
         </div>
       </div>
     );

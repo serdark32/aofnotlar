@@ -351,6 +351,7 @@ app.get('/api/leaderboard/:category_id', authMiddleware, async (req, res) => {
 const TRACK_EVENTS = {
   'skool-click': { type: 'skool_click', dedupeMs: 5000 },
   'sales-page-view': { type: 'sales_page_view', dedupeMs: 0 },
+  'final-hesap': { type: 'final_hesap', dedupeMs: 5000 },
 };
 
 const recentEvents = new Map();
