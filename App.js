@@ -1166,11 +1166,18 @@ export default function App() {
       .d-top {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
-        border-top: 1px solid #e4e7ec;
+        gap: 16px;
+        align-items: start;
         margin-bottom: 40px;
       }
-      .d-top > .d-cell { padding: 20px 24px 20px 0; min-width: 0; }
-      .d-top > .d-blue { padding: 20px; background: #0047bb; color: #ffffff; cursor: pointer; min-width: 0; }
+      .d-top > .d-cell { border: 1px solid #d5dae1; padding: 0 16px 14px; min-width: 0; background: #ffffff; }
+      .d-top > .d-cell > .d-head {
+        margin: 0 -16px 4px;
+        padding: 10px 16px;
+        background: #f4f6f9;
+        border-bottom: 1px solid #d5dae1;
+      }
+      .d-top > .d-blue { padding: 18px; background: #0047bb; color: #ffffff; cursor: pointer; min-width: 0; }
       .d-courses {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1178,7 +1185,6 @@ export default function App() {
       }
       @media (max-width: 760px) {
         .d-top { grid-template-columns: 1fr; }
-        .d-top > .d-cell { padding: 20px 0; border-bottom: 1px solid #e4e7ec; }
         .d-courses { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       }
       @media (max-width: 480px) {
@@ -1694,8 +1700,8 @@ export default function App() {
         {/* Üst satır: liderler, kaynaklar, Skool */}
         <div className="d-top">
           <div className="d-cell">
-            <div style={s.label}>Bugünün liderleri</div>
-            {top3.length > 0 && <div style={s.joke}>{getDailyJoke(top3[0]?.username)}</div>}
+            <div className="d-head" style={{ ...s.label, marginBottom: 4 }}>Bugünün liderleri</div>
+            {top3.length > 0 && <div style={{ ...s.joke, marginTop: 8 }}>{getDailyJoke(top3[0]?.username)}</div>}
             {(!top3 || top3.length === 0) ? (
               <div style={s.mutedText}>Henüz soru çözülmedi. İlk sen ol!</div>
             ) : top3.map((p, i) => (
@@ -1711,7 +1717,7 @@ export default function App() {
           </div>
 
           <div className="d-cell">
-            <div style={s.label}>Kaynaklar</div>
+            <div className="d-head" style={{ ...s.label, marginBottom: 4 }}>Kaynaklar</div>
             <button
               className="cat-btn-hover"
               style={s.resBtn}
@@ -3187,8 +3193,8 @@ const getStyles = (theme) => {
     quizCard: {
       background: 'transparent',
       border: 'none',
-      padding: '20px 0 8px',
-      marginBottom: 8,
+      padding: '12px 0 6px',
+      marginBottom: 6,
       width: '100%',
       maxWidth: 680,
       boxSizing: 'border-box',
@@ -3202,7 +3208,7 @@ const getStyles = (theme) => {
       color: colors.primary,
     },
     qText: {
-      fontSize: 19,
+      fontSize: 'clamp(15px, 4vw, 19px)',
       color: colors.textMain,
       lineHeight: 1.4,
       fontWeight: 400,
@@ -3211,22 +3217,23 @@ const getStyles = (theme) => {
     divider: {
       height: 1,
       background: colors.cardBorder,
-      margin: '18px 0 0',
+      margin: '12px 0 0',
     },
     optBtn: {
       width: '100%',
-      padding: '13px 4px 13px 0',
+      padding: '9px 4px 9px 0',
       background: 'transparent',
       border: 'none',
       borderBottom: `1px solid ${colors.cardBorder}`,
       borderRadius: 0,
       cursor: 'pointer',
-      fontSize: 16,
+      fontSize: 'clamp(14px, 3.8vw, 16px)',
+      lineHeight: 1.35,
       textAlign: 'left',
       display: 'flex',
       alignItems: 'baseline',
       gap: 10,
-      minHeight: 48,
+      minHeight: 42,
     },
     optLetter: {
       width: 28,
