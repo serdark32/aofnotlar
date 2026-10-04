@@ -2218,12 +2218,11 @@ export default function App() {
               <img
                 src="/ozet-pdf-gorsel.jpg"
                 alt="Skool topluluğu sınav özetleri"
-                width={720}
-                height={432}
+                width={1200}
+                height={669}
                 style={{
                   width: '100%',
                   height: 'auto',
-                  maxWidth: 360,
                   borderRadius: 0, 
                   boxShadow: theme === 'dark' ? '0 8px 24px rgba(0, 0, 0, 0.4)' : '0 8px 24px rgba(0, 0, 0, 0.1)',
                   border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(0, 0, 0, 0.05)',
@@ -2237,20 +2236,6 @@ export default function App() {
               Geçmiş 6-7 yılın çıkmış soruları tek tek analiz edildi; hangi konudan kaç soru geldiği sayıldı, en çok tekrar edenler sınav özetlerinde toplandı. Bu materyallerin tamamı Skool topluluğumuzda. Takıldığın yeri sorabilir, aynı dersi alan arkadaşlarınla birlikte çalışabilirsin.
             </div>
 
-            <div style={{
-              background: theme === 'dark' ? 'rgba(255, 255, 255, 0.04)' : '#f5f5f7',
-              border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid #e8e8ed',
-              borderRadius: 0,
-              padding: 14,
-              marginBottom: 16,
-              fontSize: 12.5,
-              color: theme === 'dark' ? '#c9cfd8' : '#6e6e73',
-              lineHeight: 1.6,
-              fontStyle: 'italic',
-              textAlign: 'left'
-            }}>
-              "Ben de AÖF öğrencisiyim ve bu sınavlara ben de giriyorum. Bu notları önce kendim geçmek için hazırladım, sonra paylaşmaya karar verdim. İçinde işe yaramayan tek satır yok — çünkü ilk kullanan benim."
-            </div>
 
             <div style={{
               display: 'inline-flex',
@@ -2396,10 +2381,10 @@ export default function App() {
                 Toplulukta paylaşılan sınav özetlerinden örnek sayfalar.
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                <img src="/pdf-kesit-1.png" alt="PDF sayfa kesiti 1" loading="lazy" decoding="async" width={900} height={774} style={{ width: '100%', height: 'auto', borderRadius: 0, border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #e8e8ed', boxShadow: theme === 'dark' ? '0 4px 14px rgba(0, 0, 0, 0.3)' : '0 4px 14px rgba(0, 0, 0, 0.06)' }} />
-                <img src="/pdf-kesit-2.png" alt="PDF sayfa kesiti 2" loading="lazy" decoding="async" width={900} height={720} style={{ width: '100%', height: 'auto', borderRadius: 0, border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #e8e8ed', boxShadow: theme === 'dark' ? '0 4px 14px rgba(0, 0, 0, 0.3)' : '0 4px 14px rgba(0, 0, 0, 0.06)' }} />
-                <img src="/pdf-kesit-3.png" alt="PDF sayfa kesiti 3" loading="lazy" decoding="async" width={900} height={586} style={{ width: '100%', height: 'auto', borderRadius: 0, border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #e8e8ed', boxShadow: theme === 'dark' ? '0 4px 14px rgba(0, 0, 0, 0.3)' : '0 4px 14px rgba(0, 0, 0, 0.06)' }} />
-                <img src="/pdf-kesit-4.png" alt="PDF sayfa kesiti 4" loading="lazy" decoding="async" width={900} height={529} style={{ width: '100%', height: 'auto', borderRadius: 0, border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #e8e8ed', boxShadow: theme === 'dark' ? '0 4px 14px rgba(0, 0, 0, 0.3)' : '0 4px 14px rgba(0, 0, 0, 0.06)' }} />
+                <img src="/pdf-kesit-1.png" alt="PDF sayfa kesiti 1" loading="lazy" decoding="async" width={900} height={1133} style={{ width: '100%', height: 'auto', borderRadius: 0, border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #e8e8ed', boxShadow: theme === 'dark' ? '0 4px 14px rgba(0, 0, 0, 0.3)' : '0 4px 14px rgba(0, 0, 0, 0.06)' }} />
+                <img src="/pdf-kesit-2.png" alt="PDF sayfa kesiti 2" loading="lazy" decoding="async" width={900} height={1127} style={{ width: '100%', height: 'auto', borderRadius: 0, border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #e8e8ed', boxShadow: theme === 'dark' ? '0 4px 14px rgba(0, 0, 0, 0.3)' : '0 4px 14px rgba(0, 0, 0, 0.06)' }} />
+                <img src="/pdf-kesit-3.png" alt="PDF sayfa kesiti 3" loading="lazy" decoding="async" width={900} height={999} style={{ width: '100%', height: 'auto', borderRadius: 0, border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #e8e8ed', boxShadow: theme === 'dark' ? '0 4px 14px rgba(0, 0, 0, 0.3)' : '0 4px 14px rgba(0, 0, 0, 0.06)' }} />
+                <img src="/pdf-kesit-4.png" alt="PDF sayfa kesiti 4" loading="lazy" decoding="async" width={900} height={918} style={{ width: '100%', height: 'auto', borderRadius: 0, border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #e8e8ed', boxShadow: theme === 'dark' ? '0 4px 14px rgba(0, 0, 0, 0.3)' : '0 4px 14px rgba(0, 0, 0, 0.06)' }} />
               </div>
             </div>
 
