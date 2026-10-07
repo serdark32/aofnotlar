@@ -7,3 +7,6 @@ frontend/.env
 frontend/build/
 *.log
 .DS_Store
+
+# MCP sunucu yapılandırması — API anahtarı içerir
+.mcp.json

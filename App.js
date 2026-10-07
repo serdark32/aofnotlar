@@ -1063,7 +1063,7 @@ export default function App() {
   }, [screen]);
 
   // Vize / Final seçimi
-  const [examType, setExamType] = useState('yazokulu');
+  const [examType, setExamType] = useState('vize');
 
   // Feedback
   const [showFeedback, setShowFeedback] = useState(false);
